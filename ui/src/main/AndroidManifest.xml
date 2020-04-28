@@ -3,7 +3,8 @@
     package="com.xuhai.ui">
 
     <application>
-        <activity android:name=".UiMainActivity"></activity>
+        <activity android:name=".flowlayout.FlowLayoutActivity"></activity>
+        <activity android:name=".UiMainActivity" />
     </application>
 
 </manifest>
