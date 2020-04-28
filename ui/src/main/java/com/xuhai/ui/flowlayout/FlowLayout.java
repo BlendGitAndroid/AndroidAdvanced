@@ -42,6 +42,9 @@ public class FlowLayout extends ViewGroup {
         int measureWidth = 0;
         int measureHeight = 0;
 
+        measureWidth = widthSize;
+        measureHeight = heightSize;
+
         //每一行的宽高
         int iCurLineW = 0;
         int iCurLineH = 0;
@@ -49,65 +52,67 @@ public class FlowLayout extends ViewGroup {
         //每一行的布局容器
         List<View> viewList = new ArrayList<>();
 
-        if (widthMode == MeasureSpec.EXACTLY && heightMode == MeasureSpec.EXACTLY) {
-            measureWidth = widthSize;
-            measureHeight = heightSize;
 
-        } else {
+        //当前子View控件宽高
+        int iChildWidth = 0;
+        int iChildHeight = 0;
 
-            //当前子View控件宽高
-            int iChildWidth = 0;
-            int iChildHeight = 0;
+        //获取子View数量用于迭代
+        int childCount = getChildCount();
 
-            //获取子View数量用于迭代
-            int childCount = getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            View child = getChildAt(i);
+            //1.测量每一个子View
+            measureChild(child, widthMeasureSpec, heightMeasureSpec);
+            //2.获取每一个子View的getLayoutParams，即XML资源
+            MarginLayoutParams layoutParams = (MarginLayoutParams) child.getLayoutParams();
 
-            for (int i = 0; i < childCount; i++) {
-                View child = getChildAt(i);
-                //1.测量每一个子View
-                measureChild(child, widthMeasureSpec, heightMeasureSpec);
-                //2.获取每一个子View的getLayoutParams，即XML资源
-                MarginLayoutParams layoutParams = (MarginLayoutParams) child.getLayoutParams();
+            //3.获取每一个子View控件的实际宽高
+            iChildWidth = child.getMeasuredWidth() + layoutParams.leftMargin + layoutParams.rightMargin;
+            iChildHeight = child.getMeasuredHeight() + layoutParams.topMargin + layoutParams.bottomMargin;
 
-                //3.获取每一个子View控件的实际宽高
-                iChildWidth = child.getMeasuredWidth() + layoutParams.leftMargin + layoutParams.rightMargin;
-                iChildHeight = child.getMeasuredHeight() + layoutParams.topMargin + layoutParams.bottomMargin;
-
-                //4.是否需要换行
-                if (iCurLineW + iChildWidth > widthSize) {
-                    //记录总的布局最大宽度，高度累加
+            //4.是否需要换行
+            if (iCurLineW + iChildWidth > widthSize) {
+                //记录总的布局最大宽度，高度累加
+                if (widthMode != MeasureSpec.EXACTLY) {
                     measureWidth = Math.max(measureWidth, iCurLineW);
+                }
+                if (heightMode != MeasureSpec.EXACTLY) {
                     measureHeight += iCurLineH;
-
-                    //保存每一行的数据（高度和View）
-                    lstHeights.add(iCurLineH);
-                    lstLineView.add(viewList);
-
-                    //赋予新的行宽高
-                    iCurLineW = iChildWidth;
-                    iCurLineH = iChildHeight;
-
-                    //添加新的行
-                    viewList = new ArrayList<>();
-                    viewList.add(child);
-
-                } else {
-                    iCurLineW += iChildWidth;
-                    iCurLineH = Math.max(iCurLineH, iChildHeight);
-                    viewList.add(child);
                 }
 
-                //5如果是最后一行
-                if (i == childCount - 1) {
-                    measureWidth = Math.max(measureWidth, iCurLineW);
-                    measureHeight += iCurLineH;
+                //保存每一行的数据（高度和View）
+                lstHeights.add(iCurLineH);
+                lstLineView.add(viewList);
 
-                    lstHeights.add(iCurLineH);
-                    lstLineView.add(viewList);
-                }
+                //赋予新的行宽高
+                iCurLineW = iChildWidth;
+                iCurLineH = iChildHeight;
+
+                //添加新的行
+                viewList = new ArrayList<>();
+                viewList.add(child);
+
+            } else {
+                iCurLineW += iChildWidth;
+                iCurLineH = Math.max(iCurLineH, iChildHeight);
+                viewList.add(child);
             }
 
+            //5如果是最后一行
+            if (i == childCount - 1) {
+                if (widthMode != MeasureSpec.EXACTLY) {
+                    measureWidth = Math.max(measureWidth, iCurLineW);
+                }
+                if (heightMode != MeasureSpec.EXACTLY) {
+                    measureHeight += iCurLineH;
+                }
+
+                lstHeights.add(iCurLineH);
+                lstLineView.add(viewList);
+            }
         }
+
 
         setMeasuredDimension(measureWidth, measureHeight);
     }
