@@ -47,56 +47,67 @@ public class FlowLayout2 extends ViewGroup {
         //1.确认自己当前空间的宽高，这里因为会有两次OnMeasure,进行二级测量优化，所以采用IF_ELSE结构
         //二级优化原理在源码具体Draw时，第一次不会直接进行performDraw的调用反而是在下面重新进行了一次scheduleTraversals
         //在ViewRootImpl源码2349-2372之中我门会看到  scheduleTraversals在我们的2363
-        if (widthMode == MeasureSpec.EXACTLY && heightMode == MeasureSpec.EXACTLY) {
+        if (widthMode == MeasureSpec.EXACTLY) {
             measureWidth = widthSize;
+        }
+
+        if (heightMode == MeasureSpec.EXACTLY) {
             measureHeight = heightSize;
-        } else {
-            //当前VIEW宽高
-            int iChildWidth = 0;
-            int iChildHeight = 0;
-            //获取子VIEW数量用于迭代
-            int childCount = getChildCount();
-            //单行信息容器
-            for (int i = 0; i < childCount; i++) {
-                View childAt = getChildAt(i);
-                //1.测量自己
-                measureChild(childAt, widthMeasureSpec, heightMeasureSpec);
-                //2.获取XML资源
-                MarginLayoutParams layoutParams = (MarginLayoutParams) childAt.getLayoutParams();
+        }
+
+        //当前子VIEW宽高
+        int iChildWidth = 0;
+        int iChildHeight = 0;
+        //获取子VIEW数量用于迭代
+        int childCount = getChildCount();
+        //单行信息容器
+        for (int i = 0; i < childCount; i++) {
+            View childAt = getChildAt(i);
+            //1.测量自己
+            measureChild(childAt, widthMeasureSpec, heightMeasureSpec);
+            //2.获取XML资源
+            MarginLayoutParams layoutParams = (MarginLayoutParams) childAt.getLayoutParams();
 
 
-                //3.获得实际宽度和高度(MARGIN+WIDTH)
-                iChildWidth = childAt.getMeasuredWidth() + layoutParams.leftMargin + layoutParams.rightMargin;
-                iChildHeight = childAt.getMeasuredHeight() + layoutParams.topMargin + layoutParams.bottomMargin;
+            //3.获得实际宽度和高度(MARGIN+WIDTH)
+            iChildWidth = childAt.getMeasuredWidth() + layoutParams.leftMargin + layoutParams.rightMargin;
+            iChildHeight = childAt.getMeasuredHeight() + layoutParams.topMargin + layoutParams.bottomMargin;
 
 
-                //4.是否需要换行
-                if (iCurLineW + iChildWidth > widthSize) {
-                    //4.1.纪录当前行信息
-                    //4.1.1.纪录当前行最大宽度，高度累加
+            //4.是否需要换行
+            if (iCurLineW + iChildWidth > widthSize) {
+                //4.1.纪录当前行信息
+                //4.1.1.纪录当前行最大宽度，高度累加
+                if (widthMode != MeasureSpec.EXACTLY) {
                     measureWidth = Math.max(measureWidth, iCurLineW);
-                    measureHeight += iCurLineH;
-                    //4.1.2.保存这一行数据，及行高
-
-                    //4.2.纪录新的行信息
-                    //4.2.1.赋予新行新的宽高
-                    iCurLineW = iChildWidth;
-                    iCurLineH = iChildHeight;
-
-
-                } else {
-                    //5.1.不换行情况
-                    //5.1.1.记录某行内的消息行内宽度的叠加、高度比较
-                    iCurLineW += iChildWidth;
-                    iCurLineH = Math.max(iCurLineH, iChildHeight);
-
-
                 }
 
-                //6.如果正好是最后一行需要换行
-                if (i == childCount - 1) {
-                    //6.1.记录当前行的最大宽度，高度累加
+                if (heightMode != MeasureSpec.EXACTLY) {
+                    measureHeight += iCurLineH;
+                }
+                //4.1.2.保存这一行数据，及行高
+
+                //4.2.纪录新的行信息
+                //4.2.1.赋予新行新的宽高
+                iCurLineW = iChildWidth;
+                iCurLineH = iChildHeight;
+
+
+            } else {
+                //5.1.不换行情况
+                //5.1.1.记录某行内的消息行内宽度的叠加、高度比较
+                iCurLineW += iChildWidth;
+                iCurLineH = Math.max(iCurLineH, iChildHeight);
+
+            }
+
+            //6.如果正好是最后一行需要换行
+            if (i == childCount - 1) {
+                //6.1.记录当前行的最大宽度，高度累加
+                if (widthMode != MeasureSpec.EXACTLY) {
                     measureWidth = Math.max(measureWidth, iCurLineW);
+                }
+                if (heightMode != MeasureSpec.EXACTLY) {
                     measureHeight += iCurLineH;
                 }
             }
