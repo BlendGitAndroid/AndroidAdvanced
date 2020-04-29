@@ -1,9 +1,9 @@
-package com.xuhai.ui.flowlayout;
+package com.blend.ui.flowlayout;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-import com.xuhai.ui.R;
+import com.blend.ui.R;
 
 public class FlowLayoutActivity extends AppCompatActivity {
 

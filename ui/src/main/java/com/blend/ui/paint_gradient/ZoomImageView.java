@@ -1,4 +1,4 @@
-package com.xuhai.ui.paint_gradient;
+package com.blend.ui.paint_gradient;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -12,7 +12,7 @@ import android.graphics.drawable.shapes.OvalShape;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.xuhai.ui.R;
+import com.blend.ui.R;
 
 public class ZoomImageView extends View {
 

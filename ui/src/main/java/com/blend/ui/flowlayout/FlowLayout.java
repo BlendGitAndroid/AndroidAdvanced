@@ -1,4 +1,4 @@
-package com.xuhai.ui.flowlayout;
+package com.blend.ui.flowlayout;
 
 import android.content.Context;
 import android.util.AttributeSet;

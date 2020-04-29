@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.xuhai.ui">
+    package="com.blend.ui">
 
     <application>
-        <activity android:name=".paint_gradient.PaintGradientActivity"></activity>
-        <activity android:name=".flowlayout.FlowLayoutActivity" />
-        <activity android:name=".UiMainActivity" />
+        <activity android:name="com.blend.ui.paint_gradient.PaintGradientActivity"></activity>
+        <activity android:name="com.blend.ui.flowlayout.FlowLayoutActivity" />
+        <activity android:name="com.blend.ui.UiMainActivity" />
     </application>
 
 </manifest>

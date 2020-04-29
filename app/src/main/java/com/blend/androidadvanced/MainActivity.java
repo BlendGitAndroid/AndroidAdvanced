@@ -1,10 +1,10 @@
-package com.xuhai.androidadvanced;
+package com.blend.androidadvanced;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.xuhai.ui.UiMainActivity;
+import com.blend.ui.UiMainActivity;
 
 public class MainActivity extends Activity {
 

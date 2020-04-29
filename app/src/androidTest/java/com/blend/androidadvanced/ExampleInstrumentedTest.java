@@ -1,4 +1,4 @@
-package com.xuhai.ui;
+package com.blend.androidadvanced;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
 
-        assertEquals("com.xuhai.ui.test", appContext.getPackageName());
+        assertEquals("com.blend.androidadvanced", appContext.getPackageName());
     }
 }

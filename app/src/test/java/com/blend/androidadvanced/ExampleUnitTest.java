@@ -1,4 +1,4 @@
-package com.xuhai.ui;
+package com.blend.androidadvanced;
 
 import org.junit.Test;
 

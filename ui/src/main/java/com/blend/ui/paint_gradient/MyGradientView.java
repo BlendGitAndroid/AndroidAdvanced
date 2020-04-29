@@ -1,4 +1,4 @@
-package com.xuhai.ui.paint_gradient;
+package com.blend.ui.paint_gradient;
 
 import android.annotation.Nullable;
 import android.content.Context;
@@ -15,7 +15,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.xuhai.ui.R;
+import com.blend.ui.R;
 
 public class MyGradientView extends View {
     private Paint mPaint;

@@ -1,4 +1,4 @@
-package com.xuhai.ui;
+package com.blend.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,8 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
-import com.xuhai.ui.flowlayout.FlowLayoutActivity;
-import com.xuhai.ui.paint_gradient.PaintGradientActivity;
+import com.blend.ui.flowlayout.FlowLayoutActivity;
+import com.blend.ui.paint_gradient.PaintGradientActivity;
 
 public class UiMainActivity extends AppCompatActivity {
 

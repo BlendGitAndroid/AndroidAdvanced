@@ -1,4 +1,4 @@
-package com.xuhai.ui.paint_gradient;
+package com.blend.ui.paint_gradient;
 
 import android.annotation.Nullable;
 import android.content.Context;
