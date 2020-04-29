@@ -2,14 +2,33 @@ package com.xuhai.ui.flowlayout;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * bug:在7.0之后的手机上，显示的自定义控件的高度是本来高度的两倍
+ * <p>
+ * 原因：
+ * <p>
+ * 这个FlowLayout,首先看代码，采取的方式，是将测量后的代码用集合保存起来再给layout进行布局
+ * <p>
+ * 在7.0之前的版本，绘制过程：onMeasure -> onLayout -> onMeasure -> onLayout，在每一次onLayout之后都会讲集合清空
+ * <p>
+ * 但是，在7.0之后的手机上，绘制过程：onMeasure -> onMeasure -> onLayout，减少了一次onLayout,没有集合清空，两次onMeasure
+ * <p>
+ * 会使控件高度是原来的二倍
+ * <p>
+ * 解决办法：
+ * 1.在onMeasure时第一步就进行集合清空操作。
+ * 2.修改布局代码，见FlowLayout2。
+ */
 public class FlowLayout extends ViewGroup {
+
+    private static final String TAG = "FlowLayout";
 
     //行高纪录
     List<Integer> lstHeights = new ArrayList<>();
@@ -28,22 +47,37 @@ public class FlowLayout extends ViewGroup {
         super(context, attrs, defStyleAttr);
     }
 
+    /*
+    根据父布局的MeasureSpec和自己的LayoutParam,确定自定义控件的MeasureSpec
+     */
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 
-        //获取到父控件的测量模式和测量大小
+        Log.e(TAG, "onMeasure");
+
+        //清空集合，防止在7.0之后的版本高度变为原来的二倍
+        lstHeights.clear();
+        lstLineView.clear();
+
+        //获取到自己的测量模式和最大允许的大小
         int widthSize = MeasureSpec.getSize(widthMeasureSpec);
         int widthMode = MeasureSpec.getMode(widthMeasureSpec);
+
 
         int heightSize = MeasureSpec.getSize(heightMeasureSpec);
         int heightMode = MeasureSpec.getMode(heightMeasureSpec);
 
-        //测量父布局的宽高
+        //测量自己最大的宽高
         int measureWidth = 0;
         int measureHeight = 0;
 
-        measureWidth = widthSize;
-        measureHeight = heightSize;
+        if (widthMode == MeasureSpec.EXACTLY) {
+            measureWidth = widthSize;
+        }
+
+        if (heightMode == MeasureSpec.EXACTLY) {
+            measureHeight = heightSize;
+        }
 
         //每一行的宽高
         int iCurLineW = 0;
@@ -62,6 +96,7 @@ public class FlowLayout extends ViewGroup {
 
         for (int i = 0; i < childCount; i++) {
             View child = getChildAt(i);
+
             //1.测量每一个子View
             measureChild(child, widthMeasureSpec, heightMeasureSpec);
             //2.获取每一个子View的getLayoutParams，即XML资源
@@ -113,7 +148,7 @@ public class FlowLayout extends ViewGroup {
             }
         }
 
-
+        Log.e(TAG, "setMeasuredDimension: " + measureWidth + "--" + measureHeight);
         setMeasuredDimension(measureWidth, measureHeight);
     }
 
@@ -124,6 +159,8 @@ public class FlowLayout extends ViewGroup {
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
+
+        Log.e(TAG, "onLayout");
 
         //1.每一个子控件的位置
         int left, top, right, bottom;
@@ -136,6 +173,9 @@ public class FlowLayout extends ViewGroup {
             List<View> viewList = lstLineView.get(i);
             for (int j = 0; j < viewList.size(); j++) {
                 View child = viewList.get(j);
+                if (child.getVisibility() == GONE) {
+                    continue;
+                }
                 MarginLayoutParams layoutParams = (MarginLayoutParams) child.getLayoutParams();
                 left = curLeft + layoutParams.leftMargin;
                 top = curTop + layoutParams.topMargin;
