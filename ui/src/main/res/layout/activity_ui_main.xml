@@ -10,4 +10,9 @@
         android:id="@+id/flowLayoutBtn"
         style="@style/main_style"
         android:text="FlowLayout" />
+
+    <Button
+        android:id="@+id/paintGradientBtn"
+        style="@style/main_style"
+        android:text="PaintGradient" />
 </LinearLayout>
