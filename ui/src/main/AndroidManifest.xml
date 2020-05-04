@@ -3,9 +3,11 @@
     package="com.blend.ui">
 
     <application>
-        <activity android:name="com.blend.ui.paint_gradient.PaintGradientActivity"></activity>
-        <activity android:name="com.blend.ui.flowlayout.FlowLayoutActivity" />
-        <activity android:name="com.blend.ui.UiMainActivity" />
+        <activity android:name=".screen_adapter.ScreenAdapterMainActivity2" />
+        <activity android:name=".screen_adapter.ScreenAdapterMainActivity" />
+        <activity android:name=".paint_gradient.PaintGradientActivity" />
+        <activity android:name=".flowlayout.FlowLayoutActivity" />
+        <activity android:name=".UiMainActivity" />
     </application>
 
 </manifest>
