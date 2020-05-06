@@ -15,4 +15,9 @@
         android:id="@+id/paintGradientBtn"
         style="@style/main_style"
         android:text="PaintGradient" />
+
+    <Button
+        android:id="@+id/itemTouchBtn"
+        style="@style/main_style"
+        android:text="ItemTouch" />
 </LinearLayout>
