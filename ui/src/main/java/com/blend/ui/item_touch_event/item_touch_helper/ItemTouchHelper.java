@@ -16,6 +16,8 @@ package com.blend.ui.item_touch_event.item_touch_helper;/*
 
 
 import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.res.Resources;
 import android.graphics.Canvas;
@@ -37,7 +39,9 @@ import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewConfiguration;
+import android.view.ViewGroup;
 import android.view.ViewParent;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Interpolator;
 
 import java.util.ArrayList;
@@ -172,6 +176,12 @@ public class ItemTouchHelper extends RecyclerView.ItemDecoration
     ViewHolder mSelected = null;
 
     /**
+     * 记录上一个打开的view holder
+     */
+    ViewHolder mPreOpened = null;
+
+
+    /**
      * The reference coordinates for the action start. For drag & drop, this is the time long
      * press is completed vs for swipe, this is the initial touch point.
      */
@@ -297,7 +307,14 @@ public class ItemTouchHelper extends RecyclerView.ItemDecoration
      */
     private ItemTouchHelperGestureListener mItemTouchHelperGestureListener;
 
+    /**
+     * 一个用来处理拦截事件的逻辑，一个用来处理事件逻辑，最后一个用来给子view设置item是否可以拦截的设置
+     */
     private final OnItemTouchListener mOnItemTouchListener = new OnItemTouchListener() {
+
+        boolean mClick = false;
+        public float initX;
+
         @Override
         public boolean onInterceptTouchEvent(RecyclerView recyclerView, MotionEvent event) {
             mGestureDetector.onTouchEvent(event);
@@ -306,9 +323,22 @@ public class ItemTouchHelper extends RecyclerView.ItemDecoration
             }
             final int action = event.getActionMasked();
             if (action == MotionEvent.ACTION_DOWN) {
+
+                Log.e(TAG, "onInterceptTouchEvent: MotionEvent.ACTION_DOWN");
+
+                //手指按下的时候赋值true
+                mClick = true;
+
+                //MotionEvent.ACTION_DOWN里面会先记录下初始按下的位置，接下来如果当前触摸位置对应的item有动画
+                // (不管是swipe还是drag模式，在手指离开的时候，当前选中的item都会有一个到指定位置的动画)还在执行动画中。
+                // 这个时候这个item会当做选中的item来处理。
                 mActivePointerId = event.getPointerId(0);
                 mInitialTouchX = event.getX();
                 mInitialTouchY = event.getY();
+
+                //防止抖动
+                initX = event.getX();
+
                 obtainVelocityTracker();
                 if (mSelected == null) {
                     final RecoverAnimation animation = findAnimation(event);
@@ -324,6 +354,15 @@ public class ItemTouchHelper extends RecyclerView.ItemDecoration
                     }
                 }
             } else if (action == MotionEvent.ACTION_CANCEL || action == MotionEvent.ACTION_UP) {
+
+                Log.e(TAG, "onInterceptTouchEvent: MotionEvent.ACTION_UP");
+
+                //手指抬起的时候进行点击
+                if (mClick && action == MotionEvent.ACTION_UP) {
+                    doChildClickEvent(event);
+                }
+
+                //清除之前mSelected的选择
                 mActivePointerId = ACTIVE_POINTER_ID_NONE;
                 select(null, ACTION_STATE_IDLE);
             } else if (mActivePointerId != ACTIVE_POINTER_ID_NONE) {
@@ -340,8 +379,10 @@ public class ItemTouchHelper extends RecyclerView.ItemDecoration
             if (mVelocityTracker != null) {
                 mVelocityTracker.addMovement(event);
             }
+            Log.e(TAG, "onInterceptTouchEvent mSelected != null: " + (mSelected != null));
             return mSelected != null;
         }
+
 
         @Override
         public void onTouchEvent(RecyclerView recyclerView, MotionEvent event) {
@@ -359,6 +400,8 @@ public class ItemTouchHelper extends RecyclerView.ItemDecoration
             final int action = event.getActionMasked();
             final int activePointerIndex = event.findPointerIndex(mActivePointerId);
             if (activePointerIndex >= 0) {
+
+                //swipe模式
                 checkSelectForSwipe(action, event, activePointerIndex);
             }
             ViewHolder viewHolder = mSelected;
@@ -367,12 +410,25 @@ public class ItemTouchHelper extends RecyclerView.ItemDecoration
             }
             switch (action) {
                 case MotionEvent.ACTION_MOVE: {
+                    Log.e(TAG, "onTouchEvent: MotionEvent.ACTION_MOVE");
                     // Find the index of the active pointer and fetch its position
                     if (activePointerIndex >= 0) {
+
+                        //如果滑动的距离大于50，就认为不是点击事件
+                        float abs = Math.abs(initX - event.getX(0));
+                        if (abs > 50) {
+                            mClick = false;
+                        }
+
+                        //更新已经滑动的距离
                         updateDxDy(event, mSelectedFlags, activePointerIndex);
+
+                        //设置是否要move
                         moveIfNecessary(viewHolder);
                         mRecyclerView.removeCallbacks(mScrollRunnable);
                         mScrollRunnable.run();
+
+                        //一直让去重绘(mRecyclerView.invalidate的调用)。
                         mRecyclerView.invalidate();
                     }
                     break;
@@ -383,10 +439,17 @@ public class ItemTouchHelper extends RecyclerView.ItemDecoration
                     }
                     // fall through
                 case MotionEvent.ACTION_UP:
+                    Log.e(TAG, "onTouchEvent: MotionEvent.ACTION_UP");
+                    if (mClick) {
+                        doChildClickEvent(event);
+                    }
+                    mClick = false;
+                    //一些释放操作。
                     select(null, ACTION_STATE_IDLE);
                     mActivePointerId = ACTIVE_POINTER_ID_NONE;
                     break;
                 case MotionEvent.ACTION_POINTER_UP: {
+                    mClick = false;
                     final int pointerIndex = event.getActionIndex();
                     final int pointerId = event.getPointerId(pointerIndex);
                     if (pointerId == mActivePointerId) {
@@ -398,11 +461,14 @@ public class ItemTouchHelper extends RecyclerView.ItemDecoration
                     }
                     break;
                 }
+                default:
+                    mClick = false;
             }
         }
 
         @Override
         public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+            //如果子view设置disallow的时候会调用select(null, ACTION_STATE_IDLE)函数，其实也好理解，子view都告诉父view不能处理这个事件饿，所以要做一些释放操作。
             if (!disallowIntercept) {
                 return;
             }
@@ -464,15 +530,31 @@ public class ItemTouchHelper extends RecyclerView.ItemDecoration
             mMaxSwipeVelocity = resources
                     .getDimension(R.dimen.item_touch_helper_swipe_escape_max_velocity);
             setupCallbacks();
+
+            //当RecyclerView滑动的时候
+            mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                    super.onScrollStateChanged(recyclerView, newState);
+                    if (newState == RecyclerView.SCROLL_STATE_DRAGGING && mPreOpened != null) {
+                        closeOpenedPreItem();
+                    }
+                }
+            });
         }
     }
 
     private void setupCallbacks() {
         ViewConfiguration vc = ViewConfiguration.get(mRecyclerView.getContext());
         mSlop = vc.getScaledTouchSlop();
+        //用来装饰RecyclerView中每个item的帮助类,ItemDecoration里面onDraw()函数里面处理item随手指移动的逻辑
         mRecyclerView.addItemDecoration(this);
+        //RecyclerView提供给我们处理item各种事件的一个类，处理item事件拦截和事件处理的逻辑
         mRecyclerView.addOnItemTouchListener(mOnItemTouchListener);
+        //处理当上层逻辑删除item的时候一些回收机制的逻辑
         mRecyclerView.addOnChildAttachStateChangeListener(this);
+        //GestureDetector用来获取触摸过程中的各种手势事件。ItemTouchHelper源码里面会用到GestureDetector来获取item长按的的手势，长按之后然后判断要不要进入drag状态。
+        //处理item长按的逻辑
         startGestureDetection();
     }
 
@@ -534,6 +616,14 @@ public class ItemTouchHelper extends RecyclerView.ItemDecoration
                 mRecoverAnimations, mActionState, dx, dy);
     }
 
+    /**
+     * mSelected对应的item是怎么随着手指移动的呀?
+     * <p>
+     * 触摸移动的过程中一直会调用mRecyclerView.invalidate()函数，迫使RecyclerView的onDraw()函数的调用。
+     * RecyclerView的onDraw()的调用又会引起ItemDecoration里面的onDraw()函数的调用。又调用到Callback里面的onDraw()，
+     * 接着又到Callback里面的onChildDraw()函数。最终到了ItemTouchUIUtilImpl内部BaseImpl类的onDraw()函数里面最后会
+     * 调用view.setTranslationX()，view.setTranslationY()来移动view。
+     */
     @Override
     public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
         // we don't know if RV changed something so we should invalidate this index.
@@ -549,6 +639,10 @@ public class ItemTouchHelper extends RecyclerView.ItemDecoration
     }
 
     /**
+     * ViewHolder代表当前swipe或者drag选中的item对应的ViewHolder(如果ViewHolder不为空代表选中了一个item，为空代表swipe或者drag释放了item)
+     * actionState代表当前模式有三个值ACTION_STATE_IDLE空闲状态、ACTION_STATE_SWIPE状态对应 swipe模式、ACTION_STATE_DRAG状态对应 drag模式
+     * <p>
+     * <p>
      * Starts dragging or swiping the given View. Call with null if you want to clear it.
      *
      * @param selected    The ViewHolder to drag or swipe. Can be null if you want to cancel the
@@ -562,6 +656,8 @@ public class ItemTouchHelper extends RecyclerView.ItemDecoration
         mDragScrollStartTimeInMs = Long.MIN_VALUE;
         final int prevActionState = mActionState;
         // prevent duplicate animations
+
+        //给选中的View设置动画
         endRecoverAnimation(selected, true);
         mActionState = actionState;
         if (actionState == ACTION_STATE_DRAG) {
@@ -627,6 +723,8 @@ public class ItemTouchHelper extends RecyclerView.ItemDecoration
                         } else {
                             // wait until remove animation is complete.
                             mPendingCleanup.add(prevSelected.itemView);
+                            //当动画结束的时候，给mPreOpened赋值
+                            mPreOpened = prevSelected;
                             mIsPendingCleanup = true;
                             if (swipeDir > 0) {
                                 // Animation might be ended by other animators during a layout.
@@ -656,6 +754,8 @@ public class ItemTouchHelper extends RecyclerView.ItemDecoration
             mSelectedFlags =
                     (mCallback.getAbsoluteMovementFlags(mRecyclerView, selected) & actionStateMask)
                             >> (mActionState * DIRECTION_FLAG_COUNT);
+
+            //把当前参数的ViewHolder设置给mSelected，同时记录mSelectedStartX,mSelectedStartY等的一些位置，便于后面计算移动的距离
             mSelectedStartX = selected.itemView.getLeft();
             mSelectedStartY = selected.itemView.getTop();
             mSelected = selected;
@@ -671,7 +771,11 @@ public class ItemTouchHelper extends RecyclerView.ItemDecoration
         if (!preventLayout) {
             mRecyclerView.getLayoutManager().requestSimpleAnimationsInNextLayout();
         }
+
+        //可以通过参数ViewHolder是否为空来判断是进入还是退出swipe或者drag状态
         mCallback.onSelectedChanged(mSelected, mActionState);
+
+        //告诉RecyclerView重绘，强迫RecyclerView去调用onDraw()函数。(RecyclerView的onDraw()函数的调用会引起ItemDecoration里面onDraw()函数的调用)
         mRecyclerView.invalidate();
     }
 
@@ -952,6 +1056,8 @@ public class ItemTouchHelper extends RecyclerView.ItemDecoration
      * Checks whether we should select a View for swiping.
      */
     boolean checkSelectForSwipe(int action, MotionEvent motionEvent, int pointerIndex) {
+
+        //先去判断是否支持swipe模式(isItemViewSwipeEnabled())
         if (mSelected != null || action != MotionEvent.ACTION_MOVE
                 || mActionState == ACTION_STATE_DRAG || !mCallback.isItemViewSwipeEnabled()) {
             return false;
@@ -963,6 +1069,8 @@ public class ItemTouchHelper extends RecyclerView.ItemDecoration
         if (vh == null) {
             return false;
         }
+
+        //判断swipe支持的方向是否和滑动的方向是否一致
         final int movementFlags = mCallback.getAbsoluteMovementFlags(mRecyclerView, vh);
 
         final int swipeFlags = (movementFlags & ACTION_MODE_SWIPE_MASK)
@@ -1005,7 +1113,14 @@ public class ItemTouchHelper extends RecyclerView.ItemDecoration
         }
         mDx = mDy = 0f;
         mActivePointerId = motionEvent.getPointerId(0);
+
+        //两个条件都满足会把当前手指下对应的item设置为mSelected
         select(vh, ACTION_STATE_SWIPE);
+
+        //当swipe另外一个item的时候
+        if (mPreOpened != null && mPreOpened != vh) {
+            closeOpenedPreItem();
+        }
         return true;
     }
 
@@ -1044,7 +1159,7 @@ public class ItemTouchHelper extends RecyclerView.ItemDecoration
      * through RecyclerView's ItemTouchListener mechanism. As long as no other ItemTouchListener
      * grabs previous events, this should work as expected.</li>
      * </ul>
-     *
+     * <p>
      * For example, if you would like to let your user to be able to drag an Item by touching one
      * of its descendants, you may implement it as follows:
      * <pre>
@@ -1093,7 +1208,7 @@ public class ItemTouchHelper extends RecyclerView.ItemDecoration
      * through RecyclerView's ItemTouchListener mechanism. As long as no other ItemTouchListener
      * grabs previous events, this should work as expected.</li>
      * </ul>
-     *
+     * <p>
      * For example, if you would like to let your user to be able to swipe an Item by touching one
      * of its descendants, you may implement it as follows:
      * <pre>
@@ -1885,7 +2000,7 @@ public class ItemTouchHelper extends RecyclerView.ItemDecoration
          * This method is responsible to give necessary hint to the LayoutManager so that it will
          * keep the View in visible area. For example, for LinearLayoutManager, this is as simple
          * as calling {@link LinearLayoutManager#scrollToPositionWithOffset(int, int)}.
-         *
+         * <p>
          * Default implementation calls {@link RecyclerView#scrollToPosition(int)} if the View's
          * new position is likely to be out of bounds.
          * <p>
@@ -1944,6 +2059,7 @@ public class ItemTouchHelper extends RecyclerView.ItemDecoration
                     List<ItemTouchHelper.RecoverAnimation> recoverAnimationList,
                     int actionState, float dX, float dY) {
             final int recoverAnimSize = recoverAnimationList.size();
+            //动画列表里面对应item的绘制
             for (int i = 0; i < recoverAnimSize; i++) {
                 final ItemTouchHelper.RecoverAnimation anim = recoverAnimationList.get(i);
                 anim.update();
@@ -1952,6 +2068,7 @@ public class ItemTouchHelper extends RecyclerView.ItemDecoration
                         false);
                 c.restoreToCount(count);
             }
+            //swipe或者drag模式选中的item的绘制,更新位置
             if (selected != null) {
                 final int count = c.save();
                 onChildDraw(c, parent, selected, dX, dY, actionState, true);
@@ -2259,7 +2376,7 @@ public class ItemTouchHelper extends RecyclerView.ItemDecoration
         /**
          * Whether to execute code in response to the the invoking of
          * {@link ItemTouchHelperGestureListener#onLongPress(MotionEvent)}.
-         *
+         * <p>
          * It is necessary to control this here because
          * {@link GestureDetector.SimpleOnGestureListener} can only be set on a
          * {@link GestureDetector} in a GestureDetector's constructor, a GestureDetector will call
@@ -2295,8 +2412,12 @@ public class ItemTouchHelper extends RecyclerView.ItemDecoration
             }
             View child = findChildView(e);
             if (child != null) {
+
+                //先得到当前MotionEvent事件对应的ViewHolder
                 ViewHolder vh = mRecyclerView.getChildViewHolder(child);
                 if (vh != null) {
+
+                    //判断是否允许进入drag模式
                     if (!mCallback.hasDragFlag(mRecyclerView, vh)) {
                         return;
                     }
@@ -2315,7 +2436,9 @@ public class ItemTouchHelper extends RecyclerView.ItemDecoration
                             Log.d(TAG,
                                     "onlong press: x:" + mInitialTouchX + ",y:" + mInitialTouchY);
                         }
+                        //调用Callback的isLongPressDragEnabled()函数判断是否允许长按进入drag模式
                         if (mCallback.isLongPressDragEnabled()) {
+                            //设置mSelected,之后MotionEvent移动事件的处理就都跑到OnItemTouchListener帮助类里面的onTouchEvent()函数里面去了
                             select(vh, ACTION_STATE_DRAG);
                         }
                     }
@@ -2433,6 +2556,98 @@ public class ItemTouchHelper extends RecyclerView.ItemDecoration
         @Override
         public void onAnimationRepeat(Animator animation) {
 
+        }
+    }
+
+    /**
+     * 分发按键事件给子控件
+     * <p>
+     * 根据坐标，找到自定义控件
+     */
+    private void doChildClickEvent(MotionEvent event) {
+        if (mSelected == null) {
+            return;
+        }
+
+        View consumeEventView = mSelected.itemView;
+
+        if (consumeEventView instanceof ViewGroup) {
+            consumeEventView = findConsumeView((ViewGroup) consumeEventView, event.getRawX(), event.getRawY());
+        }
+
+        if (consumeEventView != null) {
+            consumeEventView.performClick();
+        }
+    }
+
+    /**
+     * 递归调用，找到点击事件的View，找不到，返回其parent
+     */
+    private View findConsumeView(ViewGroup parent, float x, float y) {
+        for (int i = 0; i < parent.getChildCount(); i++) {
+            View child = parent.getChildAt(i);
+            if (child instanceof ViewGroup && child.getVisibility() == View.VISIBLE) {
+                View view = findConsumeView((ViewGroup) child, x, y);
+                if (view != null) {
+                    return view;
+                }
+            } else if (isInBounds((int) x, (int) y, child)) {
+                return child;
+            }
+        }
+
+        if (isInBounds((int) x, (int) y, parent)) {
+            return parent;
+        }
+        return null;
+    }
+
+    private boolean isInBounds(int x, int y, View child) {
+        int[] location = new int[2];
+        child.getLocationOnScreen(location);
+        Rect rect = new Rect(location[0], location[1], location[0] + child.getWidth(), location[1] + child.getHeight());
+        if (rect.contains(x, y) && ViewCompat.hasOnClickListeners(child) && child.getVisibility() == View.VISIBLE) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     *
+     */
+    private void closeOpenedPreItem() {
+        final View view = getItemFrontView(mPreOpened);
+        if (mPreOpened == null || view == null) return;
+        ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(view, "translationX", view.getTranslationX(), 0f);
+        objectAnimator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                super.onAnimationStart(animation);
+                if (mPreOpened != null) mCallback.clearView(mRecyclerView, mPreOpened);
+                if (mPreOpened != null) mPendingCleanup.remove(mPreOpened.itemView);
+                endRecoverAnimation(mPreOpened, true);
+                mPreOpened = mSelected;
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+            }
+        });
+        objectAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+        objectAnimator.start();
+    }
+
+    private View getItemFrontView(ViewHolder viewHolder) {
+        if (viewHolder == null) {
+            return null;
+        }
+        if (viewHolder.itemView instanceof ViewGroup
+                && ((ViewGroup) viewHolder.itemView).getChildCount() > 1) {
+            ViewGroup viewGroup = (ViewGroup) viewHolder.itemView;
+            return viewGroup.getChildAt(viewGroup.getChildCount() - 1);
+        } else {
+            return viewHolder.itemView;
         }
     }
 

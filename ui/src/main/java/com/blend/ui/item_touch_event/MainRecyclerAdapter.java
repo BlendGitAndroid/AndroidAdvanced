@@ -29,8 +29,6 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private List<ItemTouchModel> mDatas;
     private Context mContext;
 
-    private ItemTouchHelper mItemTouchHelperExtension;
-
     public MainRecyclerAdapter(Context context) {
         mDatas = new ArrayList<>();
         mContext = context;
@@ -44,10 +42,6 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public void updateData(List<ItemTouchModel> datas) {
         setDatas(datas);
         notifyDataSetChanged();
-    }
-
-    public void setItemTouchHelperExtension(ItemTouchHelper itemTouchHelperExtension) {
-        mItemTouchHelperExtension = itemTouchHelperExtension;
     }
 
     private LayoutInflater getLayoutInflater() {
@@ -167,15 +161,6 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         public void bind(ItemTouchModel testModel) {
             mTextTitle.setText(testModel.title);
             mTextIndex.setText("#" + testModel.position);
-            itemView.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    if (MotionEventCompat.getActionMasked(event) == MotionEvent.ACTION_DOWN) {
-                        mItemTouchHelperExtension.startDrag(ItemBaseViewHolder.this);
-                    }
-                    return true;
-                }
-            });
         }
     }
 

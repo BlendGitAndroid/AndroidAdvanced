@@ -28,6 +28,14 @@ import android.view.View;
  * public API, which is not desired in this case.
  */
 class ItemTouchUIUtilImpl {
+
+    /**
+     * 不对呀。看效果的时候随手指移动的那个item感觉是绘制在RecyclerView之上的呀，因为我们手指滑动的时候选中的item是
+     * 在RecyclerView的上层滑动的呀。
+     * <p>
+     * Build.VERSION.SDK_INT>=21：通过给选中的item 调用View.setElevation()增加效果来实现的
+     */
+
     static class Api21Impl extends BaseImpl {
         @Override
         public void onDraw(Canvas c, RecyclerView recyclerView, View view,
@@ -84,6 +92,7 @@ class ItemTouchUIUtilImpl {
 
         }
 
+        //View移动最终是靠这个
         @Override
         public void onDraw(Canvas c, RecyclerView recyclerView, View view,
                            float dX, float dY, int actionState, boolean isCurrentlyActive) {

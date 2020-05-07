@@ -11,6 +11,10 @@ import com.blend.ui.item_touch_event.item_touch_helper.ItemTouchHelper;
 import java.util.ArrayList;
 import java.util.List;
 
+//参考：https://www.jianshu.com/p/130fdd755471
+
+//bug，点击refresh有时候不刷新
+
 public class ItemTouchMainActivity extends AppCompatActivity {
 
     private RecyclerView mRecyclerView;
@@ -31,6 +35,17 @@ public class ItemTouchMainActivity extends AppCompatActivity {
 
         mAdapter.updateData(createTestDatas());
 
+        /**
+         *
+         * 一些小的总结：
+         * 1.swipe和drag模式进入的时机。swipe模式进入的判断是在OnItemTouchListener帮助类里面onTouchEvent()的函数
+         * 的checkSelectForSwipe()的调用里面判断是否进入，drag模式进入的判断是在GestureDetectorCompat帮助里
+         * ItemTouchHelperGestureListener里面onLongPress()里面判断是否进入。
+         *
+         * 2.触摸事件在移动的过程中(信息信息请看OnItemTouchListener帮助类里面onTouchEvent()函数的MotionEvent.ACTION_MOVE逻辑处理)
+         * 会一直去更新滑动的位置(updateDxDy函数)和一直让去重绘(mRecyclerView.invalidate的调用)。
+         *
+         */
         ItemTouchHelpCallback callback = new ItemTouchHelpCallback();
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
         itemTouchHelper.attachToRecyclerView(mRecyclerView);
