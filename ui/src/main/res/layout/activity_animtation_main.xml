@@ -64,6 +64,15 @@
             android:onClick="startAnimator"
             android:text="evaluator"
             android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/btn_splash"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:onClick="startAnimator"
+            android:text="splash"
+            android:textAllCaps="false" />
     </com.blend.ui.flowlayout.FlowLayout2>
 
     <ImageView
