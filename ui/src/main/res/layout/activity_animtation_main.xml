@@ -17,7 +17,8 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:onClick="startAnimator"
-            android:text="ObjectAnimator" />
+            android:text="ObjectAnimator"
+            android:textAllCaps="false" />
 
         <Button
             android:id="@+id/btn_value"
@@ -25,7 +26,8 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:onClick="startAnimator"
-            android:text="ValueAnimator" />
+            android:text="ValueAnimator"
+            android:textAllCaps="false" />
 
         <Button
             android:id="@+id/btn_valueholder"
@@ -33,7 +35,8 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:onClick="startAnimator"
-            android:text="PropertyValueHolder" />
+            android:text="PropertyValueHolder"
+            android:textAllCaps="false" />
 
         <Button
             android:id="@+id/btn_animatorset"
@@ -41,7 +44,8 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:onClick="startAnimator"
-            android:text="AnimatorSet" />
+            android:text="AnimatorSet"
+            android:textAllCaps="false" />
 
         <Button
             android:id="@+id/btn_interpolator"
@@ -49,7 +53,8 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:onClick="startAnimator"
-            android:text="Interpolator" />
+            android:text="Interpolator"
+            android:textAllCaps="false" />
 
         <Button
             android:id="@+id/btn_evaluator"
@@ -57,7 +62,8 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:onClick="startAnimator"
-            android:text="evaluator" />
+            android:text="evaluator"
+            android:textAllCaps="false" />
     </com.blend.ui.flowlayout.FlowLayout2>
 
     <ImageView
