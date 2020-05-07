@@ -3,7 +3,8 @@
     package="com.blend.ui">
 
     <application>
-        <activity android:name=".item_touch_event.ItemTouchMainActivity"></activity>
+        <activity android:name=".animtation.AnimationMainActivity"></activity>
+        <activity android:name=".item_touch_event.ItemTouchMainActivity" />
         <activity android:name=".screen_adapter.ScreenAdapterMainActivity2" />
         <activity android:name=".screen_adapter.ScreenAdapterMainActivity" />
         <activity android:name=".paint_gradient.PaintGradientActivity" />

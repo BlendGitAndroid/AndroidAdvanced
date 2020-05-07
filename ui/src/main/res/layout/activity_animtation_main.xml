@@ -1,0 +1,72 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".animtation.AnimationMainActivity">
+
+    <com.blend.ui.flowlayout.FlowLayout2
+        android:id="@+id/first"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/btn_object"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:onClick="startAnimator"
+            android:text="ObjectAnimator" />
+
+        <Button
+            android:id="@+id/btn_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:onClick="startAnimator"
+            android:text="ValueAnimator" />
+
+        <Button
+            android:id="@+id/btn_valueholder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:onClick="startAnimator"
+            android:text="PropertyValueHolder" />
+
+        <Button
+            android:id="@+id/btn_animatorset"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:onClick="startAnimator"
+            android:text="AnimatorSet" />
+
+        <Button
+            android:id="@+id/btn_interpolator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:onClick="startAnimator"
+            android:text="Interpolator" />
+
+        <Button
+            android:id="@+id/btn_evaluator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:onClick="startAnimator"
+            android:text="evaluator" />
+    </com.blend.ui.flowlayout.FlowLayout2>
+
+    <ImageView
+        android:id="@+id/img_iv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:scaleType="fitXY"
+        android:src="@drawable/duo"
+        android:visibility="visible" />
+
+</LinearLayout>

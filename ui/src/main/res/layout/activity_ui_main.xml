@@ -20,4 +20,9 @@
         android:id="@+id/itemTouchBtn"
         style="@style/main_style"
         android:text="ItemTouch" />
+
+    <Button
+        android:id="@+id/animatorBtn"
+        style="@style/main_style"
+        android:text="Animator" />
 </LinearLayout>
