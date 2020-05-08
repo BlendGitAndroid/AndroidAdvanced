@@ -11,6 +11,14 @@ import com.blend.ui.flowlayout.FlowLayoutActivity;
 import com.blend.ui.item_touch_event.ItemTouchMainActivity;
 import com.blend.ui.paint_gradient.PaintGradientActivity;
 
+/**
+ * 1.属性动画的问题？
+ * <p>
+ * 2.ItemTouchHelp中的bug？
+ * <p>
+ * 3.屏幕适配？
+ */
+
 public class UiMainActivity extends AppCompatActivity {
 
     private Button flowLayoutBtn;
