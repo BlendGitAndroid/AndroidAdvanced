@@ -1,11 +1,12 @@
 <com.blend.ui.animation_framework.AnimatorScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:discrollve="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:discrollve="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
 
     <com.blend.ui.animation_framework.AnimatorLinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <ImageView
             android:layout_width="match_parent"

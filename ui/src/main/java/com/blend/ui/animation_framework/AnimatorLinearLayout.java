@@ -23,7 +23,6 @@ public class AnimatorLinearLayout extends LinearLayout {
 
     public AnimatorLinearLayout(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        setOrientation(VERTICAL);
     }
 
     /*考虑到系统控件不识别自定义属性，所以我们考虑给控件包一层帧，这里采用父容器组件给子容器包裹一层的方式
@@ -35,25 +34,27 @@ public class AnimatorLinearLayout extends LinearLayout {
     @Override
     public void addView(View child, ViewGroup.LayoutParams params) {
         AnimatorLayoutParams layoutParams = (AnimatorLayoutParams) params;
-        AnimatorFrameLayout view = new AnimatorFrameLayout(child.getContext());
 
         if (!isDiscrollable(layoutParams)) {
-            super.addView(view);
+            super.addView(child, params);
         } else {
-            view.addView(child);
-            view.setDiscrollveAlpha(layoutParams.mDiscrollveAlpha);
-            view.setDiscrollveFromBgColor(layoutParams.mDiscrollveFromBgColor);
-            view.setDiscrollveToBgColor(layoutParams.mDiscrollveToBgColor);
-            view.setDiscrollveScaleX(layoutParams.mDiscrollveScaleX);
-            view.setDisCrollveTranslation(layoutParams.mDisCrollveTranslation);
-            super.addView(view, params);
+            AnimatorFrameLayout frameLayout = new AnimatorFrameLayout(child.getContext());
+
+            frameLayout.addView(child);
+            frameLayout.setDiscrollveAlpha(layoutParams.mDiscrollveAlpha);
+            frameLayout.setDiscrollveFromBgColor(layoutParams.mDiscrollveFromBgColor);
+            frameLayout.setDiscrollveToBgColor(layoutParams.mDiscrollveToBgColor);
+            frameLayout.setDiscrollveScaleX(layoutParams.mDiscrollveScaleX);
+            frameLayout.setDiscrollveScaleY(layoutParams.mDiscrollveScaleY);
+            frameLayout.setDisCrollveTranslation(layoutParams.mDisCrollveTranslation);
+            super.addView(frameLayout, layoutParams);
         }
     }
 
     private boolean isDiscrollable(AnimatorLayoutParams layoutParams) {
         return layoutParams.mDiscrollveAlpha || layoutParams.mDiscrollveScaleX || layoutParams.mDiscrollveScaleY
-                || layoutParams.mDisCrollveTranslation == -1 || layoutParams.mDiscrollveFromBgColor == -1
-                || layoutParams.mDiscrollveToBgColor == -1;
+                || layoutParams.mDisCrollveTranslation != -1
+                || (layoutParams.mDiscrollveFromBgColor != -1 && layoutParams.mDiscrollveToBgColor != -1);
     }
 
     @Override

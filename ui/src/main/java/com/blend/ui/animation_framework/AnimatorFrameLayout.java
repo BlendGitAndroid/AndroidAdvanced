@@ -47,11 +47,11 @@ public class AnimatorFrameLayout extends FrameLayout implements DiscrollInterfac
     private int mWidth;//本view的宽度
 
     public AnimatorFrameLayout(@NonNull Context context) {
-        super(context, null);
+        super(context);
     }
 
     public AnimatorFrameLayout(@NonNull Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs, 0);
+        super(context, attrs);
     }
 
     public AnimatorFrameLayout(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
@@ -63,10 +63,6 @@ public class AnimatorFrameLayout extends FrameLayout implements DiscrollInterfac
         super.onSizeChanged(w, h, oldw, oldh);
         mWidth = w;
         mHeight = h;
-    }
-
-    public static void setsArgbEvaluator(ArgbEvaluator sArgbEvaluator) {
-        AnimatorFrameLayout.sArgbEvaluator = sArgbEvaluator;
     }
 
     public void setDiscrollveFromBgColor(int discrollveFromBgColor) {
@@ -167,7 +163,7 @@ public class AnimatorFrameLayout extends FrameLayout implements DiscrollInterfac
         if (translationMask == -1) {
             return false;
         }
-        //fromLeft|fromeBottom & fromBottom = fromBottom
+        //fromLeft|fromBottom & fromBottom = fromBottom
         return (mDisCrollveTranslation & translationMask) == translationMask;
     }
 }

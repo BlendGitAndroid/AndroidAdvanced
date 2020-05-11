@@ -30,13 +30,6 @@ public class AnimatorScrollView extends ScrollView {
     }
 
     @Override
-    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        super.onSizeChanged(w, h, oldw, oldh);
-        View first = mContent.getChildAt(0);
-        first.getLayoutParams().height = getHeight();
-    }
-
-    @Override
     protected void onScrollChanged(int l, int t, int oldl, int oldt) {
         /**
          * 监听滑动程度，child从屏幕下面冒出多少距离，来计算出一个百分比来执行动画
