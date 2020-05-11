@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".animtation.AnimationMainActivity">
+    tools:context=".animation.AnimationMainActivity">
 
     <com.blend.ui.flowlayout.FlowLayout2
         android:id="@+id/first"

@@ -1,4 +1,4 @@
-package com.blend.ui.animtation;
+package com.blend.ui.animation;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;

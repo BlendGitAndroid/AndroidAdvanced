@@ -1,4 +1,4 @@
-package com.blend.ui.animtation;
+package com.blend.ui.animation;
 
 import android.content.Context;
 import android.support.v7.widget.AppCompatImageView;

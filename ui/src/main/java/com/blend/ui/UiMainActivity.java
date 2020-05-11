@@ -6,7 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
-import com.blend.ui.animtation.AnimationMainActivity;
+import com.blend.ui.animation_framework.AnimatorFrameworkMainActivity;
+import com.blend.ui.animation.AnimationMainActivity;
 import com.blend.ui.flowlayout.FlowLayoutActivity;
 import com.blend.ui.item_touch_event.ItemTouchMainActivity;
 import com.blend.ui.paint_gradient.PaintGradientActivity;
@@ -25,6 +26,7 @@ public class UiMainActivity extends AppCompatActivity {
     private Button paintGradientBtn;
     private Button itemTouchBtn;
     private Button animatorBtn;
+    private Button animatorFrameworkBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +36,7 @@ public class UiMainActivity extends AppCompatActivity {
         paintGradientBtn = findViewById(R.id.paintGradientBtn);
         itemTouchBtn = findViewById(R.id.itemTouchBtn);
         animatorBtn = findViewById(R.id.animatorBtn);
+        animatorFrameworkBtn = findViewById(R.id.animatorFrameworkBtn);
 
         flowLayoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,6 +60,13 @@ public class UiMainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(UiMainActivity.this, AnimationMainActivity.class));
+            }
+        });
+
+        animatorFrameworkBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(UiMainActivity.this, AnimatorFrameworkMainActivity.class));
             }
         });
     }

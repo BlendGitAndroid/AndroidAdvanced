@@ -3,8 +3,9 @@
     package="com.blend.ui">
 
     <application>
-        <activity android:name=".animtation.SplashActivity"></activity>
-        <activity android:name=".animtation.AnimationMainActivity" />
+        <activity android:name=".animation_framework.AnimatorFrameworkMainActivity"></activity>
+        <activity android:name=".animation.SplashActivity" />
+        <activity android:name=".animation.AnimationMainActivity" />
         <activity android:name=".item_touch_event.ItemTouchMainActivity" />
         <activity android:name=".screen_adapter.ScreenAdapterMainActivity2" />
         <activity android:name=".screen_adapter.ScreenAdapterMainActivity" />

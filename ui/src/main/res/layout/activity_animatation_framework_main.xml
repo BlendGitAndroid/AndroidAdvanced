@@ -1,0 +1,110 @@
+<com.blend.ui.animation_framework.AnimatorScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:discrollve="http://schemas.android.com/apk/res-auto">
+
+    <com.blend.ui.animation_framework.AnimatorLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="600dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/tb_bg" />
+
+
+        <ImageView
+            android:layout_width="200dp"
+            android:layout_height="120dp"
+            android:layout_gravity="top|right"
+            android:src="@drawable/baggage"
+            discrollve:discrollve_alpha="true"
+            discrollve:discrollve_translation="toLeft|toBottom" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:fontFamily="serif"
+            android:gravity="center"
+            android:padding="25dp"
+            android:text="准备好相机，这里有你想象不到的惊喜！"
+            android:textColor="@android:color/black"
+            android:textSize="25sp"
+            discrollve:discrollve_fromBgColor="#ffff00"
+            discrollve:discrollve_toBgColor="#88EE66" />
+
+        <ImageView
+            android:layout_width="220dp"
+            android:layout_height="110dp"
+            android:layout_gravity="right"
+            android:src="@drawable/camera"
+            discrollve:discrollve_translation="toRight" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#D97C1F"
+            android:fontFamily="serif"
+            android:gravity="center"
+            android:padding="20dp"
+            android:text="这次淘宝造物节真的来了，我们都在造，你造吗？\n
+							7月22日-7月24日\n
+							上海世博展览馆\n
+							在现场，我们造什么？"
+            android:textSize="23sp"
+            discrollve:discrollve_alpha="true"
+            discrollve:discrollve_translation="toBottom" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="20dp"
+            android:src="@drawable/sweet"
+            discrollve:discrollve_scaleX="true"
+            discrollve:discrollve_scaleY="true" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="20dp"
+            android:src="@drawable/shoes"
+            discrollve:discrollve_alpha="true"
+            discrollve:discrollve_scaleX="true"
+            discrollve:discrollve_scaleY="true"
+            discrollve:discrollve_translation="toLeft|toBottom" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="20dp"
+            android:src="@drawable/shoes"
+            discrollve:discrollve_alpha="true"
+            discrollve:discrollve_scaleY="true"
+            discrollve:discrollve_translation="toRight|toTop" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="20dp"
+            android:src="@drawable/sweet"
+            discrollve:discrollve_alpha="true"
+            discrollve:discrollve_scaleY="true"
+            discrollve:discrollve_translation="toLeft" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="20dp"
+            android:src="@drawable/camera"
+            discrollve:discrollve_scaleY="true"
+            discrollve:discrollve_translation="toLeft" />
+
+    </com.blend.ui.animation_framework.AnimatorLinearLayout>
+
+</com.blend.ui.animation_framework.AnimatorScrollView>

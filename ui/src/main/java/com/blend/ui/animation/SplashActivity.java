@@ -1,11 +1,9 @@
-package com.blend.ui.animtation;
+package com.blend.ui.animation;
 
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.FrameLayout;
-
-import com.blend.ui.R;
 
 public class SplashActivity extends AppCompatActivity {
 
