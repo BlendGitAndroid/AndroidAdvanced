@@ -5,7 +5,10 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.widget.FrameLayout;
+
+import javax.security.auth.login.LoginException;
 
 
 public class AnimatorFrameLayout extends FrameLayout implements DiscrollInterface {
@@ -58,6 +61,7 @@ public class AnimatorFrameLayout extends FrameLayout implements DiscrollInterfac
         super(context, attrs, defStyleAttr);
     }
 
+    //每一个View的原始宽高
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
