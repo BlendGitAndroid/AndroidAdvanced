@@ -29,5 +29,10 @@
     <Button
         android:id="@+id/animatorFrameworkBtn"
         style="@style/main_style"
-        android:text="animatorFramework" />
+        android:text="AnimatorFramework" />
+
+    <Button
+        android:id="@+id/materialDesignBtn"
+        style="@style/main_style"
+        android:text="MaterialDesign" />
 </LinearLayout>
