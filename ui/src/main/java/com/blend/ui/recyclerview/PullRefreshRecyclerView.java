@@ -20,6 +20,13 @@ import android.widget.Toast;
 import com.blend.ui.R;
 
 
+/**
+ * 下拉刷新，上啦加载
+ * <p>
+ * 1.https://blog.csdn.net/q714093365/article/details/77063084
+ * 2.https://www.jianshu.com/p/34b78dae9f57
+ * 3.自己的实现
+ */
 public class PullRefreshRecyclerView extends LinearLayout {
 
     private static final String TAG = "PullRefreshRecyclerView";
