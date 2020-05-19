@@ -20,9 +20,10 @@ import com.blend.ui.R;
 /**
  * 这个AppCompatActivity是干什么的？
  * 作用：用来做兼容
- * 原理：继承了AppCompatActivity都会在创建解析xml时，将xml里面的所有系统控件转换成appcomtweight的兼容控件
- *
- *
+ * 原理：继承了AppCompatActivity都会在创建解析xml时，将xml里面的所有系统控件转换成appcomtweight的兼容控件,并在
+ * AppCompatDelegateV9 onCreateView开始对于view进行重新转化和解析
+ * <p>
+ * <p>
  * 这个里面的style？需要看下
  */
 public class MaterialDesignMainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
