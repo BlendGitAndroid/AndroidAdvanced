@@ -12,6 +12,7 @@ import com.blend.ui.flowlayout.FlowLayoutActivity;
 import com.blend.ui.item_touch_event.ItemTouchMainActivity;
 import com.blend.ui.material_design.MaterialDesignMainActivity;
 import com.blend.ui.paint_gradient.PaintGradientActivity;
+import com.blend.ui.recyclerview.RefreshRecyclerViewActivity;
 
 /**
  * 1.属性动画的问题？
@@ -29,6 +30,7 @@ public class UiMainActivity extends AppCompatActivity {
     private Button animatorBtn;
     private Button animatorFrameworkBtn;
     private Button materialDesignBtn;
+    private Button refreshRecyclerViewBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +42,7 @@ public class UiMainActivity extends AppCompatActivity {
         animatorBtn = findViewById(R.id.animatorBtn);
         animatorFrameworkBtn = findViewById(R.id.animatorFrameworkBtn);
         materialDesignBtn = findViewById(R.id.materialDesignBtn);
+        refreshRecyclerViewBtn = findViewById(R.id.refreshRecyclerViewBtn);
 
         flowLayoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -77,6 +80,13 @@ public class UiMainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(UiMainActivity.this, MaterialDesignMainActivity.class));
+            }
+        });
+
+        refreshRecyclerViewBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(UiMainActivity.this, RefreshRecyclerViewActivity.class));
             }
         });
     }

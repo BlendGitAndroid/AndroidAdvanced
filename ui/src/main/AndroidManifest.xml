@@ -3,10 +3,11 @@
     package="com.blend.ui">
 
     <application>
+        <activity android:name=".recyclerview.RefreshRecyclerViewActivity"></activity>
         <activity
             android:name=".material_design.MaterialDesignMainActivity"
             android:label="Material Design Ui"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".animation_framework.AnimatorFrameworkMainActivity" />
         <activity android:name=".animation.SplashActivity" />
         <activity android:name=".animation.AnimationMainActivity" />

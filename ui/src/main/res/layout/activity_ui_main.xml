@@ -35,4 +35,9 @@
         android:id="@+id/materialDesignBtn"
         style="@style/main_style"
         android:text="MaterialDesign" />
+
+    <Button
+        android:id="@+id/refreshRecyclerViewBtn"
+        style="@style/main_style"
+        android:text="RefreshRecyclerView" />
 </LinearLayout>
