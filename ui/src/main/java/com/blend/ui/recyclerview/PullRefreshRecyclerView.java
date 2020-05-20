@@ -26,12 +26,21 @@ import com.blend.ui.R;
  * 1.https://blog.csdn.net/q714093365/article/details/77063084
  * 2.https://www.jianshu.com/p/34b78dae9f57
  * 3.自己的实现
+ * 采用ScrollTo和ScrollBy，加属性动画
+ * <p>
+ * 各种滑动方式的对比：
+ * <p>
+ * (1)scrollTo/scrollBy:操作简单，合适对View内容的滑动
+ * <p>
+ * (2)动画：操作简单，主要适用于没有交互的View和实现复杂的动画效果
+ * <p>
+ * (3)改变布局参数：操作稍微复杂，适用于有交互的View（培训中对每日一考的滑动操作）
  */
 public class PullRefreshRecyclerView extends LinearLayout {
 
     private static final String TAG = "PullRefreshRecyclerView";
 
-    private int mTouchSlop;
+    private int mTouchSlop; //系统所能识别出的被认为是滑动的最小距离，27版本是8dp
     private boolean flag = false;
 
     //分别记录上次滑动的坐标
@@ -238,11 +247,18 @@ public class PullRefreshRecyclerView extends LinearLayout {
                 }
 
                 /**
-                 * 视图内容相对于视图起始坐标的x/y轴方向的偏移量
+                 * getScrollX:从左向右滑动为负值
                  *
-                 * getScrollX:向右结果为负，向左结果为正
+                 * getScrollY:从上往下滑动为负值
                  *
-                 * getScrollY:向下结果为负，向上结果为正
+                 * getScrollX()和getScrollY()得到的是mScrollX和mScrollY的值
+                 * mScrollX：总是等于View左边缘减去View内容左边缘在水平方向的距离
+                 * mScrollY：总是等于View上边缘减去View内容上边缘在竖直方向的距离
+                 *
+                 * View边缘：View的位置，由四个顶点组成
+                 * View内容边缘：View中内容的边缘
+                 *
+                 * scrollTo和scrollBy只能改变View内容的位置而不能改变View在布局中的位置
                  */
 
                 //拉到最顶部，继续往下拉(Y轴的偏移量大于X轴的偏移量)，将拉出头布局，需要父布局拦截
@@ -304,7 +320,7 @@ public class PullRefreshRecyclerView extends LinearLayout {
                 if (getScrollY() > 0) { //防止正在刷新的状态下，上拉出现空白
 
                 } else if (getScrollY() <= 0 && getScrollY() > -refreshHeaderHeight * 5) {  //最多下拉到头布局高度5倍的距离
-                    scrollBy(0, -deltaY / 2); //向下滚动
+                    scrollBy(0, -deltaY / 2); //向下滚动(scrollBy,基于当前位置的相对滑动)
                 }
 
                 //头布局显示不全时，为下拉刷新PULL_DOWN_REFRESH
@@ -371,6 +387,9 @@ public class PullRefreshRecyclerView extends LinearLayout {
         invalidate();
     }
 
+    /**
+     * scrollTo和scrollBy方法进行滑动时，是瞬间完成的，使用computeScroll实现过度动画的效果
+     */
     @Override
     public void computeScroll() {
         super.computeScroll();
