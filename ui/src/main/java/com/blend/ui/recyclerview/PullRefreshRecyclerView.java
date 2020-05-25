@@ -221,6 +221,12 @@ public class PullRefreshRecyclerView extends LinearLayout {
         });
     }
 
+    /**
+     * 外部拦截法，解决滑动冲突
+     *
+     * @param ev
+     * @return
+     */
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         boolean intercepted = false;
@@ -228,6 +234,9 @@ public class PullRefreshRecyclerView extends LinearLayout {
         int y = (int) ev.getY();
 
         switch (ev.getAction()) {
+            /*
+            ACTION_DOWN必须返回false，因为一拦截，后续的事件都会交给父容器来处理
+             */
             case MotionEvent.ACTION_DOWN:
                 Log.e(TAG, "onInterceptTouchEvent: ACTION_DOWN");
                 intercepted = false;
@@ -237,6 +246,9 @@ public class PullRefreshRecyclerView extends LinearLayout {
                     }
                 }
                 break;
+            /*
+             ACTION_MOVE:这个事件需要根据需要是否拦截，拦截就返回true，否则返回false
+             */
             case MotionEvent.ACTION_MOVE:
                 Log.e(TAG, "onInterceptTouchEvent: ACTION_MOVE");
                 int deltaX = x - mLastXIntercept;
@@ -274,6 +286,9 @@ public class PullRefreshRecyclerView extends LinearLayout {
                     intercepted = false;
                 }
                 break;
+            /*
+             ACTION_UP:必须返回false，本身没有太大意义
+             */
             case MotionEvent.ACTION_UP:
                 Log.e(TAG, "onInterceptTouchEvent: ACTION_UP");
                 intercepted = false;
