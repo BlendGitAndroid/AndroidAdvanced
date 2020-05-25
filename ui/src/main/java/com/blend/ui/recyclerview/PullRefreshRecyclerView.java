@@ -229,6 +229,7 @@ public class PullRefreshRecyclerView extends LinearLayout {
 
         switch (ev.getAction()) {
             case MotionEvent.ACTION_DOWN:
+                Log.e(TAG, "onInterceptTouchEvent: ACTION_DOWN");
                 intercepted = false;
                 if (state != DEFAULT || state != REFRESHING) {  //当不是默认状态和刷新状态时，并且上一个动画没有停止，此时立即停止该动画
                     if (!mScroller.isFinished()) {
@@ -237,6 +238,7 @@ public class PullRefreshRecyclerView extends LinearLayout {
                 }
                 break;
             case MotionEvent.ACTION_MOVE:
+                Log.e(TAG, "onInterceptTouchEvent: ACTION_MOVE");
                 int deltaX = x - mLastXIntercept;
                 int deltaY = y - mLastYIntercept;
 
@@ -273,6 +275,7 @@ public class PullRefreshRecyclerView extends LinearLayout {
                 }
                 break;
             case MotionEvent.ACTION_UP:
+                Log.e(TAG, "onInterceptTouchEvent: ACTION_UP");
                 intercepted = false;
                 break;
         }
@@ -305,11 +308,13 @@ public class PullRefreshRecyclerView extends LinearLayout {
         int y = (int) event.getY();
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
+                Log.e(TAG, "onTouchEvent: ACTION_DOWN");
                 if (!mScroller.isFinished()) {
                     mScroller.abortAnimation();
                 }
                 break;
             case MotionEvent.ACTION_MOVE:
+                Log.e(TAG, "onTouchEvent: ACTION_MOVE");
                 int deltaY = y - mLastY;
 
                 /**
@@ -340,6 +345,7 @@ public class PullRefreshRecyclerView extends LinearLayout {
                 }
                 break;
             case MotionEvent.ACTION_UP:
+                Log.e(TAG, "onTouchEvent: ACTION_UP");
                 int scrollY = getScrollY();
                 switch (state) {
                     case PULL_DOWN_REFRESH:
