@@ -44,7 +44,7 @@ public class ImplRecyclerViewRefreshStateCall implements PullRefreshRecyclerView
     }
 
     /**
-     * 松手时调用？这里应该不是松手时刷新
+     * 当处于松手刷新时，头布局显示完全时显示效果
      *
      * @param scrollY 下拉的距离
      * @param deltaY  moveY-lastMoveY,正值为向下拉

@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.blend.ui.R;
 
@@ -40,9 +41,15 @@ public class RefreshAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof BodyViewHolder) {
-            RefreshBody body = mBodyList.get(position);
+            final RefreshBody body = mBodyList.get(position);
             BodyViewHolder bodyViewHolder = (BodyViewHolder) holder;
             bodyViewHolder.bodyTv.setText(body.name + "  " + body.age);
+            bodyViewHolder.bodyTv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(mContext, String.valueOf(body.age), Toast.LENGTH_SHORT).show();
+                }
+            });
         } else if (holder instanceof FootViewHolder) {
 
         }

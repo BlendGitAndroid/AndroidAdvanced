@@ -238,7 +238,6 @@ public class PullRefreshRecyclerView extends LinearLayout {
             ACTION_DOWN必须返回false，因为一拦截，后续的事件都会交给父容器来处理
              */
             case MotionEvent.ACTION_DOWN:
-                Log.e(TAG, "onInterceptTouchEvent: ACTION_DOWN");
                 intercepted = false;
                 if (state != DEFAULT || state != REFRESHING) {  //当不是默认状态和刷新状态时，并且上一个动画没有停止，此时立即停止该动画
                     if (!mScroller.isFinished()) {
@@ -250,7 +249,6 @@ public class PullRefreshRecyclerView extends LinearLayout {
              ACTION_MOVE:这个事件需要根据需要是否拦截，拦截就返回true，否则返回false
              */
             case MotionEvent.ACTION_MOVE:
-                Log.e(TAG, "onInterceptTouchEvent: ACTION_MOVE");
                 int deltaX = x - mLastXIntercept;
                 int deltaY = y - mLastYIntercept;
 
@@ -290,7 +288,6 @@ public class PullRefreshRecyclerView extends LinearLayout {
              ACTION_UP:必须返回false，本身没有太大意义
              */
             case MotionEvent.ACTION_UP:
-                Log.e(TAG, "onInterceptTouchEvent: ACTION_UP");
                 intercepted = false;
                 break;
         }
@@ -323,13 +320,11 @@ public class PullRefreshRecyclerView extends LinearLayout {
         int y = (int) event.getY();
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                Log.e(TAG, "onTouchEvent: ACTION_DOWN");
                 if (!mScroller.isFinished()) {
                     mScroller.abortAnimation();
                 }
                 break;
             case MotionEvent.ACTION_MOVE:
-                Log.e(TAG, "onTouchEvent: ACTION_MOVE");
                 int deltaY = y - mLastY;
 
                 /**
@@ -340,7 +335,7 @@ public class PullRefreshRecyclerView extends LinearLayout {
                 if (getScrollY() > 0) { //防止正在刷新的状态下，上拉出现空白
 
                 } else if (getScrollY() <= 0 && getScrollY() > -refreshHeaderHeight * 5) {  //最多下拉到头布局高度5倍的距离
-                    scrollBy(0, -deltaY / 2); //向下滚动(scrollBy,基于当前位置的相对滑动)
+                    scrollBy(0, -deltaY / 2); //慢慢向下滚动(scrollBy,基于当前位置的相对滑动)，设置阻尼系数
                 }
 
                 //头布局显示不全时，为下拉刷新PULL_DOWN_REFRESH
@@ -360,7 +355,6 @@ public class PullRefreshRecyclerView extends LinearLayout {
                 }
                 break;
             case MotionEvent.ACTION_UP:
-                Log.e(TAG, "onTouchEvent: ACTION_UP");
                 int scrollY = getScrollY();
                 switch (state) {
                     case PULL_DOWN_REFRESH:
@@ -399,7 +393,7 @@ public class PullRefreshRecyclerView extends LinearLayout {
     }
 
     /**
-     * 在500ms内平滑的滚动多少像素点
+     * 在500ms内平滑的滚动多少像素点，指的是View内容的滑动，而不是View本身位置的改变
      *
      * @param dy
      */
@@ -475,7 +469,7 @@ public class PullRefreshRecyclerView extends LinearLayout {
     public interface RecyclerViewRefreshStateCallBack {
 
         /**
-         * 当处于下拉刷新时，头布局显示效果
+         * 当处于下拉刷新时，头布局显示不全时效果
          *
          * @param scrollY        下拉的距离
          * @param headViewHeight 头布局高度
@@ -485,7 +479,7 @@ public class PullRefreshRecyclerView extends LinearLayout {
 
 
         /**
-         * 当处于松手刷新时，头布局显示效果
+         * 当处于松手刷新时，头布局显示完全时显示效果
          *
          * @param scrollY 下拉的距离
          * @param deltaY  moveY-lastMoveY,正值为向下拉
