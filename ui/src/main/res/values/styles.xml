@@ -41,4 +41,15 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <declare-styleable name="BehaviorCoordinatorLayout">
+        <attr name="layout_behavior" format="string" />
+    </declare-styleable>
+
+    <style name="BehaviorTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
 </resources>

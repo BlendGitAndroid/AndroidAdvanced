@@ -3,7 +3,11 @@
     package="com.blend.ui">
 
     <application>
-        <activity android:name=".recyclerview.RefreshRecyclerViewActivity"></activity>
+        <activity
+            android:name=".nested_scrolling.NestedScrollingActivity"
+            android:label="Behavior Scrolling"
+            android:theme="@style/BehaviorTheme"></activity>
+        <activity android:name=".recyclerview.RefreshRecyclerViewActivity" />
         <activity
             android:name=".material_design.MaterialDesignMainActivity"
             android:label="Material Design Ui"

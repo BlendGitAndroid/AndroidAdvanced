@@ -11,6 +11,7 @@ import com.blend.ui.animation_framework.AnimatorFrameworkMainActivity;
 import com.blend.ui.flowlayout.FlowLayoutActivity;
 import com.blend.ui.item_touch_event.ItemTouchMainActivity;
 import com.blend.ui.material_design.MaterialDesignMainActivity;
+import com.blend.ui.nested_scrolling.NestedScrollingActivity;
 import com.blend.ui.paint_gradient.PaintGradientActivity;
 import com.blend.ui.recyclerview.RefreshRecyclerViewActivity;
 
@@ -31,6 +32,7 @@ public class UiMainActivity extends AppCompatActivity {
     private Button animatorFrameworkBtn;
     private Button materialDesignBtn;
     private Button refreshRecyclerViewBtn;
+    private Button nestedScrollingBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +45,7 @@ public class UiMainActivity extends AppCompatActivity {
         animatorFrameworkBtn = findViewById(R.id.animatorFrameworkBtn);
         materialDesignBtn = findViewById(R.id.materialDesignBtn);
         refreshRecyclerViewBtn = findViewById(R.id.refreshRecyclerViewBtn);
+        nestedScrollingBtn = findViewById(R.id.nestedScrollingBtn);
 
         flowLayoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,6 +90,13 @@ public class UiMainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(UiMainActivity.this, RefreshRecyclerViewActivity.class));
+            }
+        });
+
+        nestedScrollingBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(UiMainActivity.this, NestedScrollingActivity.class));
             }
         });
     }

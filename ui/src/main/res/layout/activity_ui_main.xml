@@ -40,4 +40,9 @@
         android:id="@+id/refreshRecyclerViewBtn"
         style="@style/main_style"
         android:text="RefreshRecyclerView" />
+
+    <Button
+        android:id="@+id/nestedScrollingBtn"
+        style="@style/main_style"
+        android:text="NestedScrolling" />
 </LinearLayout>
