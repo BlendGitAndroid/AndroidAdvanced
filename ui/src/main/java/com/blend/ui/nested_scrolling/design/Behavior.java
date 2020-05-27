@@ -5,6 +5,9 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
+/**
+ * Behavior作为一个中间者，目的是协调 子控件之间的触摸事件
+ */
 public class Behavior {
 
     public Behavior(Context context, AttributeSet set) {
