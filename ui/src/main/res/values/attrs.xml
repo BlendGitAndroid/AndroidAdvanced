@@ -26,4 +26,9 @@
         <attr name="content_view" format="reference" />
     </declare-styleable>
 
+
+    <declare-styleable name="MenuDrawerTheme">
+        <attr name="maxTranslationX" format="dimension" />
+    </declare-styleable>
+
 </resources>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MenuDrawerLayout.MenuDrawerLayoutActivity">
+
+    <com.blend.ui.MenuDrawerLayout.MenuDrawerLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!--内容区域-->
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/fake" />
+
+        <com.blend.ui.MenuDrawerLayout.MenuContentLayout
+            android:layout_width="350dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:background="@color/colorPrimaryDark"
+            android:orientation="vertical"
+            app:maxTranslationX="66dp">
+
+            <TextView
+                style="@style/DrawerMenuText"
+                android:layout_marginTop="50dp"
+                android:drawableLeft="@drawable/circle"
+                android:onClick="test"
+                android:text="朋友圈" />
+
+            <TextView
+                style="@style/DrawerMenuText"
+                android:drawableLeft="@drawable/wallet"
+                android:onClick="test"
+                android:text="钱包" />
+
+            <TextView
+                style="@style/DrawerMenuText"
+                android:drawableLeft="@drawable/coupon"
+                android:onClick="test"
+                android:text="优惠券" />
+
+            <TextView
+                style="@style/DrawerMenuText"
+                android:drawableLeft="@drawable/coupon"
+                android:onClick="test"
+                android:text="设置" />
+
+            <TextView
+                style="@style/DrawerMenuText"
+                android:drawableLeft="@drawable/coupon"
+                android:onClick="test"
+                android:text="更新" />
+        </com.blend.ui.MenuDrawerLayout.MenuContentLayout>
+
+    </com.blend.ui.MenuDrawerLayout.MenuDrawerLayout>
+
+</android.support.constraint.ConstraintLayout>

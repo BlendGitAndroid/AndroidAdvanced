@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
+import com.blend.ui.MenuDrawerLayout.MenuDrawerLayoutActivity;
 import com.blend.ui.animation.AnimationMainActivity;
 import com.blend.ui.animation_framework.AnimatorFrameworkMainActivity;
 import com.blend.ui.flowlayout.FlowLayoutActivity;
@@ -33,6 +34,7 @@ public class UiMainActivity extends AppCompatActivity {
     private Button materialDesignBtn;
     private Button refreshRecyclerViewBtn;
     private Button nestedScrollingBtn;
+    private Button menuDrawerLayoutBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +48,7 @@ public class UiMainActivity extends AppCompatActivity {
         materialDesignBtn = findViewById(R.id.materialDesignBtn);
         refreshRecyclerViewBtn = findViewById(R.id.refreshRecyclerViewBtn);
         nestedScrollingBtn = findViewById(R.id.nestedScrollingBtn);
+        menuDrawerLayoutBtn = findViewById(R.id.menuDrawerLayoutBtn);
 
         flowLayoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,6 +100,13 @@ public class UiMainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(UiMainActivity.this, NestedScrollingActivity.class));
+            }
+        });
+
+        menuDrawerLayoutBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(UiMainActivity.this, MenuDrawerLayoutActivity.class));
             }
         });
     }

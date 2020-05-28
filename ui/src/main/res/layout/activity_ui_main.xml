@@ -45,4 +45,10 @@
         android:id="@+id/nestedScrollingBtn"
         style="@style/main_style"
         android:text="NestedScrolling" />
+
+    <Button
+        android:id="@+id/menuDrawerLayoutBtn"
+        style="@style/main_style"
+        android:text="MenuDrawerLayout" />
+
 </LinearLayout>
