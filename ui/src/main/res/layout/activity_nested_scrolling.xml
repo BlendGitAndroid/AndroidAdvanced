@@ -9,7 +9,7 @@
     <ImageView
         android:id="@+id/behaviorIv"
         android:layout_width="wrap_content"
-        android:layout_height="50dp"
+        android:layout_height="100dp"
         android:scaleType="centerCrop"
         android:src="@drawable/image_behavior"
         app:layout_behavior="com.blend.ui.nested_scrolling.ImageBehavior" />
@@ -17,7 +17,7 @@
     <android.support.v7.widget.Toolbar
         android:id="@+id/behaviorToolbar"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="100dp"
         android:background="#00F"
         app:layout_behavior="com.blend.ui.nested_scrolling.ToolBarBehavior" />
 

@@ -51,4 +51,9 @@
         style="@style/main_style"
         android:text="MenuDrawerLayout" />
 
+    <Button
+        android:id="@+id/customViewBtn"
+        style="@style/main_style"
+        android:text="CustomView" />
+
 </LinearLayout>

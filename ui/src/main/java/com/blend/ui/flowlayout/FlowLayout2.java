@@ -1,6 +1,7 @@
 package com.blend.ui.flowlayout;
 
 import android.content.Context;
+import android.graphics.Canvas;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,9 +21,35 @@ public class FlowLayout2 extends ViewGroup {
         super(context, attrs, defStyleAttr);
     }
 
+    /**
+     * 在父类(ViewGroup.LayoutParams)的基础之上提供了子View对margin属性的支持
+     * <p>
+     * 只要是因为在ViewGroup在addView之前都会调用generateLayoutParams方法，在LayoutInflater.rInflate里面，
+     * 如果不重写这个方法，默认就是调用ViewGroup.generateLayoutParams方法，那么子view就不能有margin属性了
+     */
     @Override
     public LayoutParams generateLayoutParams(AttributeSet attrs) {
         return new MarginLayoutParams(getContext(), attrs);
+    }
+
+    /**
+     * 上面的方法，是在XML解析中，父布局会为每个子View添加上LayoutParams，那么使用addView(没有LayoutParams参数的方法)添加子View时，看源码，还会调用
+     * generateDefaultLayoutParams方法，为了保守起见，还是要重写这个方法。
+     * <p>
+     * <p>
+     * 同时，在addViewInner里面，有checkLayoutParams方法
+     */
+    @Override
+    protected LayoutParams generateDefaultLayoutParams() {
+        return super.generateDefaultLayoutParams();
+    }
+
+    /**
+     * 检查子view的LayoutParams是否正确
+     */
+    @Override
+    protected boolean checkLayoutParams(LayoutParams p) {
+        return super.checkLayoutParams(p);
     }
 
     @Override
@@ -112,8 +139,6 @@ public class FlowLayout2 extends ViewGroup {
                 }
             }
         }
-
-
         //确认保存自己的宽高
         setMeasuredDimension(measureWidth, measureHeight);
     }

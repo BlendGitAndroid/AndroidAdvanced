@@ -10,6 +10,9 @@ import android.view.MotionEvent;
 import android.view.View;
 
 
+/**
+ * 侧滑菜单，完成事件分发
+ */
 public class MenuDrawerLayout extends DrawerLayout implements DrawerLayout.DrawerListener {
 
     private MenuContentLayout mMenuContentLayout;

@@ -9,6 +9,7 @@ import android.widget.Button;
 import com.blend.ui.MenuDrawerLayout.MenuDrawerLayoutActivity;
 import com.blend.ui.animation.AnimationMainActivity;
 import com.blend.ui.animation_framework.AnimatorFrameworkMainActivity;
+import com.blend.ui.custom_view.CustomViewActivity;
 import com.blend.ui.flowlayout.FlowLayoutActivity;
 import com.blend.ui.item_touch_event.ItemTouchMainActivity;
 import com.blend.ui.material_design.MaterialDesignMainActivity;
@@ -35,6 +36,7 @@ public class UiMainActivity extends AppCompatActivity {
     private Button refreshRecyclerViewBtn;
     private Button nestedScrollingBtn;
     private Button menuDrawerLayoutBtn;
+    private Button customViewBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +51,7 @@ public class UiMainActivity extends AppCompatActivity {
         refreshRecyclerViewBtn = findViewById(R.id.refreshRecyclerViewBtn);
         nestedScrollingBtn = findViewById(R.id.nestedScrollingBtn);
         menuDrawerLayoutBtn = findViewById(R.id.menuDrawerLayoutBtn);
+        customViewBtn = findViewById(R.id.customViewBtn);
 
         flowLayoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,6 +110,13 @@ public class UiMainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(UiMainActivity.this, MenuDrawerLayoutActivity.class));
+            }
+        });
+
+        customViewBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(UiMainActivity.this, CustomViewActivity.class));
             }
         });
     }

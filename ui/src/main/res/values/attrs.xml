@@ -31,4 +31,8 @@
         <attr name="maxTranslationX" format="dimension" />
     </declare-styleable>
 
+    <declare-styleable name="CircleView">
+        <attr name="circleColorView" format="color" />
+    </declare-styleable>
+
 </resources>
