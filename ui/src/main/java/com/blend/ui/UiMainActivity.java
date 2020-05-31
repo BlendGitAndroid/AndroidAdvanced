@@ -9,6 +9,8 @@ import android.widget.Button;
 import com.blend.ui.MenuDrawerLayout.MenuDrawerLayoutActivity;
 import com.blend.ui.animation.AnimationMainActivity;
 import com.blend.ui.animation_framework.AnimatorFrameworkMainActivity;
+import com.blend.ui.custom_recycler.CustomRecyclerView;
+import com.blend.ui.custom_recycler.CustomRecyclerViewActivity;
 import com.blend.ui.custom_view.CustomViewActivity;
 import com.blend.ui.flowlayout.FlowLayoutActivity;
 import com.blend.ui.item_touch_event.ItemTouchMainActivity;
@@ -39,6 +41,7 @@ public class UiMainActivity extends AppCompatActivity {
     private Button menuDrawerLayoutBtn;
     private Button customViewBtn;
     private Button qqHeaderBtn;
+    private Button customRecyclerViewBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +58,7 @@ public class UiMainActivity extends AppCompatActivity {
         menuDrawerLayoutBtn = findViewById(R.id.menuDrawerLayoutBtn);
         customViewBtn = findViewById(R.id.customViewBtn);
         qqHeaderBtn = findViewById(R.id.qqHeaderBtn);
+        customRecyclerViewBtn = findViewById(R.id.customRecyclerViewBtn);
 
         flowLayoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -127,6 +131,13 @@ public class UiMainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(UiMainActivity.this, QQHeaderActivity.class));
+            }
+        });
+
+        customRecyclerViewBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(UiMainActivity.this, CustomRecyclerViewActivity.class));
             }
         });
     }

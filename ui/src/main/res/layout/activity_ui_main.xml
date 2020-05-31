@@ -1,64 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".UiMainActivity">
+    android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/flowLayoutBtn"
-        style="@style/main_style"
-        android:text="FlowLayout" />
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".UiMainActivity">
 
-    <Button
-        android:id="@+id/paintGradientBtn"
-        style="@style/main_style"
-        android:text="PaintGradient" />
+        <Button
+            android:id="@+id/flowLayoutBtn"
+            style="@style/main_style"
+            android:text="FlowLayout" />
 
-    <Button
-        android:id="@+id/itemTouchBtn"
-        style="@style/main_style"
-        android:text="ItemTouch" />
+        <Button
+            android:id="@+id/paintGradientBtn"
+            style="@style/main_style"
+            android:text="PaintGradient" />
 
-    <Button
-        android:id="@+id/animatorBtn"
-        style="@style/main_style"
-        android:text="Animator" />
+        <Button
+            android:id="@+id/itemTouchBtn"
+            style="@style/main_style"
+            android:text="ItemTouch" />
 
-    <Button
-        android:id="@+id/animatorFrameworkBtn"
-        style="@style/main_style"
-        android:text="AnimatorFramework" />
+        <Button
+            android:id="@+id/animatorBtn"
+            style="@style/main_style"
+            android:text="Animator" />
 
-    <Button
-        android:id="@+id/materialDesignBtn"
-        style="@style/main_style"
-        android:text="MaterialDesign" />
+        <Button
+            android:id="@+id/animatorFrameworkBtn"
+            style="@style/main_style"
+            android:text="AnimatorFramework" />
 
-    <Button
-        android:id="@+id/refreshRecyclerViewBtn"
-        style="@style/main_style"
-        android:text="RefreshRecyclerView" />
+        <Button
+            android:id="@+id/materialDesignBtn"
+            style="@style/main_style"
+            android:text="MaterialDesign" />
 
-    <Button
-        android:id="@+id/nestedScrollingBtn"
-        style="@style/main_style"
-        android:text="NestedScrolling" />
+        <Button
+            android:id="@+id/refreshRecyclerViewBtn"
+            style="@style/main_style"
+            android:text="RefreshRecyclerView" />
 
-    <Button
-        android:id="@+id/menuDrawerLayoutBtn"
-        style="@style/main_style"
-        android:text="MenuDrawerLayout" />
+        <Button
+            android:id="@+id/nestedScrollingBtn"
+            style="@style/main_style"
+            android:text="NestedScrolling" />
 
-    <Button
-        android:id="@+id/customViewBtn"
-        style="@style/main_style"
-        android:text="CustomView" />
+        <Button
+            android:id="@+id/menuDrawerLayoutBtn"
+            style="@style/main_style"
+            android:text="MenuDrawerLayout" />
 
-    <Button
-        android:id="@+id/qqHeaderBtn"
-        style="@style/main_style"
-        android:text="QQHeader" />
+        <Button
+            android:id="@+id/customViewBtn"
+            style="@style/main_style"
+            android:text="CustomView" />
 
-</LinearLayout>
+        <Button
+            android:id="@+id/qqHeaderBtn"
+            style="@style/main_style"
+            android:text="QQHeader" />
+
+        <Button
+            android:id="@+id/customRecyclerViewBtn"
+            style="@style/main_style"
+            android:text="CustomRecyclerView" />
+    </LinearLayout>
+</android.support.v4.widget.NestedScrollView>
