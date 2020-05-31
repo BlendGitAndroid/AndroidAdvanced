@@ -3,7 +3,8 @@
     package="com.blend.ui">
 
     <application>
-        <activity android:name=".custom_view.CustomViewActivity"></activity>
+        <activity android:name=".qq_header_scrollerview.QQHeaderActivity"></activity>
+        <activity android:name=".custom_view.CustomViewActivity" />
         <activity android:name=".MenuDrawerLayout.MenuDrawerLayoutActivity" />
         <activity
             android:name=".nested_scrolling.NestedScrollingActivity"

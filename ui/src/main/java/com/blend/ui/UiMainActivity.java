@@ -15,6 +15,7 @@ import com.blend.ui.item_touch_event.ItemTouchMainActivity;
 import com.blend.ui.material_design.MaterialDesignMainActivity;
 import com.blend.ui.nested_scrolling.NestedScrollingActivity;
 import com.blend.ui.paint_gradient.PaintGradientActivity;
+import com.blend.ui.qq_header_scrollerview.QQHeaderActivity;
 import com.blend.ui.recyclerview.RefreshRecyclerViewActivity;
 
 /**
@@ -37,6 +38,7 @@ public class UiMainActivity extends AppCompatActivity {
     private Button nestedScrollingBtn;
     private Button menuDrawerLayoutBtn;
     private Button customViewBtn;
+    private Button qqHeaderBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +54,7 @@ public class UiMainActivity extends AppCompatActivity {
         nestedScrollingBtn = findViewById(R.id.nestedScrollingBtn);
         menuDrawerLayoutBtn = findViewById(R.id.menuDrawerLayoutBtn);
         customViewBtn = findViewById(R.id.customViewBtn);
+        qqHeaderBtn = findViewById(R.id.qqHeaderBtn);
 
         flowLayoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,6 +120,13 @@ public class UiMainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(UiMainActivity.this, CustomViewActivity.class));
+            }
+        });
+
+        qqHeaderBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(UiMainActivity.this, QQHeaderActivity.class));
             }
         });
     }

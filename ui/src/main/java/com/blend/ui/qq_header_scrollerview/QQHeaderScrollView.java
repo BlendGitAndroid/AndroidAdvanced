@@ -2,6 +2,7 @@ package com.blend.ui.qq_header_scrollerview;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
@@ -15,6 +16,8 @@ import com.blend.ui.R;
 
 public class QQHeaderScrollView extends ListView {
 
+    private static final String TAG = "QQHeaderScrollView";
+
     private ImageView mImageView;
     private int mImageViewHeight;
 
@@ -23,11 +26,11 @@ public class QQHeaderScrollView extends ListView {
     }
 
     public QQHeaderScrollView(Context context) {
-        super(context);
+        this(context, null);
     }
 
     public QQHeaderScrollView(Context context, AttributeSet attrs) {
-        super(context, attrs);
+        this(context, attrs, 0);
     }
 
     public QQHeaderScrollView(Context context, AttributeSet attrs, int defStyleAttr) {
@@ -52,25 +55,16 @@ public class QQHeaderScrollView extends ListView {
      * 不管是下滑还是上滑，都是-
      * 下滑：deltaY是负值，-去负值就是加
      * 上滑：deltaY是正值，-去正值就是减
+     * <p>
+     * TODO:mImageView.getLayoutParams().height = Math.max(mImageView.getHeight() - deltaY, 1);
+     * 这里的代码为1才有用，为0的话又会变为原来的宽高，为何
      */
     @Override
     protected boolean overScrollBy(int deltaX, int deltaY, int scrollX, int scrollY, int scrollRangeX, int scrollRangeY, int maxOverScrollX, int maxOverScrollY, boolean isTouchEvent) {
-        mImageView.getLayoutParams().height = mImageView.getHeight() - deltaY;
+        Log.e(TAG, "overScrollBy() called with: deltaY = [" + deltaY + "]" + " ,mImageView.getHeight() - deltaY: " + (mImageView.getHeight() - deltaY));
+        mImageView.getLayoutParams().height = Math.max(mImageView.getHeight() - deltaY, 1);
         mImageView.requestLayout();
         return super.overScrollBy(deltaX, deltaY, scrollX, scrollY, scrollRangeX, scrollRangeY, maxOverScrollX, maxOverScrollY, isTouchEvent);
-    }
-
-    @Override
-    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        View header = (View) mImageView.getParent();
-        //ListView会滑出去的高度
-        int deltaY = header.getTop();
-        if (mImageView.getHeight() > mImageViewHeight) {
-            mImageView.getLayoutParams().height = mImageView.getHeight() + deltaY;
-            header.layout(header.getLeft(), 0, header.getRight(), header.getHeight());
-            mImageView.requestLayout();
-        }
-        super.onSizeChanged(w, h, oldw, oldh);
     }
 
     class ResetAnimation extends Animation {
@@ -79,7 +73,7 @@ public class QQHeaderScrollView extends ListView {
         private int currentHeight;
 
         public ResetAnimation(int targetHeight) {
-            currentHeight = targetHeight;
+            currentHeight = mImageView.getHeight();
             extraHeight = mImageView.getHeight() - targetHeight;
         }
 

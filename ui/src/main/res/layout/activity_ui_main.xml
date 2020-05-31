@@ -56,4 +56,9 @@
         style="@style/main_style"
         android:text="CustomView" />
 
+    <Button
+        android:id="@+id/qqHeaderBtn"
+        style="@style/main_style"
+        android:text="QQHeader" />
+
 </LinearLayout>
