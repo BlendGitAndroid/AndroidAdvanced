@@ -1,3 +1,4 @@
 rootProject.name='AndroidAdvanced'
 include ':app'
 include ':ui'
+include ':architecture'
