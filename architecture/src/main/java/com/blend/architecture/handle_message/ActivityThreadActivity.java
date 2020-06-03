@@ -6,6 +6,10 @@ import android.util.Log;
 
 import com.blend.architecture.R;
 
+/**
+ * TODO:
+ * 问题：阻塞，挂起，休眠的区别？
+ */
 public class ActivityThreadActivity extends AppCompatActivity {
 
     private static final String TAG = "ActivityThreadActivity";
