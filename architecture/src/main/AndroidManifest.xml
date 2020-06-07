@@ -3,7 +3,8 @@
     package="com.blend.architecture">
 
     <application>
-        <activity android:name=".handle_message.ActivityThreadActivity"></activity>
+        <activity android:name=".binder.BinderActivity"></activity>
+        <activity android:name=".handle_message.ActivityThreadActivity" />
         <activity android:name=".ArchitectureMainActivity" />
     </application>
 
