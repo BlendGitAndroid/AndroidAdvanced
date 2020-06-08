@@ -1,7 +1,7 @@
 package com.blend.architecture.binder;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
 import com.blend.architecture.R;
 
@@ -19,12 +19,22 @@ import com.blend.architecture.R;
  * <p>
  * 在根目录上.aidl会自动生成.java类，这个类是一个接口，声明了一个内部类Stub，就是一个Binder类。当客户端和服务端位于同一个进程时，
  * 不会走transact，位于两个进程时，走transact由其内部代理类Proxy完成。
+ * 需要注意的地方：当客户端发起远程请求时，当前线程会被挂起直至服务端进程返回数据，如果一个远程方法时很耗时的，那么不能在UI线程中发起此远程请求；
+ * 其次，由于服务端的Binder方法运行在Binder的线程池中，所以Binder不管是否耗时都应该采用同步的方式去实现，因为它已经运行在一个线程中了。
+ * <p>
  * 下面详细介绍这两个类的每个方法的含义：
  * DESCRIPTOR：Binder的唯一标识，一般为类名。
  * asInterface：用于将服务端的Binder对象转换成客户端所需的AIDL接口类型的对象，这个转换过程是区分进程的，若为同一进程，返回的就是服务端的
  * Stub对象本身，否则返回的是系统封装后的Stub.proxy对象。
  * asBinder：返回当前Binder对象。
- *
+ * onTransact：这个方法运行在服务端的Binder线程池中，当客户端发起夸进程请求时，远程请求会通过系统底层封装后交由此方法来处理。服务端通过code
+ * 可以确定客户端所请求的目标方法是什么，接着从data中取出目标方法所需的参数（如果有的话），然后执行目标方法。当目标方法执行完毕后，就向reply中
+ * 写入返回值（如果有的话）。若返回false，那么客户端的请求会调用失败。
+ * <p>
+ * 不提供AIDL文件依然可以实现Binder，之所以提供，系统根据AIDL文件生成java文件的格式是固定的，会为我们自动生成代码。
+ * <p>
+ * 需要注意：AIDL的包结构在客户端和服务端要保持一致，否则运行会出错，这是因为客户端需要反序列化服务端中和AIDL接口相关的所有类，如果类的完整路径
+ * 不一致的话，就无法成功反序列化。
  */
 public class BinderActivity extends AppCompatActivity {
 
