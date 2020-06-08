@@ -35,6 +35,11 @@ import com.blend.architecture.R;
  * <p>
  * 需要注意：AIDL的包结构在客户端和服务端要保持一致，否则运行会出错，这是因为客户端需要反序列化服务端中和AIDL接口相关的所有类，如果类的完整路径
  * 不一致的话，就无法成功反序列化。
+ *
+ * 其他的知识点：
+ * 1.在AIDL中基于观察者模式注册监听，当要解注册的时候，需要使用RemoteCallbackList来添加监听器。
+ * 2.当Binder意外死亡时，需要重连服务。一种是设置DeathRecipient监听，另外一种是onServiceDisconnected中重连远程服务。
+ * 3.当有多个AIDL Service时，应该创建Binder连接池：将每个业务模块的Binder请求统一转发到远程Service中去执行，从未避免了重复创建Service的过程。
  */
 public class BinderActivity extends AppCompatActivity {
 
