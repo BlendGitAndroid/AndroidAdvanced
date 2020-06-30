@@ -3,7 +3,9 @@
     package="com.blend.architecture">
 
     <application>
-        <activity android:name=".binder.BinderActivity"></activity>
+        <activity android:name=".eventbus.EventBusSecondActivity"></activity>
+        <activity android:name=".eventbus.EventBusMainActivity" />
+        <activity android:name=".binder.BinderActivity" />
         <activity android:name=".handle_message.ActivityThreadActivity" />
         <activity android:name=".ArchitectureMainActivity" />
     </application>

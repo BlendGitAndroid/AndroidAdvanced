@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f5f5f5"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <Button
+        android:id="@+id/btnMain"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="主线程执行" />
+
+    <Button
+        android:id="@+id/btnBackground"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="后台线程执行" />
+
+    <Button
+        android:id="@+id/btnAsync"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="后台线程强制执行" />
+
+    <Button
+        android:id="@+id/btnPosting"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="和发送方同一线程执行" />
+
+
+    <Button
+        android:id="@+id/btn1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="跳转" />
+
+    <TextView
+        android:id="@+id/tv_desc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" />
+</LinearLayout>

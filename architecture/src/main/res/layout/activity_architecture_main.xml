@@ -11,4 +11,9 @@
         style="@style/main_style"
         android:text="HandleMessage" />
 
+    <Button
+        android:id="@+id/eventBus"
+        style="@style/main_style"
+        android:text="EventBus" />
+
 </LinearLayout>
