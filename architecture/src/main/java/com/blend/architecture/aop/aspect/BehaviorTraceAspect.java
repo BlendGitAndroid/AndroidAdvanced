@@ -1,9 +1,9 @@
-package com.blend.androidadvanced.aop.aspect;
+package com.blend.architecture.aop.aspect;
 
 import android.os.SystemClock;
 import android.util.Log;
 
-import com.blend.androidadvanced.aop.annotation.BehaviorTrace;
+import com.blend.architecture.aop.annotation.BehaviorTrace;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -23,7 +23,7 @@ public class BehaviorTraceAspect {
     1.就在原来的应用中那些注解的地方放到当前切面进行处理
     execution(注解名 注解用到的地方)
      */
-    @Pointcut("execution(@com.blend.androidadvanced.aop.annotation.BehaviorTrace *  *(..))")
+    @Pointcut("execution(@com.blend.architecture.aop.annotation.BehaviorTrace *  *(..))")
     public void methodAnnotatedWithBehaviorTrace() {
     }
 

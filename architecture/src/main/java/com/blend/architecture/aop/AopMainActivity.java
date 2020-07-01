@@ -1,13 +1,13 @@
-package com.blend.androidadvanced.aop;
+package com.blend.architecture.aop;
 
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
-import com.blend.androidadvanced.R;
-import com.blend.androidadvanced.aop.annotation.BehaviorTrace;
-import com.blend.androidadvanced.aop.annotation.UserInfoBehaviorTrace;
+import com.blend.architecture.R;
+import com.blend.architecture.aop.annotation.BehaviorTrace;
+import com.blend.architecture.aop.annotation.UserInfoBehaviorTrace;
 
 import java.util.Random;
 

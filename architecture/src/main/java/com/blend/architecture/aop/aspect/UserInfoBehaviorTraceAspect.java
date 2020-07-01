@@ -1,4 +1,4 @@
-package com.blend.androidadvanced.aop.aspect;
+package com.blend.architecture.aop.aspect;
 
 import android.util.Log;
 
@@ -13,7 +13,7 @@ public class UserInfoBehaviorTraceAspect {
     private static final String TAG = "UserInfoBehaviorTraceAs";
 
 
-    @Pointcut("execution(@com.blend.androidadvanced.aop.annotation.UserInfoBehaviorTrace *  *(..))")
+    @Pointcut("execution(@com.blend.architecture.aop.annotation.UserInfoBehaviorTrace *  *(..))")
     public void methodAnnotatedWithBehaviorTrace() {
     }
 

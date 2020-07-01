@@ -8,6 +8,7 @@
         <activity android:name=".binder.BinderActivity" />
         <activity android:name=".handle_message.ActivityThreadActivity" />
         <activity android:name=".ArchitectureMainActivity" />
+        <activity android:name=".aop.AopMainActivity" />
     </application>
 
 </manifest>

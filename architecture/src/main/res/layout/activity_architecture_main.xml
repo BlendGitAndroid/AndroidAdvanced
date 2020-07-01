@@ -12,6 +12,11 @@
         android:text="HandleMessage" />
 
     <Button
+        android:id="@+id/aop"
+        style="@style/main_style"
+        android:text="AOP" />
+
+    <Button
         android:id="@+id/eventBus"
         style="@style/main_style"
         android:text="EventBus" />

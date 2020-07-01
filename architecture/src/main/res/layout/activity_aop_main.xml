@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".aop.AopMainActivity">
+    tools:context="com.blend.architecture.aop.AopMainActivity">
 
     <Button
         android:layout_width="match_parent"
