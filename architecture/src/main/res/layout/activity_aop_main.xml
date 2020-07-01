@@ -30,4 +30,10 @@
         android:onClick="saySomething"
         android:text="发表说说" />
 
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="animalFly"
+        android:text="动物飞行" />
+
 </LinearLayout>
