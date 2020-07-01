@@ -3,7 +3,10 @@
     package="com.blend.architecture">
 
     <application>
-        <activity android:name=".eventbus.EventBusSecondActivity"></activity>
+        <activity android:name=".aop.imitation_taobao.MemberActivity"></activity>
+        <activity android:name=".aop.imitation_taobao.LoginActivity" />
+        <activity android:name=".aop.imitation_taobao.TaobaoMainActivity" />
+        <activity android:name=".eventbus.EventBusSecondActivity" />
         <activity android:name=".eventbus.EventBusMainActivity" />
         <activity android:name=".binder.BinderActivity" />
         <activity android:name=".handle_message.ActivityThreadActivity" />

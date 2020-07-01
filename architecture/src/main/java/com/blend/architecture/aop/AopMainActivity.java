@@ -1,5 +1,6 @@
 package com.blend.architecture.aop;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -9,6 +10,7 @@ import com.blend.architecture.R;
 import com.blend.architecture.aop.animal.Animal;
 import com.blend.architecture.aop.annotation.BehaviorTrace;
 import com.blend.architecture.aop.annotation.UserInfoBehaviorTrace;
+import com.blend.architecture.aop.imitation_taobao.TaobaoMainActivity;
 
 /**
  * AOP为Aspect Oriented Programming的缩写，意为：面向切面编程，通过预编译方式和运行期动态代理实现程序功能的统一维护
@@ -65,5 +67,10 @@ public class AopMainActivity extends AppCompatActivity {
     //方法织入
     public void animalFly(View view) {
         new Animal().fly();
+    }
+
+    //淘宝式登录
+    public void taobaoLogin(View view) {
+        startActivity(new Intent(AopMainActivity.this, TaobaoMainActivity.class));
     }
 }
