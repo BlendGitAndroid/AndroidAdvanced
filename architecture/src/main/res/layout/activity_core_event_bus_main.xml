@@ -8,44 +8,26 @@
     android:padding="10dp">
 
     <Button
-        android:id="@+id/btnCoreEventBus"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="自定义EventBus" />
-
-    <Button
-        android:id="@+id/btnMain"
+        android:id="@+id/btnCoreMain"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="主线程执行" />
 
     <Button
-        android:id="@+id/btnBackground"
+        android:id="@+id/btnCoreAsync"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="后台线程执行" />
 
-    <Button
-        android:id="@+id/btnAsync"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="后台线程强制执行" />
 
     <Button
-        android:id="@+id/btnPosting"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="和发送方同一线程执行" />
-
-
-    <Button
-        android:id="@+id/btn1"
+        android:id="@+id/btnCore1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="跳转" />
 
     <TextView
-        android:id="@+id/tv_desc"
+        android:id="@+id/tv_core_desc"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center" />

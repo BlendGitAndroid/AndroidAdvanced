@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.blend.architecture.R;
+import com.blend.architecture.eventbus.core.CoreEventBusMainActivity;
 import com.blend.architecture.eventbus.model.AsyncMessage;
 import com.blend.architecture.eventbus.model.BackgroundMessage;
 import com.blend.architecture.eventbus.model.MainMessage;
@@ -22,7 +23,7 @@ public class EventBusMainActivity extends AppCompatActivity implements View.OnCl
 
     private static final String TAG = "EventBusMainActivity";
 
-    private Button btnMain, btnBackground, btnAsync, btnPosting, btn1;
+    private Button btnMain, btnBackground, btnAsync, btnPosting, btn1, btnCoreEventBus;
     private TextView tv_desc;
 
     @Override
@@ -31,6 +32,7 @@ public class EventBusMainActivity extends AppCompatActivity implements View.OnCl
         setContentView(R.layout.activity_event_bus_main);
         EventBus.getDefault().register(this);
 
+        btnCoreEventBus = findViewById(R.id.btnCoreEventBus);
         btnMain = findViewById(R.id.btnMain);
         btnBackground = findViewById(R.id.btnBackground);
         btnAsync = findViewById(R.id.btnAsync);
@@ -43,6 +45,7 @@ public class EventBusMainActivity extends AppCompatActivity implements View.OnCl
         btnAsync.setOnClickListener(this);
         btnPosting.setOnClickListener(this);
         btn1.setOnClickListener(this);
+        btnCoreEventBus.setOnClickListener(this);
     }
 
     @Override
@@ -59,6 +62,8 @@ public class EventBusMainActivity extends AppCompatActivity implements View.OnCl
         } else if (id == R.id.btn1) {
             Intent intent = new Intent(EventBusMainActivity.this, EventBusSecondActivity.class);
             startActivity(intent);
+        } else if (id == R.id.btnCoreEventBus) {
+            startActivity(new Intent(EventBusMainActivity.this, CoreEventBusMainActivity.class));
         }
     }
 

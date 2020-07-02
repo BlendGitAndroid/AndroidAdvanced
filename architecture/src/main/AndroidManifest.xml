@@ -3,7 +3,9 @@
     package="com.blend.architecture">
 
     <application>
-        <activity android:name=".aop.imitation_taobao.MemberActivity"></activity>
+        <activity android:name=".eventbus.core.CoreEventBusSecondActivity"></activity>
+        <activity android:name=".eventbus.core.CoreEventBusMainActivity" />
+        <activity android:name=".aop.imitation_taobao.MemberActivity" />
         <activity android:name=".aop.imitation_taobao.LoginActivity" />
         <activity android:name=".aop.imitation_taobao.TaobaoMainActivity" />
         <activity android:name=".eventbus.EventBusSecondActivity" />
