@@ -28,6 +28,15 @@ import com.blend.architecture.aop.imitation_taobao.TaobaoMainActivity;
  *
  * <p>
  * 作用：统计埋点，日志打印/打点，数据校验，行为拦截，性能监控，动态权限控制。
+ * <p>
+ * 比较：
+ * 1、Aspect Oriented Programming 面向切面编程 通过预编译方式和运行期动态代理实现程序功能的统一维护。
+ *   ObjectOriented Programming，面向对象编程 把功能或问题模块化，每个模块处理自己模块内部的事情。
+ * 2、在运行时，编译时，类加载期，动态地将代码切入到类的指定方法、指定位置上的编程思想。
+ * 3、AOP在编程历史上可以说是里程碑式的，对OOP编程是一种十分有益的补充。
+ * 4、AOP像OOP一样，只是一种编程方法论，AOP并没有规定说，实现AOP协议的代码，要用什么方式去实现。
+ * 5、OOP侧重静态，名词，状态，组织，数据，载体是空间。
+ * 6、AOP侧重动态，动词，行为，调用，算法，载体是时间。
  */
 public class AopMainActivity extends AppCompatActivity {
 
