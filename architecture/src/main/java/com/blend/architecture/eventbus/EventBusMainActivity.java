@@ -44,7 +44,7 @@ import org.greenrobot.eventbus.ThreadMode;
  * 使用到的设计模式：单例模式、建造者模式、观察者模式
  * <p>
  * 优点：简化组件之间的通信方式，实现解耦让业务代码更加简洁，可以动态设置事件处理线程以及优先级，调度灵活
- * 缺点：每个事件都必须自定义一个事件类，造成事件类太多，无形中加大了维护成本，导致了当接受者过多或相同参数时很难理清消息流
+ * 缺点：每个事件都必须自定义一个事件类，造成事件类太多，无形中加大了维护成本，导致了当接受者过多或相同参数时很难理清消息流，无法进行进程间通信
  */
 public class EventBusMainActivity extends AppCompatActivity implements View.OnClickListener {
 

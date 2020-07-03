@@ -12,7 +12,7 @@ import com.blend.architecture.R;
  * IPC主要包含三块内容：Serializable接口，Parcelable，和Binder。
  * <p>
  * Binder:是Android中的一个类，实现了IBinder接口。
- * 从IPC角度来说，Binder是Android中的一种跨进程通信方式，也可以理解为一种屋里设备；
+ * 从IPC角度来说，Binder是Android中的一种跨进程通信方式，也可以理解为一种物理设备；
  * 从Framework角度来说，Binder是ServiceManager连接各种Manager(ActivityManager,WindowManager)和相应ManagerService的桥梁；
  * 从Android应用层来说，Binder是客户端和服务端进行通信的媒介，当bindService的时候，服务端会返回一个包含了服务端业务调用的Binder对象，
  * 通过这个Binder对象，客户端就可以获取服务端提供的服务或者数据，这里的服务包括普通服务和AIDL服务。
