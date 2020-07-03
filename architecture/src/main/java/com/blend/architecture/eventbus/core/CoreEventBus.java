@@ -84,7 +84,7 @@ class CoreEventBus {
 
     //取消注册
     public void unregister(Object subscriber) {
-        List<CoreSubscribeMethod> list = cacheMap.remove(subscriber);
+        List<CoreSubscribeMethod> list = cacheMap.get(subscriber);
         if (list != null) {
             cacheMap.remove(subscriber);
         }
