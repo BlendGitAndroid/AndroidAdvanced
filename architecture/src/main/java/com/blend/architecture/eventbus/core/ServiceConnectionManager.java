@@ -17,19 +17,21 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class ServiceConnectionManager {
     private static final ServiceConnectionManager ourInstance = new ServiceConnectionManager();
-    //    Class  对应的Binder  对象
+    // Class对应的Binder对象
     private final ConcurrentHashMap<Class<? extends HermesService>, MyEventBusService> mHermesServices =
             new ConcurrentHashMap<Class<? extends HermesService>, MyEventBusService>();
 
     public static ServiceConnectionManager getInstance() {
         return ourInstance;
     }
-    //Class对应的链接对象
+    //Class对应的连接对象，key-->Service，value->与Service对应的Connection
     private final ConcurrentHashMap<Class<? extends HermesService>, HermesServiceConnection> mHermesServiceConnections = new ConcurrentHashMap<Class<? extends HermesService>, HermesServiceConnection>();
 
 
     private ServiceConnectionManager() {
     }
+
+    //客户端连接服务器
     public void bind(Context context, String packageName, Class<? extends HermesService> service) {
         HermesServiceConnection connection = new HermesServiceConnection(service);
         mHermesServiceConnections.put(service, connection);
@@ -38,7 +40,7 @@ public class ServiceConnectionManager {
             intent = new Intent(context, service);
         } else {
             intent = new Intent();
-            intent.setClassName(packageName, service.getName());
+            intent.setClassName(packageName, service.getName());    //打开外部应用
         }
         context.bindService(intent, connection, Context.BIND_AUTO_CREATE);
     }
@@ -58,7 +60,7 @@ public class ServiceConnectionManager {
         return null;
     }
 
-    //     接受远端的binder 对象   进程B就可以了通过Binder对象去操作 服务端的 方法
+    //接受远端的binder对象，进程B就可以了通过Binder对象去操作服务端的方法
     private class HermesServiceConnection implements ServiceConnection {
         private Class<? extends HermesService> mClass;
 

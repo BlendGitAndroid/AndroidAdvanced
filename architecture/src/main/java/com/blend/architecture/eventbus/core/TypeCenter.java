@@ -27,7 +27,7 @@ public class TypeCenter {
         mRawMethods = new ConcurrentHashMap<Class<?>, ConcurrentHashMap<String, Method>>();
     }
     public void register(Class<?> clazz) {
-//分为注册类  注册方法
+        //分为注册类  注册方法
         registerClass(clazz);
         registerMethod(clazz);
 
@@ -90,10 +90,11 @@ public class TypeCenter {
             map.put(key, method);
         }
     }
+
     //    mAnnotatedClasses 填充
     private void registerClass(Class<?> clazz) {
         String className = clazz.getName();
-        mAnnotatedClasses.putIfAbsent(className, clazz);
+        mAnnotatedClasses.putIfAbsent(className, clazz);    //若存在重复的key，则不会放入值
     }
 
 }

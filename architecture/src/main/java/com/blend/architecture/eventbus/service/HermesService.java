@@ -14,6 +14,9 @@ import com.blend.architecture.eventbus.response.InstanceResponceMake;
 import com.blend.architecture.eventbus.response.ObjectResponceMake;
 import com.blend.architecture.eventbus.response.ResponceMake;
 
+/**
+ * 服务端代码
+ */
 public class HermesService extends Service {
     @Nullable
     @Override
@@ -24,7 +27,7 @@ public class HermesService extends Service {
     private MyEventBusService.Stub mBinder = new MyEventBusService.Stub() {
         @Override
         public Responce send(Request request) throws RemoteException {
-//            对请求参数进行处理  生成Responce结果返回
+//            对请求参数进行处理，生成Responce结果返回
             ResponceMake responceMake = null;
             switch (request.getType()) {   //根据不同的类型，产生不同的策略
                 case Hermes.TYPE_GET://获取单例
@@ -34,7 +37,6 @@ public class HermesService extends Service {
                     responceMake = new ObjectResponceMake();
                     break;
             }
-
 
             return responceMake.makeResponce(request);
         }

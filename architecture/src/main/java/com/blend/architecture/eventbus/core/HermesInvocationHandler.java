@@ -18,13 +18,20 @@ public class HermesInvocationHandler implements InvocationHandler {
     private Class hermeService;
 
     public HermesInvocationHandler(Class<? extends HermesService> service, Class clazz) {
-        this.clazz = clazz;
         this.hermeService = service;
+        this.clazz = clazz;
     }
 
+    /*
+    三个参数：
+    Object proxy：就是代理对象，newProxyInstance方法的返回对象
+    Method method：调用的方法
+    Object[] args：方法中的参数
+     */
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         Log.i(TAG, "invoke:-------> " + method.getName());
+        //生成单例，返回客户端
         Responce responce = Hermes.getDefault().sendObjectRequest(hermeService, clazz, method, args);
         if (!TextUtils.isEmpty(responce.getData())) {
             ResponceBean responceBean = GSON.fromJson(responce.getData(), ResponceBean.class);

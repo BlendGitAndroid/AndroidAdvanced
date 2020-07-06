@@ -18,10 +18,8 @@ public class HermesEventBusMainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_hermes_event_bus_main);
 
-        //为什么要初始化（在进程中，单例存在不同，所以需要初始化）
-        Hermes.getDefault().init(this);
-
         Hermes.getDefault().register(UserManager.class);
+
         UserManager.getInstance().setFriend(new Friend("xuhai", 18));
 
     }
