@@ -1,7 +1,7 @@
 package com.blend.architecture.eventbus.response;
 
-import com.blend.architecture.Request;
-import com.blend.architecture.Responce;
+import com.blend.architecture.eventbus.Request;
+import com.blend.architecture.eventbus.Responce;
 import com.blend.architecture.eventbus.bean.RequestBean;
 import com.blend.architecture.eventbus.bean.RequestParameter;
 import com.blend.architecture.eventbus.core.ObjectCenter;

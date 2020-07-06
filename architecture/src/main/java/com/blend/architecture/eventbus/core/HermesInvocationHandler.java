@@ -3,7 +3,7 @@ package com.blend.architecture.eventbus.core;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.blend.architecture.Responce;
+import com.blend.architecture.eventbus.Responce;
 import com.blend.architecture.eventbus.response.ResponceBean;
 import com.blend.architecture.eventbus.service.HermesService;
 import com.google.gson.Gson;

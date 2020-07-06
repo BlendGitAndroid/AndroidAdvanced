@@ -3,7 +3,11 @@
     package="com.blend.architecture">
 
     <application>
-        <activity android:name=".eventbus.core.CoreEventBusSecondActivity"></activity>
+        <activity
+            android:name=".eventbus.hermesevent.HermesEventBusSecondActivity"
+            android:process=":s"></activity>
+        <activity android:name=".eventbus.hermesevent.HermesEventBusMainActivity" />
+        <activity android:name=".eventbus.core.CoreEventBusSecondActivity" />
         <activity android:name=".eventbus.core.CoreEventBusMainActivity" />
         <activity android:name=".aop.imitation_taobao.MemberActivity" />
         <activity android:name=".aop.imitation_taobao.LoginActivity" />
@@ -14,6 +18,8 @@
         <activity android:name=".handle_message.ActivityThreadActivity" />
         <activity android:name=".ArchitectureMainActivity" />
         <activity android:name=".aop.AopMainActivity" />
+
+        <service android:name=".eventbus.service.HermesService" />
     </application>
 
 </manifest>

@@ -1,4 +1,4 @@
-package com.blend.architecture;
+package com.blend.architecture.eventbus;
 
 import android.os.Parcel;
 import android.os.Parcelable;

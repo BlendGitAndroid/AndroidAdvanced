@@ -9,8 +9,8 @@ import android.os.RemoteException;
 import android.text.TextUtils;
 
 import com.blend.architecture.MyEventBusService;
-import com.blend.architecture.Request;
-import com.blend.architecture.Responce;
+import com.blend.architecture.eventbus.Request;
+import com.blend.architecture.eventbus.Responce;
 import com.blend.architecture.eventbus.service.HermesService;
 
 import java.util.concurrent.ConcurrentHashMap;

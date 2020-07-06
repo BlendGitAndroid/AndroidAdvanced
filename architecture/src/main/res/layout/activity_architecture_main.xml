@@ -21,4 +21,9 @@
         style="@style/main_style"
         android:text="EventBus" />
 
+    <Button
+        android:id="@+id/hermesEventBus"
+        style="@style/main_style"
+        android:text="HermesEventBus" />
+
 </LinearLayout>

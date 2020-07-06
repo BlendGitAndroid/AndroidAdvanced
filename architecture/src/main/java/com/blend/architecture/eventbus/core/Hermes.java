@@ -2,8 +2,8 @@ package com.blend.architecture.eventbus.core;
 
 import android.content.Context;
 
-import com.blend.architecture.Request;
-import com.blend.architecture.Responce;
+import com.blend.architecture.eventbus.Request;
+import com.blend.architecture.eventbus.Responce;
 import com.blend.architecture.eventbus.annotion.ClassId;
 import com.blend.architecture.eventbus.bean.RequestBean;
 import com.blend.architecture.eventbus.bean.RequestParameter;

@@ -3,8 +3,8 @@ package com.blend.architecture;
 
 // Declare any non-default types here with import statements
 
-import com.blend.architecture.Request;
-import com.blend.architecture.Responce;
+import com.blend.architecture.eventbus.Request;
+import com.blend.architecture.eventbus.Responce;
 
 interface MyEventBusService {
     /**

@@ -8,6 +8,7 @@ import android.widget.Button;
 
 import com.blend.architecture.aop.AopMainActivity;
 import com.blend.architecture.eventbus.EventBusMainActivity;
+import com.blend.architecture.eventbus.hermesevent.HermesEventBusMainActivity;
 import com.blend.architecture.handle_message.ActivityThreadActivity;
 
 public class ArchitectureMainActivity extends AppCompatActivity {
@@ -15,6 +16,7 @@ public class ArchitectureMainActivity extends AppCompatActivity {
     private Button handleMessage;
     private Button aop;
     private Button eventBus;
+    private Button hermesEventBus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +25,7 @@ public class ArchitectureMainActivity extends AppCompatActivity {
         handleMessage = findViewById(R.id.handleMessage);
         eventBus = findViewById(R.id.eventBus);
         aop = findViewById(R.id.aop);
+        hermesEventBus = findViewById(R.id.hermesEventBus);
         handleMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -40,6 +43,12 @@ public class ArchitectureMainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(ArchitectureMainActivity.this, EventBusMainActivity.class));
+            }
+        });
+        hermesEventBus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ArchitectureMainActivity.this, HermesEventBusMainActivity.class));
             }
         });
     }
