@@ -40,7 +40,8 @@ public class ServiceConnectionManager {
             intent = new Intent(context, service);
         } else {
             intent = new Intent();
-            intent.setClassName(packageName, service.getName());    //打开外部应用
+            //打开外部应用，跳转到不同Application的activity或者service，setClassName内部也是调用的setComponent
+            intent.setClassName(packageName, service.getName());
         }
         context.bindService(intent, connection, Context.BIND_AUTO_CREATE);
     }

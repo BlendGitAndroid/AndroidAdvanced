@@ -24,35 +24,39 @@ public abstract class ResponceMake {
     protected static final ObjectCenter OBJECT_CENTER = ObjectCenter.getInstance();
 
 
-
-    protected abstract Object invokeMethod()  ;
+    protected abstract Object invokeMethod();
 
     protected abstract void setMethod(RequestBean requestBean);
 
     public Responce makeResponce(Request request) {
+
+        //取出request中的RequestBean消息
         RequestBean requestBean = GSON.fromJson(request.getData(), RequestBean.class);
-//reslutClass  UserManage   getInstance  method()
+
+        //通过requestBean中设置的目标单例类的名字去加载类
         reslutClass = typeCenter.getClassType(requestBean.getResultClassName());
-//        参数还原    Object[]
+
+        //组装参数，将参数进行还原组装
         RequestParameter[] requestParameters = requestBean.getRequestParameter();
         if (requestParameters != null && requestParameters.length > 0) {
             mParameters = new Object[requestParameters.length];
-            for (int i=0;i<requestParameters.length;i++) {
+            for (int i = 0; i < requestParameters.length; i++) {
                 RequestParameter requestParameter = requestParameters[i];
                 Class<?> clazz = typeCenter.getClassType(requestParameter.getParameterClassName());
-                mParameters[i] =  GSON.fromJson(requestParameter.getParameterValue(), clazz);
+                mParameters[i] = GSON.fromJson(requestParameter.getParameterValue(), clazz);
             }
-        }else {
+        } else {
             mParameters = new Object[0];
         }
 
-//        Method.invoke(null,object[])  重载
+        //通过requestBean中设置的方法名获取到要执行的具体方法
         setMethod(requestBean);
-//        UserManager  getInstance()
-        Object resultObject=invokeMethod();
-//    返回
+
+        //执行方法，并得到方法结果
+        Object resultObject = invokeMethod();
+
+        //将执行结果封装成response返回给B
         ResponceBean responceBean = new ResponceBean(resultObject);
-//把的到的结果序列化成字符串  resultObject--->
         String data = GSON.toJson(responceBean);
         Responce responce = new Responce(data);
         return responce;

@@ -38,7 +38,7 @@ public class Hermes {
 //------------------------------A进程  服务端----------------------------------------------------------------
 
     public void register(Class<?> clazz) {
-        //保存  到另外一个单例地方
+        //将单例保存到另外一个地方，TYPE_CENTER中
         typeCenter.register(clazz);
     }
 
@@ -54,11 +54,12 @@ public class Hermes {
         serviceConnectionManager.bind(context.getApplicationContext(), packageName, service);
     }
 
-    //主要防止方法重载，单例对象是不需要，客户端获取单列对象
+    // 将IUserManager接口进行代理处理，并返回代理。
     public <T> T getInstance(Class<T> clazz, Object... parameters) {    //可变长参数
     //Class<T> clazz, Object... parameters   ====》  Request    ----->Responce
         Responce responce = sendRequest(HermesService.class, clazz, null, parameters);
     //        responce ---》UserManager  不需要 还原     客户端进程压根 UserManager
+        //这是因为客户端和服务端在一个APP中，能相互调用
         return getProxy(HermesService.class, clazz);
     }
 
@@ -71,6 +72,11 @@ public class Hermes {
         /*
         利用Java的反射技术(Java Reflection)，在运行时创建一个实现某些给定接口的新类（也称“动态代理类”）及其实例（对象）,代理的是接口(Interfaces)，
         不是类(Class)，也不是抽象类。
+
+        作用：
+        1.一个接口的实现在编译时无法知道，需要在运行时才能实现
+        2.面向切面编程：如AOP
+
         三个参数：
         ClassLoader loader：用哪个类加载器去加载代理对象
         Class<?>[] interfaces：动态代理类需要实现的接口
@@ -125,28 +131,36 @@ public class Hermes {
     }
 
 
-    //第一个参数：服务类，第二个：单例类，第三个：方法，第四个：方法参数
+    /**
+     * sendObjectRequest将接口中设置的 注解类名，请求的方法名，请求的参数等都封装在requestBean中，
+     * 再把requestBean封装在Request中，进行发送给服务端进程处理。
+     *
+     * @param hermesServiceClass 服务类
+     * @param clazz 单例类，注解的类名
+     * @param method 方法(getFriend)
+     * @param parameters 方法参数
+     * @param <T>
+     * @return
+     */
     public <T> Responce sendObjectRequest(Class<HermesService> hermesServiceClass
             , Class<T> clazz, Method method, Object[] parameters) {
         RequestBean requestBean = new RequestBean();
 
-        String className = null;
+        //设置class类名
         if (clazz.getAnnotation(ClassId.class) == null) {
-//            当
             requestBean.setClassName(clazz.getName());
             requestBean.setResultClassName(clazz.getName());
         } else {
-//            返回类型的全类名
             requestBean.setClassName(clazz.getAnnotation(ClassId.class).value());
             requestBean.setResultClassName(clazz.getAnnotation(ClassId.class).value());
         }
+
+        //设置方法，方法名统一传方法名+参数名  getInstance(java.lang.String)
         if (method != null) {
-//            方法名统一传方法名+参数名  getInstance(java.lang.String)
             requestBean.setMethodName(TypeUtils.getMethodId(method));
         }
-//fastjson  ---》  GSON
 
-
+        //设置参数信息，将参数json化
         RequestParameter[] requestParameters = null;
         if (parameters != null && parameters.length > 0) {
             requestParameters = new RequestParameter[parameters.length];
@@ -164,8 +178,10 @@ public class Hermes {
             requestBean.setRequestParameter(requestParameters);
         }
 
-//        请求获取单例 ----》对象 ----------》调用对象的方法
+        //封装request对象
         Request request = new Request(GSON.toJson(requestBean), TYPE_NEW);
+
+        //aidl传递
         return serviceConnectionManager.request(hermesServiceClass, request);
 
 

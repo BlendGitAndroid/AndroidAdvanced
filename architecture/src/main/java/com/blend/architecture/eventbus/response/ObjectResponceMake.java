@@ -15,6 +15,7 @@ public class ObjectResponceMake  extends ResponceMake {
 
         Exception exception;
         try {
+            //通过反射执行代码
             return mMethod.invoke(mObject,mParameters);
         } catch (IllegalAccessException e) {
             exception = e;
@@ -23,11 +24,14 @@ public class ObjectResponceMake  extends ResponceMake {
         }
         return null;
     }
-    //  1
+
+    /*
+    反射去加载getInstance方法并得到单例。
+    这里其实可以不把方法名写成getInstance也行，但是前提是在A进程中要在一开始就将类put到objectCenter
+     */
     @Override
     protected void setMethod(RequestBean requestBean) {
         mObject = OBJECT_CENTER.getObject(reslutClass.getName());
-//        getUser()    ---->method
         Method method = typeCenter.getMethod(mObject.getClass(), requestBean);
         mMethod = method;
     }

@@ -11,6 +11,10 @@ import com.google.gson.Gson;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 
+/**
+ * 将每一步请求都封装成Request对象通过aidl传递到A进程处理，
+ * 再将处理结果进行返回。
+ */
 public class HermesInvocationHandler implements InvocationHandler {
     private static final String TAG = "alan";
     private Class clazz;
@@ -23,9 +27,11 @@ public class HermesInvocationHandler implements InvocationHandler {
     }
 
     /*
+    创建一个类，实现这个方法，利用反射在invoke()方法里实现需求
+
     三个参数：
-    Object proxy：就是代理对象，newProxyInstance方法的返回对象
-    Method method：调用的方法
+    Object proxy：就是代理对象，但可以使用getClass()方法，得到proxy的Class类从而取得实例的类信息，如方法列表，annotation等
+    Method method：被动态代理类调用的方法，从中可得到方法名，参数类型，返回类型等等
     Object[] args：方法中的参数
      */
     @Override

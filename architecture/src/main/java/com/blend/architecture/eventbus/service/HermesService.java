@@ -15,7 +15,7 @@ import com.blend.architecture.eventbus.response.ObjectResponceMake;
 import com.blend.architecture.eventbus.response.ResponceMake;
 
 /**
- * 服务端代码
+ * 客户端连接
  */
 public class HermesService extends Service {
     @Nullable

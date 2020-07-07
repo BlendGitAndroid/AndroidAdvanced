@@ -3,7 +3,7 @@ package com.blend.architecture.eventbus.manager;
 import com.blend.architecture.eventbus.annotion.ClassId;
 import com.blend.architecture.eventbus.model.Friend;
 
-//接口的方式  描述 一个类
+//接口的方式  描述 一个类，其实是共享单例
 @ClassId("com.blend.architecture.eventbus.manager.UserManager")
 public interface IUserManager {
 
