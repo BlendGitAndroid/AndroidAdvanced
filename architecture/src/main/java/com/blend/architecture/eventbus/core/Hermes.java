@@ -79,8 +79,9 @@ public class Hermes {
 
         三个参数：
         ClassLoader loader：用哪个类加载器去加载代理对象
-        Class<?>[] interfaces：动态代理类需要实现的接口
+        Class<?>[] interfaces：动态代理类需要实现的接口列表
         InvocationHandler h：动态代理方法在执行时，会调用h里面的invoke方法去执行
+        return：返回动态创建的代理类
          */
         T proxy = (T) Proxy.newProxyInstance(classLoader, new Class<?>[]{clazz}, new HermesInvocationHandler(service, clazz));
         return proxy;
