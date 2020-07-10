@@ -2,14 +2,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.blend.architecture">
 
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
-    <application android:name=".change_skin.MyApplication">
+    <application android:name=".MyApplication">
+        <activity android:name=".database_design.DatabaseDesignMainActivity"></activity>
         <activity
             android:name=".eventbus.hermesevent.HermesEventBusSecondActivity"
-            android:process=":s"></activity>
+            android:process=":s" />
         <activity android:name=".eventbus.hermesevent.HermesEventBusMainActivity" />
         <activity android:name=".eventbus.core.CoreEventBusSecondActivity" />
         <activity android:name=".eventbus.core.CoreEventBusMainActivity" />
