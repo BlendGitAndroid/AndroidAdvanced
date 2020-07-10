@@ -2,7 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.blend.architecture">
 
-    <application>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <application android:name=".change_skin.MyApplication">
         <activity
             android:name=".eventbus.hermesevent.HermesEventBusSecondActivity"
             android:process=":s"></activity>
@@ -18,6 +22,8 @@
         <activity android:name=".handle_message.ActivityThreadActivity" />
         <activity android:name=".ArchitectureMainActivity" />
         <activity android:name=".aop.AopMainActivity" />
+        <activity android:name=".change_skin.SkinMainActivity" />
+        <activity android:name=".change_skin.SkinActivity" />
 
         <service android:name=".eventbus.service.HermesService" />
     </application>

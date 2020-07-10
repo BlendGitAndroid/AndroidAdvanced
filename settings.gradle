@@ -1,4 +1,6 @@
-rootProject.name='AndroidAdvanced'
+include ':skincoreapp'
+include ':skincore'
+rootProject.name = 'AndroidAdvanced'
 include ':app'
 include ':ui'
 include ':architecture'

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <style name="main_style">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -7,5 +8,23 @@
         <item name="android:textAllCaps">false</item>
         <item name="android:layout_marginBottom">2dp</item>
         <item name="android:textColor">#333333</item>
+    </style>
+
+    <!-- Base application theme. -->
+    <style name="SkinBaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="skinTypeface">@string/typeface</item>
+    </style>
+
+
+    <style name="SkinAppTheme" parent="SkinBaseTheme"></style>
+
+    <style name="SkinSplashTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowBackground">@drawable/p_login_bg</item>
     </style>
 </resources>

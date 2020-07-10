@@ -26,4 +26,9 @@
         style="@style/main_style"
         android:text="HermesEventBus" />
 
+    <Button
+        android:id="@+id/changeSkin"
+        style="@style/main_style"
+        android:text="ChangeSkin" />
+
 </LinearLayout>
