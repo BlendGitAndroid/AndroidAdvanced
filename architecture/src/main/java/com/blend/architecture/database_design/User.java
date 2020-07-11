@@ -6,9 +6,10 @@ import org.greenrobot.greendao.annotation.Generated;
 @Entity
 public class User {
 
-    public int id;
-    public String name;
-    public String password;
+    private int id;
+    private String name;
+    private String password;
+
     @Generated(hash = 258842593)
     public User(int id, String name, String password) {
         this.id = id;

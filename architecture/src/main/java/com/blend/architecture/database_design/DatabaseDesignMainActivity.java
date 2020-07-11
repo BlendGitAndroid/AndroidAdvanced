@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import com.blend.architecture.MyApplication;
 import com.blend.architecture.R;
+import com.blend.architecture.database_design.daopackage.UserDao;
 
 public class DatabaseDesignMainActivity extends AppCompatActivity {
 

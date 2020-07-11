@@ -5,8 +5,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatDelegate;
 
 import com.blend.architecture.change_skin.NightModeConfig;
-import com.blend.architecture.database_design.DaoMaster;
-import com.blend.architecture.database_design.DaoSession;
+import com.blend.architecture.database_design.daopackage.DaoMaster;
+import com.blend.architecture.database_design.daopackage.DaoSession;
 import com.blend.skincore.SkinManager;
 
 
@@ -18,7 +18,15 @@ public class MyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        SkinManager.init(this);
+        sMyApplication = this;
+
+        initSkin();
+
+        initGreenDao();
+    }
+
+    private void initSkin() {
+        SkinManager.init(sMyApplication);
 
         //根据app上次退出的状态来判断是否需要设置夜间模式,提前在SharedPreference中存了一个是
         // 否是夜间模式的boolean值
@@ -28,8 +36,6 @@ public class MyApplication extends Application {
         } else {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         }
-
-        initGreenDao();
     }
 
     private void initGreenDao() {

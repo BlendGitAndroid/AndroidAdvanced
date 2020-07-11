@@ -29,7 +29,7 @@ greendao {
     // 设置生成数据库文件的目录，默认是在build中，可以将生成的文件放到我们的java目录中
     targetGenDir 'src/main/java'
     // 设置生成的数据库相关文件的包名，默认为entity所在的包名
-    daoPackage 'com.blend.architecture.database_design'
+    daoPackage 'com.blend.architecture.database_design.daopackage'
 }
 
 dependencies {
