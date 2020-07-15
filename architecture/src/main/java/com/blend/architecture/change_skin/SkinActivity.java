@@ -1,6 +1,5 @@
 package com.blend.architecture.change_skin;
 
-import android.app.Activity;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Environment;
@@ -9,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 
 import com.blend.architecture.R;
@@ -22,6 +22,25 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+
+/**
+ * LayoutInflater的创建过程及实际类型？
+ * 系统在Context中默认提供了三种获取LayoutInflate的方式
+ * 1)LayoutInflater layoutInflater = getLayoutInflater();实质上和3）是一样的，获取的也是系统的
+ * 2)LayoutInflater layoutInflaterFrom = LayoutInflater.from(context);
+ * 3)LayoutInflater systemServiceInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+ * <p>
+ * 从LayoutInflater.from(context)来分析，会调用Context的getSystemService抽象方法，注意这里的context，这里可以是Activity，Application或Service，
+ * 那他们有什么区别呢？
+ * 1）以Activity为例，Activity的父类ContextThemeWrapper重写了getSystemService方法，每个Activity都有一个独立的LayoutInflater，
+ * 通过LayoutInflater.from(getBaseContext()).cloneInContext(this)创建出来，而getBaseContext()实际上是ContextImpl，是在ActivityThread中创建出来
+ * 关联到ContextImpl中的，故getSystemService实际上是调用ContextImpl中的getSystemService方法，最终调用系统的SystemServiceRegistry.getSystemService(this, name)
+ * 来根据单例模式获取到LayoutInflater，这个LayoutInflater实际上是PhoneLayoutInflater。然后通过cloneInContext(this)生成每一个Activity独有的LayoutInflate,
+ * 之所以叫做 “clone”，是因为：系统默认会将进程级的 LayoutInflater 配置给每个 Activity 的 LayoutInflater，这也符合了 LayoutInflater 的自我介绍 “且正确配置的
+ * 标准 LayoutInflater”。
+ * 2）由于 Application和Service都是ContextWrapper的直接子类，它们并没有对getSystemService方法做单独处理。故都是通过 ContextImpl获取的同一个，
+ * 也就是保存在 SystemServiceRegistry中的LayoutInflater，也就是PhoneLayoutInflater。
+ */
 
 public class SkinActivity extends AppCompatActivity {
     /**
