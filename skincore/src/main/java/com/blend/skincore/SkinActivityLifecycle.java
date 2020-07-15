@@ -54,6 +54,10 @@ public class SkinActivityLifecycle implements Application.ActivityLifecycleCallb
         } catch (Exception e) {
             e.printStackTrace();
         }
+        /*
+        LayoutInflater内部为开发者提供了直接设置 Factory的方法，不过需要注意该方法只能被设置一次，否则将会抛出异常。
+        可以利用反射将mFactorySet修改为false加载。
+         */
         //使用factory2 设置布局加载工程
         SkinLayoutInflaterFactory skinLayoutInflaterFactory = new SkinLayoutInflaterFactory
                 (activity, typeface);
