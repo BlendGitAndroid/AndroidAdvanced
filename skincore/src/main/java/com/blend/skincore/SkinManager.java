@@ -8,11 +8,9 @@ import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.text.TextUtils;
 
-
 import com.blend.skincore.utils.SkinPreference;
 import com.blend.skincore.utils.SkinResources;
 
-import java.io.File;
 import java.lang.reflect.Method;
 import java.util.Observable;
 
@@ -72,6 +70,11 @@ public class SkinManager extends Observable {
             SkinResources.getInstance().reset();
         } else {
             try {
+
+                /**
+                 * 加载外部资源可以通过反射创建AssetManager对象，反射调用AssetManager的addAssetPath方法加载外部资源，
+                 * 最后创建Resources对象并传入刚创建的AssetManager对象，通过刚创建的Resources对象获取相应的资源。
+                 */
 
                 //反射创建AssetManager 与 Resource
                 AssetManager assetManager = AssetManager.class.newInstance();

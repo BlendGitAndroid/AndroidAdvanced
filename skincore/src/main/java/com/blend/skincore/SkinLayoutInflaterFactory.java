@@ -16,6 +16,25 @@ import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 
+/**
+ * 如何获取换肤的View，利用LayoutInflate内部接口Factory2提供的onCreateView方法获取需要换肤的View。
+ * 1.首先在AppCompatActivity中，通过getDelegate()方法获取AppCompatDelegate实例，并调用其setContentView方法，AppCompatDelegate
+ * 对象的建立，是根据不同的SDK版本创建的，继承结构是AppCompatDelegate(抽象)->AppCompatDelegateImplBase(抽象)->AppCompatDelegateImplV9(实现)->
+ * AppCompatDelegateImplV11（实现）等。
+ * <p>
+ * 2.getDelegate().setContentView(layoutResID);具体调用的是AppCompatDelegateImplV9中的setContentView，一直调用到LayoutInflate的createViewFromTag，
+ * 首先会通过mFactory2不为null调用onCreateView方法，如果返回的View为null，然后根据-1 == name.indexOf('.')判断是否是全限定名称，若不是全限定名，自动加上"android.view."
+ * 前缀，；两者最后都调用createView方法，根据反射生成相应的View。
+ * <p>
+ * 3.那么2)中的mFactory2是什么？它是什么时候赋值的呢？
+ * 通过super.onCreate(savedInstanceState);调用到AppCompatDelegateImplV9中的installViewFactory()方法，最终调用到LayoutInflate的setFactory2方法中，到这里我们知道了
+ * LayoutInflater的成员变量mFactory2就是AppCompatDelegateImplV9对象（AppCompatDelegateImplV9实现LayoutInflater.Factory2接口）。
+ * 那么在createViewFromTag方法中调用的mFactory2.onCreateView，实际上调用的是AppCompatDelegateImplV9中的onCreateView。那么最终调用的mAppCompatViewInflater.createView
+ * 生成系统内置的View，不是系统的View则返回null，走到2中的逻辑。
+ * <p>
+ * 总结：Layout资源文件的加载是通过LayoutInflater.Factory2的onCreateView方法实现的。也就是如果我们自己定义一个实现了LayoutInflater.Factory2接口的类并实现onCreateView方法，
+ * 在该方法中保存需要换肤的View，最后给换肤的View设置插件中的资源。
+ */
 public class SkinLayoutInflaterFactory implements LayoutInflater.Factory2, Observer {
     private static final String[] mClassPrefixList = {
             "android.widget.",

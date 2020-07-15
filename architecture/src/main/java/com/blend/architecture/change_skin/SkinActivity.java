@@ -5,6 +5,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.text.TextUtils;
 import android.util.Log;
@@ -22,7 +23,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SkinActivity extends Activity {
+public class SkinActivity extends AppCompatActivity {
     /**
      * 从服务器拉取的皮肤表
      */
