@@ -12,6 +12,16 @@ import com.blend.skincore.utils.SkinThemeUtils;
 
 import java.lang.reflect.Field;
 
+/**
+ * ActivityLifecycleCallbacks用来监听所有Activity的生命周期回调
+ * 在android中的应用：
+ * 1.应用新开进程假重启处理（低内存回收、修改权限）
+ * 2.管理 Activity 页面栈
+ * 3.获取当前 Activity 页面
+ * 4.判断应用前后台
+ * 5.保存恢复状态值 savedInstanceState
+ * 6.页面分析统计埋点
+ */
 public class SkinActivityLifecycle implements Application.ActivityLifecycleCallbacks {
 
     private ArrayMap<Activity, SkinLayoutInflaterFactory> mLayoutInflaterFactories = new
@@ -26,6 +36,7 @@ public class SkinActivityLifecycle implements Application.ActivityLifecycleCallb
         SkinThemeUtils.updateStatusBarColor(activity);
         /**
          * 更新字体
+         * Typeface.DEFAULT //常规字体类型
          */
         Typeface typeface = SkinThemeUtils.getSkinTypeface(activity);
         /**
