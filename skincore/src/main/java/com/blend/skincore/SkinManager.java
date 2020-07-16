@@ -48,7 +48,7 @@ public class SkinManager extends Observable {
         skinActivityLifecycle = new SkinActivityLifecycle();
         application.registerActivityLifecycleCallbacks(skinActivityLifecycle);
 
-        //加载皮肤
+        //加载上次设置的皮肤
         loadSkin(SkinPreference.getInstance().getSkin());
     }
 
@@ -84,14 +84,15 @@ public class SkinManager extends Observable {
                 addAssetPath.invoke(assetManager, skinPath);
                 Resources appResource = mContext.getResources();
                 //根据当前的显示与配置(横竖屏、语言等)创建Resources
-                Resources skinResource = new Resources(assetManager, appResource.getDisplayMetrics
-                        (), appResource.getConfiguration());
+                Resources skinResource = new Resources(assetManager, appResource.getDisplayMetrics(),
+                        appResource.getConfiguration());
                 //记录
                 SkinPreference.getInstance().setSkin(skinPath);
                 //获取外部Apk(皮肤包) 包名
                 PackageManager mPm = mContext.getPackageManager();
-                PackageInfo info = mPm.getPackageArchiveInfo(skinPath, PackageManager
-                        .GET_ACTIVITIES);
+                //getPackageArchiveInfo方法，用来获取未安装APK中的信息
+                PackageInfo info = mPm.getPackageArchiveInfo(skinPath,
+                        PackageManager.GET_ACTIVITIES);
                 String packageName = info.packageName;
                 SkinResources.getInstance().applySkin(skinResource, packageName);
             } catch (Exception e) {

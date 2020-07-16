@@ -63,6 +63,7 @@ public class SkinActivityLifecycle implements Application.ActivityLifecycleCallb
                 (activity, typeface);
         LayoutInflaterCompat.setFactory2(layoutInflater, skinLayoutInflaterFactory);
         mLayoutInflaterFactories.put(activity, skinLayoutInflaterFactory);
+        //添加观察者
         SkinManager.getInstance().addObserver(skinLayoutInflaterFactory);
     }
 

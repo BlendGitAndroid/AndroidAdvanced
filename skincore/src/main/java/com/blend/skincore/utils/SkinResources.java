@@ -11,8 +11,11 @@ public class SkinResources {
 
     private static SkinResources instance;
 
+    //资源包的Resource
     private Resources mSkinResources;
+    //资源包的包名
     private String mSkinPkgName;
+    //是否是默认皮肤
     private boolean isDefaultSkin = true;
 
     private Resources mAppResources;

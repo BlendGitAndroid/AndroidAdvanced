@@ -41,10 +41,19 @@ import java.util.List;
  * 2)在继承Activity的类中，由于Activity实现了Factory2接口，重写Factory2的方法即可。前提是在Activity的onCreate之前，给Activity设置Factory2.
  * LayoutInflater mInflater = LayoutInflater.from(this);
  * LayoutInflaterCompat.setFactory2(mInflater, this)
- *
+ * <p>
  * 本文采用第一种方案。
+ * <p>
+ * <p>
+ * 换肤的具体细节：采集需要换肤的控件-->加载皮肤包-->替换所有需要换肤的控件（使用观察者模式）
+ * 1.在应用的Application里面先进行初始化，通过ActivityLifecycleCallbacks注册Activity的回调，加载上次设置的皮肤包资源。
+ * 2.每当打开一个新的activity，自动回调onActivityCreated方法中进行每个Activity的换肤，更新状态栏和字体；获得Activity的LayoutInflate，
+ * 通过反射将“mFactorySet”置为false，通过LayoutInflaterCompat.setFactory2设置Factory,在其onCreateView方法中进行View的采集；
+ * 在换肤过程中，首先根据属性名和View属性的id，拿到皮肤包中View的属性值，并进行换肤，之后添加观察者。
+ * 3.当换肤时，也就是被观察者改变，通过观察者模式，对之前采集的View进行换肤。
  */
 public class SkinMainActivity extends AppCompatActivity {
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

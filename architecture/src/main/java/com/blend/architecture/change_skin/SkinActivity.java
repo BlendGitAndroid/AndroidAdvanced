@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 
 import com.blend.architecture.R;
@@ -26,7 +25,8 @@ import java.util.List;
 /**
  * LayoutInflater的创建过程及实际类型？
  * 系统在Context中默认提供了三种获取LayoutInflate的方式
- * 1)LayoutInflater layoutInflater = getLayoutInflater();实质上和3）是一样的，获取的也是系统的
+ * 1)LayoutInflater layoutInflater = getLayoutInflater();若2）中的context是activity，则1）和2）是一样的，因为最终调用的是PhoneWindow的
+ * LayoutInflater.from(context);而这个context正是activity。
  * 2)LayoutInflater layoutInflaterFrom = LayoutInflater.from(context);
  * 3)LayoutInflater systemServiceInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
  * <p>
