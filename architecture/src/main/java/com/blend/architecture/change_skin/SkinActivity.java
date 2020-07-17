@@ -133,6 +133,19 @@ public class SkinActivity extends AppCompatActivity {
     }
 
     /**
+     * 需要新建values-night文件夹，然后在此目录下新建colors.xml文件在夜间模式下的应用的资源。
+     * 也可以根据需要新建drawable-night,layout-night等后缀为-night的夜间资源文件夹。
+     * <p>
+     * AppCompatDelegate.setDefaultNightMode()方法设置日间还是夜间模式，可以接受的参数值有4个:
+     * 1)MODE_NIGHT_NO. Always use the day (light) theme(一直应用日间(light)主题).
+     * 2)MODE_NIGHT_YES. Always use the night (dark) theme(一直使用夜间(dark)主题).
+     * 3)MODE_NIGHT_AUTO. Changes between day/night based on the time of day(根据当前时间在day/night主题间切换).
+     * 4)MODE_NIGHT_FOLLOW_SYSTEM(默认选项). This setting follows the system’s setting, which is essentially MODE_NIGHT_NO(跟随系统，通常为MODE_NIGHT_NO).
+     * <p>
+     * <p>
+     * <p>
+     * <p>
+     * <p>
      * 夜间模式
      *
      * @param view
