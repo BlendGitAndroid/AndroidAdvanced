@@ -92,9 +92,11 @@ public class SkinLayoutInflaterFactory implements LayoutInflater.Factory2, Obser
             return null;
         }
         for (int i = 0; i < mClassPrefixList.length; i++) {
-            return createView(mClassPrefixList[i] +
+            View view = createView(mClassPrefixList[i] +
                     name, context, attrs);
-
+            if (view != null) {
+                return view;
+            }
         }
         return null;
     }

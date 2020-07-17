@@ -14,7 +14,6 @@ import com.blend.architecture.change_skin.fragment.RadioFragment;
 import com.blend.architecture.change_skin.fragment.VideoFragment;
 import com.blend.architecture.change_skin.widget.MyTabLayout;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,8 +48,12 @@ import java.util.List;
  * 1.在应用的Application里面先进行初始化，通过ActivityLifecycleCallbacks注册Activity的回调，加载上次设置的皮肤包资源。
  * 2.每当打开一个新的activity，自动回调onActivityCreated方法中进行每个Activity的换肤，更新状态栏和字体；获得Activity的LayoutInflate，
  * 通过反射将“mFactorySet”置为false，通过LayoutInflaterCompat.setFactory2设置Factory,在其onCreateView方法中进行View的采集；
- * 在换肤过程中，首先根据属性名和View属性的id，拿到皮肤包中View的属性值，并进行换肤，之后添加观察者。
- * 3.当换肤时，也就是被观察者改变，通过观察者模式，对之前采集的View进行换肤。
+ * 在换肤过程之前，预先设定好换肤的XML属性集合，首先判断属性设置是不是硬编码（硬编码不支持换肤），若不是，将View的属性值和属性Id一一对应，根据拿到的属性Id,
+ * 获取到需要换肤的View的name(colorPrimaryDark)和type(type)，通过Resources.getIdentifier()拿到皮肤包中的相应View的属性Id（R.color.colorPrimaryDark的Id），
+ * 进行换肤设置。最后将这个新打开的Activity添加为观察者。
+ * 3.点击换肤时，也就是被观察者改变，通过观察者模式，对每一个观察者之前采集的View进行换肤。
+ *
+ *
  */
 public class SkinMainActivity extends AppCompatActivity {
 
