@@ -1,13 +1,14 @@
-package com.blend.architecture.database_design;
+package com.blend.architecture.database_design.daopackage;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.blend.architecture.MyApplication;
 import com.blend.architecture.R;
+import com.blend.architecture.database_design.User;
 import com.blend.architecture.database_design.daopackage.UserDao;
 
-public class DatabaseDesignMainActivity extends AppCompatActivity {
+public class GreenDaoMainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -8,6 +8,7 @@ import android.widget.Button;
 
 import com.blend.architecture.aop.AopMainActivity;
 import com.blend.architecture.change_skin.SkinMainActivity;
+import com.blend.architecture.database_design.DatabaseMainActivity;
 import com.blend.architecture.eventbus.EventBusMainActivity;
 import com.blend.architecture.eventbus.hermesevent.HermesEventBusMainActivity;
 import com.blend.architecture.handle_message.ActivityThreadActivity;
@@ -19,6 +20,7 @@ public class ArchitectureMainActivity extends AppCompatActivity {
     private Button eventBus;
     private Button hermesEventBus;
     private Button changeSkin;
+    private Button dataBaseDesign;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +31,7 @@ public class ArchitectureMainActivity extends AppCompatActivity {
         aop = findViewById(R.id.aop);
         hermesEventBus = findViewById(R.id.hermesEventBus);
         changeSkin = findViewById(R.id.changeSkin);
+        dataBaseDesign = findViewById(R.id.dataBaseDesign);
         handleMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -58,6 +61,12 @@ public class ArchitectureMainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(ArchitectureMainActivity.this, SkinMainActivity.class));
+            }
+        });
+        dataBaseDesign.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ArchitectureMainActivity.this, DatabaseMainActivity.class));
             }
         });
     }

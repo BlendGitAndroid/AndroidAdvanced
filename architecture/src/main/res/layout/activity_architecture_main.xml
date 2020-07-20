@@ -31,4 +31,9 @@
         style="@style/main_style"
         android:text="ChangeSkin" />
 
+    <Button
+        android:id="@+id/dataBaseDesign"
+        style="@style/main_style"
+        android:text="DataBaseDesign" />
+
 </LinearLayout>

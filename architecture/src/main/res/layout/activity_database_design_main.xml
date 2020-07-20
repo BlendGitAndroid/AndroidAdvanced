@@ -4,6 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".database_design.DatabaseDesignMainActivity">
+    tools:context=".database_design.daopackage.GreenDaoMainActivity">
 
 </android.support.constraint.ConstraintLayout>
