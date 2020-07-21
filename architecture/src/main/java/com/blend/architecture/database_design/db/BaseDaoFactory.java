@@ -2,6 +2,8 @@ package com.blend.architecture.database_design.db;
 
 import android.database.sqlite.SQLiteDatabase;
 
+import com.blend.architecture.MyApplication;
+
 public class BaseDaoFactory {
 
     private static final BaseDaoFactory sInstance = new BaseDaoFactory();
@@ -15,7 +17,7 @@ public class BaseDaoFactory {
     }
 
     private BaseDaoFactory() {
-        mSqlDataBasePath = "";
+        mSqlDataBasePath = MyApplication.getInstance().getFilesDir().getPath() + "/basedb";
         mSQLiteDatabase = SQLiteDatabase.openOrCreateDatabase(mSqlDataBasePath, null);
     }
 
@@ -30,6 +32,19 @@ public class BaseDaoFactory {
             e.printStackTrace();
         }
         return baseDao;
+    }
+
+    public <T extends BaseDao<M>, M> T getBaseDao(Class<T> daoClass, Class<M> entityClass) {
+        BaseDao baseDao = null;
+        try {
+            baseDao = daoClass.newInstance();
+            baseDao.init(mSQLiteDatabase, entityClass);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        }
+        return (T) baseDao;
     }
 
 }

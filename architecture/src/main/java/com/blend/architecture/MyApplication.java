@@ -15,6 +15,7 @@ public class MyApplication extends Application {
     private static MyApplication sMyApplication;
     private static DaoSession sDaoSession;
 
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -23,6 +24,10 @@ public class MyApplication extends Application {
         initSkin();
 
         initGreenDao();
+    }
+
+    public static MyApplication getInstance() {
+        return sMyApplication;
     }
 
     private void initSkin() {
