@@ -54,7 +54,12 @@ public class MyApplication extends Application {
         sDaoSession = daoMaster.newSession();
     }
 
+    /**
+     * 获取操作类DaoSession，默认数据库表存储在内存里
+     */
     public static DaoSession getDaoSession() {
         return sDaoSession;
     }
+
+
 }

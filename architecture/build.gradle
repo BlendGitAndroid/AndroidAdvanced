@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+//声明添加的插件类型
 apply plugin: 'org.greenrobot.greendao'
 
 android {
