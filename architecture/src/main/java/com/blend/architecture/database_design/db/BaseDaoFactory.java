@@ -34,6 +34,10 @@ public class BaseDaoFactory {
         return baseDao;
     }
 
+    /*
+    <T extends BaseDao<M>, M>：申明此方法有泛型，也可以理解为泛型方法
+    T：表示返回值为T
+     */
     public <T extends BaseDao<M>, M> T getBaseDao(Class<T> daoClass, Class<M> entityClass) {
         BaseDao baseDao = null;
         try {

@@ -54,10 +54,12 @@ public class BaseDao<T> implements IBaseDao<T> {
     }
 
     private void initCache() {
-        //1.获取所有字段名
+        //1.获取所有字段名 limit用法：第一个参数：为查询结果的索引值（默认从0开始）;第二个参数：为查询结果返回的数量
         String sql = "select * from " + mTableName + " limit 1, 0";  //空表
+        //rawQuery：用于执行select语句，第一个参数为select语句；第二个参数为select语句中占位符参数的值，
+        // 如果select语句没有使用占位符，该参数可以设置为null
         Cursor cursor = mSQLiteDatabase.rawQuery(sql, null);
-        String[] columnNames = cursor.getColumnNames();
+        String[] columnNames = cursor.getColumnNames(); //获取到所有的列名
         //2.取得会有的成员变量
         Field[] declaredFields = mEntityClass.getDeclaredFields();
         for (Field field : declaredFields) {
@@ -80,7 +82,7 @@ public class BaseDao<T> implements IBaseDao<T> {
                 }
             }
             if (columnField != null) {
-                mCacheMap.put(columnName, columnField); //字段名和成员变量的名字一一匹配
+                mCacheMap.put(columnName, columnField); //数据库字段名和成员变量的名字一一匹配
             }
         }
     }
@@ -139,6 +141,11 @@ public class BaseDao<T> implements IBaseDao<T> {
     }
 
 
+    /*
+    拿到数据库字段名和对应的类成员变量的值
+    因为这里传入的是泛型，不知道具体的类型，所以需要使用反射根据类对象和类成员变量类型拿到具体的数值，
+    再转换成String
+     */
     private Map<String, String> getValues(T entity) {
         HashMap<String, String> map = new HashMap<>();
         Iterator<Map.Entry<String, Field>> iterator = mCacheMap.entrySet().iterator();
@@ -178,7 +185,13 @@ public class BaseDao<T> implements IBaseDao<T> {
         //2.把数据转移到ContentValues中
         ContentValues values = getContentValues(map);
 
-        //3.开始数据库插入
+        /*
+            3.开始数据库插入
+            String table：表名
+            String nullColumnHack：数据不允许插入所有字段值都为NULL的记录，但是如果你指定一个字段为nullColumnHack的值，则数据库允许参加所有字段值都为NULL的记录。
+            ContentValues values：通过put重载添加数据，用于将表中每个列名以及相应的待插入数据传入即可
+         */
+
         mSQLiteDatabase.insert(mTableName, null, values);
         return 0;
     }
@@ -206,6 +219,12 @@ public class BaseDao<T> implements IBaseDao<T> {
 
         Map<String, String> whereValue = getValues(where);
         Condition condition = new Condition(whereValue);
+        /*
+        String table：表名
+        ContentValues values：将表中每个列名以及相应的待更新的数据传入即可
+        String whereClause：对应的是SQL语句的where部分，使用占位符？
+        String[] whereArgs：提供一个字符串数组为第三个参数中的每一个占位符指定相应的内容
+         */
         result = mSQLiteDatabase.update(mTableName, contentValues, condition.whereClause, condition.whereArgs);
         return result;
     }
@@ -215,6 +234,11 @@ public class BaseDao<T> implements IBaseDao<T> {
         int result = -1;
         Map<String, String> map = getValues(where);
         Condition condition = new Condition(map);
+        /*
+        String table:表名
+        String whereClause:对应的是SQL语句的where部分，使用占位符？
+        String[] whereArgs:提供一个字符串数组为第三个参数中的每一个占位符指定相应的内容
+         */
         result = mSQLiteDatabase.delete(mTableName, condition.whereClause, condition.whereArgs);
         return result;
     }
@@ -237,6 +261,15 @@ public class BaseDao<T> implements IBaseDao<T> {
 
         Condition condition = new Condition(values);
 
+        /*
+            String table：指定查询的表名
+            String[] columns：指定查询的列名
+            String selection：指定where的约束条件
+            String[] selectionArgs：为where中的占位符提供具体的值
+            String groupBy：指定需要的group by的列
+            String having：对group by后的结果进行进一步约束
+            String orderBy：指定查询结果的排序方式
+         */
         Cursor query = mSQLiteDatabase.query(mTableName, null, condition.whereClause,
                 condition.whereArgs, null, orderBy, limitString);
         List<T> result = getResult(query, where);
@@ -252,12 +285,14 @@ public class BaseDao<T> implements IBaseDao<T> {
                 Iterator<Map.Entry<String, Field>> iterator = mCacheMap.entrySet().iterator();
                 while (iterator.hasNext()) {
                     Map.Entry<String, Field> next = iterator.next();
-                    String key = next.getKey();
+                    String key = next.getKey(); //数据库字段名
+                    //获取到某一列在表中对应的位置索引
                     int columnIndex = query.getColumnIndex(key);
-                    Field field = next.getValue();
+                    Field field = next.getValue();  //类的成员变量的名字
                     Class<?> type = field.getType();
                     if (columnIndex != -1) {
                         if (type == String.class) {
+                            //根据索引取到相应的值
                             field.set(object, query.getString(columnIndex));
                         } else if (type == Double.class) {
                             field.set(object, query.getDouble(columnIndex));
@@ -292,7 +327,7 @@ public class BaseDao<T> implements IBaseDao<T> {
         public Condition(Map<String, String> whereCause) {
             ArrayList<String> list = new ArrayList<>();
             StringBuffer buffer = new StringBuffer();
-            buffer.append("1=1");
+            buffer.append("1=1");   //提供一个占位
             Iterator<Map.Entry<String, String>> iterator = whereCause.entrySet().iterator();
             if (iterator.hasNext()) {
                 Map.Entry<String, String> entry = iterator.next();

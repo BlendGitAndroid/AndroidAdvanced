@@ -17,9 +17,21 @@ import com.blend.architecture.database_design.db.BaseDaoNewImpl;
 
 import java.util.List;
 
+/**
+ * 数据库架构设计的思路：
+ * 使用SQLiteDatabase类，封装了一些操作数据库的API，使用该类可以完成对数据进行添加(Create)、查询(Retrieve)、更新(Update)
+ * 和删除(Delete)操作（这些操作简称为CRUD）。
+ * execSQL()方法可以执行insert、delete、update和CREATE TABLE之类有更改行为的SQL语句；rawQuery()方法用于执行select语句。
+ * <p>
+ * 创建表：因为不知道具体的类，使用泛型来表示某一个数据库类，那么就需要通过反射来拿到这个类中所有的成员变量类型,若有注解，则新建表
+ * 的表名和列名就是注解的名字，若没有注解，则是类名和成员变量名，并将数据库列名和成员变量名一一对应缓存成Map。
+ * 增删改查：首先根据传入的对象，通过缓存的Map拿到列名和变量名，通过变量名拿到变量值，从而拿到列名和相应的值，进行增删改查
+ */
 public class DatabaseMainActivity extends AppCompatActivity {
 
     private static final String TAG = "DatabaseMainActivity";
+
+    private int index = 0;
 
     private Button greenDao;
 
@@ -38,7 +50,7 @@ public class DatabaseMainActivity extends AppCompatActivity {
 
     public void insert(View view) {
         BaseDao<Person> baseDao = BaseDaoFactory.getInstance().getBaseDao(Person.class);
-        baseDao.insert(new Person(1, "xu", "123"));
+        baseDao.insert(new Person(index++, "xu", "123"));
         Toast.makeText(this, "插入成功！", Toast.LENGTH_SHORT).show();
     }
 
@@ -47,7 +59,7 @@ public class DatabaseMainActivity extends AppCompatActivity {
         Person person = new Person();
         person.setName("jiangzuo");
         Person where = new Person();
-        where.setId(1);
+        where.setId(3);
         long update = baseDao.update(person, where);
         Toast.makeText(this, "更新成功！", Toast.LENGTH_SHORT).show();
     }
@@ -63,7 +75,7 @@ public class DatabaseMainActivity extends AppCompatActivity {
     public void clickSelect(View view) {
         BaseDao<Person> baseDao = BaseDaoFactory.getInstance().getBaseDao(Person.class);
         Person where = new Person();
-        where.setId(1);
+        where.setId(3);
         List<Person> query = baseDao.query(where);
         if (query != null) {
             for (Person person : query) {
