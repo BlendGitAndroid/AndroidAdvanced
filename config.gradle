@@ -1,0 +1,20 @@
+ext {
+
+    isModule = false //true:集成模式 false:组件模式
+    android = [
+            compileSdkVersion: 27,
+            minSdkVersion    : 21,
+            targetSdkVersion : 27,
+            versionCode      : 1,
+            versionName      : "1.0"
+    ]
+    appId = [
+            "module2": "com.blend.routermodule2"
+    ]
+
+    supportLibrary = "27.0.0"
+    dependencies = [
+            "appcompat-v7": "com.android.support:appcompat-v7:${supportLibrary}",
+    ]
+
+}
