@@ -36,4 +36,9 @@
         style="@style/main_style"
         android:text="DataBaseDesign" />
 
+    <Button
+        android:id="@+id/aRouter"
+        style="@style/main_style"
+        android:text="ARouter" />
+
 </LinearLayout>
