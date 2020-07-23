@@ -5,8 +5,6 @@ import android.os.Bundle;
 
 import com.blend.architecture.MyApplication;
 import com.blend.architecture.R;
-import com.blend.architecture.database_design.User;
-import com.blend.architecture.database_design.daopackage.UserDao;
 
 /**
  * GreenDao是一个开源的Android ORM(对象关系映射，Object Relational Mapping)，是一种将对象层次结构映射成关系型结构的方法。
@@ -37,6 +35,14 @@ import com.blend.architecture.database_design.daopackage.UserDao;
  * GreenDao的ORM内部实现：
  * SQLiteOpenHelper:版本控制，创建数据库。
  * SQLiteDatabase:数据库类，提供直接操作数据库的API
+ * <p>
+ * DaoMaster：使用 greenDAO的切入点。DaoMaster保存数据库对象（SQLiteDatabase）并管理特定模式的DAO类（而不是对象）。
+ * 它有静态方法来创建表或删除它们。它的内部类OpenHelper和DevOpenHelper都是SQLiteOpenHelper的实现，用来在SQLite
+ * 数据库中创建和升级等操作。
+ * DaoSession：管理特定模式的所有可用DAO对象，你可以使用其中一个的getter方法获取DAO对象。DaoSession还为实体提供了一
+ * 些通用的持久性方法，如插入，加载，更新，刷新和删除。最后，DaoSession对象也跟踪identity scope。
+ * xxDAO：数据访问对象（DAO），用于实体的持久化和查询。 对于每个实体，greenDAO会生成一个 DAO。它比DaoSession拥有更多
+ * 的持久化方法，例如：count，loadAll 和 insertInTx。
  */
 public class GreenDaoMainActivity extends AppCompatActivity {
 
