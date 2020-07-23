@@ -1,4 +1,4 @@
-package com.blend.architecture.a_router;
+package com.blend.architecture.router;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
