@@ -43,7 +43,7 @@ dependencies {
     implementation 'org.greenrobot:eventbus:3.2.0'
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'org.aspectj:aspectjrt:1.9.2'
-    implementation 'org.greenrobot:greendao:3.2.2'
+    implementation 'org.greenrobot:greendao:3.3.0'
 
     implementation project(':skincore')
     testImplementation 'junit:junit:4.12'
