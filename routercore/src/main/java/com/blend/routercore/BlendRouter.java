@@ -23,7 +23,24 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Set;
 
-
+/**
+ * 注解的作用：注解主要是提取类或者字段的信息，用于读取数据，更深入的就是自定义注解处理器，可以在编译时候生成自己的语法树，
+ * 生成额外的java信息或者文件。
+ * <p>
+ * 路由原理：在组件化开发中，
+ * <p>
+ * 为什么需要分组：初始化只加载分组表使用的时候，如果使用A分组就去加载A分组下所有的路由信息，而不会去加载B分组。比如A组有100个
+ * 路由信息，B有200个。如果不分组，你Map中就需要加载300个路由信息，当用户可能根本就不需要进入B分组的页面，加载B分组的路由信息
+ * 除了浪费了内存。
+ * <p>
+ * 自定义注解处理器：Annotation Processor是javac的一个工具，它用来在编译时扫描和处理注解。通过Annotation Processor可以获
+ * 取到注解和被注解对象的相关信息，然后根据注解自动生成Java代码，省去了手动编写，提高了编码效率。
+ * 刚接触Annotation Processor的同学可能会遇到找不到AbstractProcessor类的问题，大概率是因为直接在Android项目里边引用了
+ * AbstractProcessor，然而由于Android平台是基于OpenJDK的，而OpenJDK中不包含Annotation Processor的相关代码。因此，
+ * 在使用Annotation Processor时，必须在新建Module时选择Java Library，处理注解相关的代码都需要在Java Library模块下完成。
+ * <p>
+ * JavaPoet:是一个Java API用于生成Java源文件。能用于自动生成一些模板化的java文件，提高工作效率，简化流程。
+ */
 public class BlendRouter {
     private static final String TAG = "BlendRouter";
     private static final String ROUTE_ROOT_PAKCAGE = "com.blend.routercore";

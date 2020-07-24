@@ -47,6 +47,7 @@ import static javax.lang.model.element.Modifier.PUBLIC;
 @AutoService(Processor.class)
 /**
  * 处理器接收的参数 替代 {@link AbstractProcessor#getSupportedOptions()} 函数
+ * 通过getOptions方法获取选项参数值。
  */
 @SupportedOptions(Consts.ARGUMENTS_NAME)
 /**
@@ -98,13 +99,13 @@ public class RouteProcessor extends AbstractProcessor {
     public synchronized void init(ProcessingEnvironment processingEnvironment) {
         super.init(processingEnvironment);
         //获得apt的日志输出
-        log = Log.newLog(processingEnvironment.getMessager());
+        log = Log.newLog(processingEnvironment.getMessager());  //返回实现Messager接口的对象，用于报告错误信息、警告提醒。
         log.i("init()");
-        elementUtils = processingEnv.getElementUtils();
-        typeUtils = processingEnvironment.getTypeUtils();
-        filerUtils = processingEnv.getFiler();
+        elementUtils = processingEnvironment.getElementUtils(); //返回实现Elements接口的对象，用于操作元素的工具类。
+        typeUtils = processingEnvironment.getTypeUtils();   //返回实现Types接口的对象，用于操作类型的工具类。
+        filerUtils = processingEnvironment.getFiler();  //返回实现Filer接口的对象，用于创建文件、类和辅助文件。
         //参数是模块名 为了防止多模块/组件化开发的时候 生成相同的 xx$$ROOT$$文件
-        Map<String, String> options = processingEnv.getOptions();
+        Map<String, String> options = processingEnvironment.getOptions();   //返回指定的参数选项。
         if (!Utils.isEmpty(options)) {
             moduleName = options.get(Consts.ARGUMENTS_NAME);
         }
@@ -117,7 +118,7 @@ public class RouteProcessor extends AbstractProcessor {
     /**
      * 相当于main函数，正式处理注解
      *
-     * @param set              使用了支持处理注解  的节点集合
+     * @param set              使用了支持处理注解的节点集合
      * @param roundEnvironment 表示当前或是之前的运行环境,可以通过该对象查找找到的注解。
      * @return true 表示后续处理器不会再处理(已经处理)
      */
@@ -126,8 +127,7 @@ public class RouteProcessor extends AbstractProcessor {
         //使用了需要处理的注解
         if (!Utils.isEmpty(set)) {
             //获取所有被 Route 注解的元素集合
-            Set<? extends Element> routeElements = roundEnvironment.getElementsAnnotatedWith
-                    (Route.class);
+            Set<? extends Element> routeElements = roundEnvironment.getElementsAnnotatedWith(Route.class);
             //处理 Route 注解
             if (!Utils.isEmpty(routeElements)) {
                 try {
