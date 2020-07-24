@@ -13,6 +13,12 @@ android {
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         consumerProguardFiles 'consumer-rules.pro'
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = [moduleName: project.getName()]
+            }
+        }
     }
 
     buildTypes {
@@ -40,12 +46,28 @@ dependencies {
     implementation 'com.android.support:design:27.0.0'
     implementation 'com.android.support:recyclerview-v7:27.0.0'
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+
+    //EventBus
     implementation 'org.greenrobot:eventbus:3.2.0'
     implementation 'com.google.code.gson:gson:2.8.5'
+
+    //切面编程
     implementation 'org.aspectj:aspectjrt:1.9.2'
+
+    //数据库架构GreenDao
     implementation 'org.greenrobot:greendao:3.3.0'
 
+    //换肤
     implementation project(':skincore')
+
+    //组件化通信
+    annotationProcessor project(':routercompiler')
+    implementation project(':routerbase')
+    implementation project(':routermodule1')
+    if (isModule) {
+        implementation project(':routermodule2')
+    }
+
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'

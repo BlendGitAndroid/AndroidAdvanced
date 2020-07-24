@@ -21,7 +21,8 @@ public class MyApplication extends Application {
         super.onCreate();
         sMyApplication = this;
 
-        initSkin();
+        //换肤初始化
+        // initSkin();
 
         initGreenDao();
     }

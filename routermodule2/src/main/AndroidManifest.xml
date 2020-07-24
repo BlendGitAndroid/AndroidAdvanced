@@ -3,7 +3,7 @@
     package="com.blend.routermodule2">
 
     <application>
-        <activity android:name=".RouterModuleMainActivity"></activity>
+        <activity android:name=".RouterModule2MainActivity"></activity>
     </application>
 
 </manifest>
