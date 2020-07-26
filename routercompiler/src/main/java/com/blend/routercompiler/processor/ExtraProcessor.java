@@ -103,6 +103,8 @@ public class ExtraProcessor extends AbstractProcessor {
     }
 
     private void generateAutoWired() throws IOException {
+        //asType:返回一个TypeMirror是元素的类型信息，包括包名，类(或方法，或参数)名/类型，在生成动态代码的时候，
+        //往往需要知道变量/方法参数的类型，以便写入正确的类型声明
         TypeMirror type_Activity = elementUtils.getTypeElement(Consts.ACTIVITY).asType();
         TypeElement IExtra = elementUtils.getTypeElement(Consts.IEXTRA);
         // 参数 Object target
@@ -149,7 +151,7 @@ public class ExtraProcessor extends AbstractProcessor {
      */
     private void categories(Set<? extends Element> elements) throws IllegalAccessException {
         for (Element element : elements) {
-            //获得父节点 (类)
+            //返回包含该element的父element，因为我们所有的Extra都是在Activity中定义的，所有这里返回的是父Element是Activity
             TypeElement enclosingElement = (TypeElement) element.getEnclosingElement();
             if (parentAndChild.containsKey(enclosingElement)) {
                 parentAndChild.get(enclosingElement).add(element);

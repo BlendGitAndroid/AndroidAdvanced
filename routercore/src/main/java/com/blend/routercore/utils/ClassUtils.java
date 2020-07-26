@@ -23,14 +23,15 @@ public class ClassUtils {
 
 
     /**
-     * 获得程序所有的apk(instant run会产生很多split apk)
+     * 获得程序所有的apk(instant run会产生很多split apk)应用信息
      */
     public static List<String> getSourcePaths(Context context) throws PackageManager
             .NameNotFoundException, IOException {
+        //获取本应用对应的ApplicationInfo
         ApplicationInfo applicationInfo = context.getPackageManager().getApplicationInfo(context
                 .getPackageName(), 0);
         List<String> sourcePaths = new ArrayList<>();
-        sourcePaths.add(applicationInfo.sourceDir);
+        sourcePaths.add(applicationInfo.sourceDir); //获取应用存放数据的目录
         //instant run
         if (null != applicationInfo.splitSourceDirs) {
             sourcePaths.addAll(Arrays.asList(applicationInfo.splitSourceDirs));
@@ -39,7 +40,7 @@ public class ClassUtils {
     }
 
     /**
-     * 路由表
+     * 分组表
      *
      * @param context
      * @param packageName

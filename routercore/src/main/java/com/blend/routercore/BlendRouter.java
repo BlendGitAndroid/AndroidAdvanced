@@ -27,7 +27,21 @@ import java.util.Set;
  * 注解的作用：注解主要是提取类或者字段的信息，用于读取数据，更深入的就是自定义注解处理器，可以在编译时候生成自己的语法树，
  * 生成额外的java信息或者文件。
  * <p>
- * 路由原理：在组件化开发中，
+ * 路由原理：为了实现组件间互不引用，但能够相互跳转，需要跳转到哪个界面，根据Activity的注解，去路由表中匹配，匹配到了进行跳转。
+ * 1）实现Router路由表并分组。利用注解，根据APT和javaPoet,在不同的模块下，分别建立分组表和路由表。分组表利用Map，根据不同的
+ * 模块进行分组，Map的key是模块的名字，Value是路由表；同理路由表也是Map存储，key是不同组件（Activity/Service）的注解，Value
+ * 是对应的类信息。
+ * 2）初始化。首先获得本程序所有apk应用存放数据的目录，加载APK中的dex，根据目录获得所有apt生成的路由分组表全类名的List（因为不同
+ * module下的分组表和路由表的包名都是一样的）。遍历分组表的List，根据反射实现，利用策略模式，将分组信息加入仓库中。
+ * 3）数据准备。首先根据传入的路径信息和Bundle信息，生成路径和组别，并新建跳转类PostCard。之后在仓库中根据路径找到路由表，第一次由于
+ * 路由表仓库中还没有，同理根据反射实现，利用策略模式，将路由表信息加入仓库中。之后为PostCard设置要跳转的activity或IService实现类。
+ * 4）跳转。利用Intent，传入全类名进行跳转。
+ * 5）以上是Activity的跳转，对于方法的调用，需要用到接口。同样，也是根据反射拿到每一个接口的实现类，保存在库中，并给PostCard设置实现类，
+ * 将实现类返回给调用者，从而调用相应的实现类方法。
+ * 6）对于参数的传递。上一个Activity通过Bundle传值，在下一个Activity使用Extra注解就能拿到传来的值。同样也是通过注解来实现的加JavaPoet，
+ * 用来生成getIntent及参数传递的模块化代码，就是得到从上一个Activity通过Bundle传来的值。
+ *
+ *
  * <p>
  * 为什么需要分组：初始化只加载分组表使用的时候，如果使用A分组就去加载A分组下所有的路由信息，而不会去加载B分组。比如A组有100个
  * 路由信息，B有200个。如果不分组，你Map中就需要加载300个路由信息，当用户可能根本就不需要进入B分组的页面，加载B分组的路由信息
@@ -80,12 +94,12 @@ public class BlendRouter {
     private static void loadInfo() throws InterruptedException, IOException, PackageManager
             .NameNotFoundException, ClassNotFoundException, NoSuchMethodException,
             IllegalAccessException, InvocationTargetException, InstantiationException {
-        //获得所有 apt生成的路由类的全类名 (路由表)
+        //获得所有apt生成的路由类的全类名 (分组表)
         Set<String> routerMap = ClassUtils.getFileNameByPackageName(mContext, ROUTE_ROOT_PAKCAGE);
         for (String className : routerMap) {
             if (className.startsWith(ROUTE_ROOT_PAKCAGE + "." + SDK_NAME + SEPARATOR +
                     SUFFIX_ROOT)) {
-                // root中注册的是分组信息 将分组信息加入仓库中
+                // root中注册的是分组信息 将分组信息加入仓库中，根据反射实现，利用策略模式，加载所有分组表
                 ((IRouteRoot) (Class.forName(className).getConstructor().newInstance())).loadInto
                         (Warehouse.groupsIndex);
             }

@@ -40,9 +40,27 @@ import javax.lang.model.util.Types;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
 /**
+ * 编译器注解的核心原理依赖APT（Annotation Processing Tools）实现，著名的ButterKnife、Dagger、Retrofit等开源库都是基于APT。
+ * 基本原理是在某些代码元素上（如类型、函数、字段）添加注解，在编译时编译器会检查AbstractProcessor的子类，并且调用该类型的process
+ * 函数，将添加了注解的所有元素都传递到process函数中，使得开发人员可以在编译期进行相应的处理，例如根据注解生成新的java类，在编译时生
+ * 成一些重复性操作的Java代码，或者不需要程序员去关心的Java代码等。
+ * <p>
+ * 对于编译器来说，代码中的元素结构是基本不变的，例如组成代码的基本元素有包，类，函数，字段，类型参数，变量等。JDK为这些元素定义了一个
+ * 基类，也就是Element类，他有如下几个子类：
+ * 1）PackageElement：包元素，包含了某个包下的信息，可以获取到包名等。表示包元素，提供对有关包及其成员的信息的访问
+ * 2）TypeElement：类型元素，如某个字段属于某种类型，表示类、接口元素。提供对有关类型及其成员的信息的访问
+ * 3）ExecutableElement：可执行元素，代表了函数类型的元素，表示类、接口的方法元素。包括构造方法、注解类型
+ * 4）VariableElement：变量元素，表示字段、enum、方法、构造方法参数、局部变量、异常参数
+ * 5）TypeParameterElement：类型参数元素。表示类、接口、方法、构造方法的参数元素
+ * 因为注解可以指定作用到哪些元素上，因此，通过上述的抽象来对应这些元素。
+ */
+
+/**
  * 在这个类上添加了@AutoService注解，它的作用是用来生成META-INF/services/javax.annotation.processing.Processor文件的，
  * 也就是我们在使用注解处理器的时候需要手动添加META-INF/services/javax.annotation.processing.Processor，
  * 而有了@AutoService后它会自动帮我们生成。AutoService是Google开发的一个库，使用时需要在build中添加依赖。
+ * <p>
+ * 这个库的主要作用是注册注解，并对其生成META-INF的配置信息
  */
 @AutoService(Processor.class)
 /**
@@ -91,7 +109,7 @@ public class RouteProcessor extends AbstractProcessor {
     private Log log;
 
     /**
-     * 初始化 从 {@link ProcessingEnvironment} 中获得一系列处理器工具
+     * 初始化 从 {@link ProcessingEnvironment} 中获得一系列处理器工具，为后面的注解处理提供帮助
      *
      * @param processingEnvironment
      */
@@ -101,11 +119,11 @@ public class RouteProcessor extends AbstractProcessor {
         //获得apt的日志输出
         log = Log.newLog(processingEnvironment.getMessager());  //返回实现Messager接口的对象，用于报告错误信息、警告提醒。
         log.i("init()");
-        elementUtils = processingEnvironment.getElementUtils(); //返回实现Elements接口的对象，用于操作元素的工具类。
-        typeUtils = processingEnvironment.getTypeUtils();   //返回实现Types接口的对象，用于操作类型的工具类。
+        elementUtils = processingEnvironment.getElementUtils(); //返回实现Elements接口的对象，用于处理元素的工具类。
+        typeUtils = processingEnvironment.getTypeUtils();   //返回实现Types接口的对象，用于处理类型的工具类。
         filerUtils = processingEnvironment.getFiler();  //返回实现Filer接口的对象，用于创建文件、类和辅助文件。
         //参数是模块名 为了防止多模块/组件化开发的时候 生成相同的 xx$$ROOT$$文件
-        Map<String, String> options = processingEnvironment.getOptions();   //返回指定的参数选项。
+        Map<String, String> options = processingEnvironment.getOptions();   //返回指定的额外参数选项。
         if (!Utils.isEmpty(options)) {
             moduleName = options.get(Consts.ARGUMENTS_NAME);
         }
@@ -116,11 +134,12 @@ public class RouteProcessor extends AbstractProcessor {
     }
 
     /**
-     * 相当于main函数，正式处理注解
+     * 相当于main函数，正式处理注解，获取注解的元素，对元素进行额外处理，可用JavaPoet生成Java代码
      *
-     * @param set              使用了支持处理注解的节点集合
-     * @param roundEnvironment 表示当前或是之前的运行环境,可以通过该对象查找找到的注解。
-     * @return true 表示后续处理器不会再处理(已经处理)
+     * @param set              使用了支持处理注解的类型元素的集合
+     * @param roundEnvironment 表示当前或是之前的运行环境,可以通过该对象查找到的注解。
+     * @return true 表示后续处理器不会再处理(已经处理)，如果返回 false，则这些注解未在此Processor中处理并，
+     * 那么后续 Processor 可以继续处理它们。
      */
     @Override
     public boolean process(Set<? extends TypeElement> set, RoundEnvironment roundEnvironment) {
@@ -146,7 +165,7 @@ public class RouteProcessor extends AbstractProcessor {
     private void parseRoutes(Set<? extends Element> routeElements) throws IOException {
         //支持配置路由类的类型
         TypeElement activity = elementUtils.getTypeElement(Consts.ACTIVITY);
-        //节点自描述 Mirror
+        //节点自描述 Mirror，表示Java编程语言中的类型。这些类型包括基本类型、引用类型、数组类型、类型变量和null类型等等
         TypeMirror type_Activity = activity.asType();
         log.i("Route Class: ===" + type_Activity);
         TypeElement iService = elementUtils.getTypeElement(Consts.ISERVICE);
@@ -209,7 +228,7 @@ public class RouteProcessor extends AbstractProcessor {
             /**
              * 类成员函数loadInfo声明构建
              */
-            //函数 public void loadInfo(Map<String,RouteMeta> atlas)
+            //函数 public void loadInto(Map<String,RouteMeta> atlas)
             MethodSpec.Builder loadIntoMethodOfGroupBuilder = MethodSpec.methodBuilder
                     (Consts.METHOD_LOAD_INTO)
                     .addAnnotation(Override.class)
