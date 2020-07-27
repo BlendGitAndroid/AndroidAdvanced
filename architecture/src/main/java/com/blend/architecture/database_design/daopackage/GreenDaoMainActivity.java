@@ -23,7 +23,6 @@ import com.blend.architecture.R;
  * 更快速的操作数据库，可以使用简单的面相对象的API来存储，更新，删除和查询Java对象。
  * 优点：
  * 1：开发起来简单，ORM框架将我们的对象模型转化为SQL语句，只需要掌握一些api就能够操作数据库，不用亲自处理sql语句了
- * (下面greenDao和原生Sqlite开发案例可以对比)。
  * <p>
  * 2：当面对一个复杂的程序时，其内部较多的数据处理，sql语句大量的硬编码，会让代码显得混乱和不易维护，ORM框架能让结构更清晰。
  * <p>
@@ -32,7 +31,7 @@ import com.blend.architecture.R;
  * 1：虽然ORM框架开发起来简单，但是我们需要掌握的东西却更多了，框架需要去学习，SQL原生操作需要去掌握。
  * 2：在一些复杂的数据库操作(如多表关联查询)时，ORM语法会变得十分复杂。直接用SQL语句会更清晰，更直接。
  * <p>
- * GreenDao的ORM内部实现：
+ * GreenDao的ORM内部实现：greenDAO是基于Android原生数据库的一个封装。
  * SQLiteOpenHelper:版本控制，创建数据库。
  * SQLiteDatabase:数据库类，提供直接操作数据库的API
  * <p>
@@ -43,6 +42,23 @@ import com.blend.architecture.R;
  * 些通用的持久性方法，如插入，加载，更新，刷新和删除。最后，DaoSession对象也跟踪identity scope。
  * xxDAO：数据访问对象（DAO），用于实体的持久化和查询。 对于每个实体，greenDAO会生成一个 DAO。它比DaoSession拥有更多
  * 的持久化方法，例如：count，loadAll 和 insertInTx。
+ *
+ *
+ * <p>
+ * 数据查询与缓存：
+ * 如果设置了缓存，并且不是第一次查找，则直接从缓存中取出数据；从 statements中拿到数据库查询语句和查询的主键，交给 rawQuery
+ * 查询，得到Cursor。通过主键查询，如果数据存在，则查到的数据是唯一的。接着会先尝试从缓存里获取数据，如果没有读取到，则从游标中
+ * 取数据，然后再存储到缓存中。
+ *
+ *
+ *
+ * <p>
+ * 在数据库版本更新中，DaoMaster.DevOpenHelper#onUpgrade方法中，会先删除掉所有的数据库，再重新建立，如果用户想自己控
+ * 制版本升级的情况，就需要自己实现OpenHelper。因为项目每次编译运行时，DaoMaster里的内容都会恢复成默认状态，所以不要在
+ * DaoMaster的DevOpenHelper里进行业务操作。所以需要自己实现数据库升级，借用一个开源解决办法MigrationHelper类，继承
+ * DaoMaster.DevOpenHelper类，重写其#onUpgrade方法。MigrationHelper的migrate方法，它有三个重载方法，我们使用的
+ * 那个方法有三个参数，分别为database，一个ReCreateAllTableListener回调，一个继承AbstractDao的class对象的可变参
+ * 数类型，其原理主要通过创建一个临时表,将旧表的数据迁移到临时表中。
  */
 public class GreenDaoMainActivity extends AppCompatActivity {
 
