@@ -60,6 +60,10 @@ import java.util.Set;
  *
  * <p>
  * JavaPoet:是一个Java API用于生成Java源文件。能用于自动生成一些模板化的java文件，提高工作效率，简化流程。
+ *
+ *
+ * <p>
+ * 如果不使用JavaPoet,还可以使用JavaFileObject，JavaFileObject是java文件对象，可以直接创建，通过流的形式，对文件进行编写。
  */
 public class BlendRouter {
     private static final String TAG = "BlendRouter";

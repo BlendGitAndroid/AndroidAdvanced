@@ -60,7 +60,7 @@ dependencies {
     //换肤
     implementation project(':skincore')
 
-    //组件化通信
+    //组件化通信(提供了编译关系，与依赖关系不同，对应的库不会被打入到apk中，但是会编译库中的代码生成java文件，过了编译期就不需要了)
     annotationProcessor project(':routercompiler')
     implementation project(':routerbase')
     implementation project(':routermodule1')
