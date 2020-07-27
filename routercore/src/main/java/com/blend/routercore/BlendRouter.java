@@ -38,20 +38,26 @@ import java.util.Set;
  * 4）跳转。利用Intent，传入全类名进行跳转。
  * 5）以上是Activity的跳转，对于方法的调用，需要用到接口。同样，也是根据反射拿到每一个接口的实现类，保存在库中，并给PostCard设置实现类，
  * 将实现类返回给调用者，从而调用相应的实现类方法。
- * 6）对于参数的传递。上一个Activity通过Bundle传值，在下一个Activity使用Extra注解就能拿到传来的值。同样也是通过注解来实现的加JavaPoet，
- * 用来生成getIntent及参数传递的模块化代码，就是得到从上一个Activity通过Bundle传来的值。
+ * 6）对于参数的传递，使用自动注入，在页面间传递数据。上一个Activity通过Bundle传值，在下一个Activity使用Extra注解就能拿到传来的值。
+ * 同样也是通过注解来实现的加JavaPoet，用来生成getIntent及参数传递的模块化代码，就是得到从上一个Activity通过Bundle传来的值。
  *
  *
  * <p>
- * 为什么需要分组：初始化只加载分组表使用的时候，如果使用A分组就去加载A分组下所有的路由信息，而不会去加载B分组。比如A组有100个
+ * 为什么需要分组：因为当项目变得越来越大庞大的时候，为了便于管理和减小首次加载路由表过于耗时的问题，我们对所有的路由进行分组。
+ * 初始化只加载分组表使用的时候，如果使用A分组就去加载A分组下所有的路由信息，而不会去加载B分组。比如A组有100个
  * 路由信息，B有200个。如果不分组，你Map中就需要加载300个路由信息，当用户可能根本就不需要进入B分组的页面，加载B分组的路由信息
- * 除了浪费了内存。
+ * 除了浪费了内存。在ARouter中会要求路由地址至少需要两级，如"/xx/xx",一个模块下可以有多个分组。这里我们就将路由地址定为必须大于等于两级，
+ * 其中第一级是group。
+ *
+ *
  * <p>
  * 自定义注解处理器：Annotation Processor是javac的一个工具，它用来在编译时扫描和处理注解。通过Annotation Processor可以获
  * 取到注解和被注解对象的相关信息，然后根据注解自动生成Java代码，省去了手动编写，提高了编码效率。
  * 刚接触Annotation Processor的同学可能会遇到找不到AbstractProcessor类的问题，大概率是因为直接在Android项目里边引用了
  * AbstractProcessor，然而由于Android平台是基于OpenJDK的，而OpenJDK中不包含Annotation Processor的相关代码。因此，
  * 在使用Annotation Processor时，必须在新建Module时选择Java Library，处理注解相关的代码都需要在Java Library模块下完成。
+ *
+ *
  * <p>
  * JavaPoet:是一个Java API用于生成Java源文件。能用于自动生成一些模板化的java文件，提高工作效率，简化流程。
  */
