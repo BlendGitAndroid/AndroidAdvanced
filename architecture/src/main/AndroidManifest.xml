@@ -7,7 +7,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application android:name=".MyApplication">
-        <activity android:name=".router.ARouterSecondActivity"></activity>
+        <activity android:name=".glide.GlideMainActivity"></activity>
+        <activity android:name=".router.ARouterSecondActivity" />
         <activity android:name=".router.ARouterMainActivity" />
         <activity android:name=".database_design.DatabaseMainActivity" />
         <activity android:name=".database_design.daopackage.GreenDaoMainActivity" />
