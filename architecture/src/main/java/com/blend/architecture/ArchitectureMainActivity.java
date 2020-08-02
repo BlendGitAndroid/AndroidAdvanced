@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
+import com.blend.architecture.glide.GlideMainActivity;
 import com.blend.architecture.router.ARouterMainActivity;
 import com.blend.architecture.aop.AopMainActivity;
 import com.blend.architecture.change_skin.SkinMainActivity;
@@ -23,6 +24,7 @@ public class ArchitectureMainActivity extends AppCompatActivity {
     private Button changeSkin;
     private Button dataBaseDesign;
     private Button aRouter;
+    private Button glide;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +37,8 @@ public class ArchitectureMainActivity extends AppCompatActivity {
         changeSkin = findViewById(R.id.changeSkin);
         dataBaseDesign = findViewById(R.id.dataBaseDesign);
         aRouter = findViewById(R.id.aRouter);
+        glide = findViewById(R.id.glide);
+
         handleMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -76,6 +80,13 @@ public class ArchitectureMainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(ArchitectureMainActivity.this, ARouterMainActivity.class));
+            }
+        });
+
+        glide.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ArchitectureMainActivity.this, GlideMainActivity.class));
             }
         });
     }
