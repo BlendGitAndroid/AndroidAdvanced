@@ -15,14 +15,9 @@ import com.blend.architecture.glide.glide.Glide;
 
 public class GlideSecondActivity extends AppCompatActivity {
 
-    String[] url = {"https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=4155045779," +
-            "3430902485&fm=27&gp=0.jpg",
-            "https://ss1.bdstatic" +
-                    ".com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=2669567003," +
-                    "3609261574&fm=27&gp=0.jpg22222222asads",
-            "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1524570152282&di" +
-                    "=541514e8c837032cbc184915e4d66139&imgtype=0&src=http%3A%2F%2Fimg1.gtimg" +
-                    ".com%2Fent%2Fpics%2Fhv1%2F74%2F146%2F2023%2F131582879.jpg"};
+    String[] url = {"https://tse3-mm.cn.bing.net/th/id/OIP.Gzze2RWjGPoKUivyJQvTrQHaE7?pid=Api&rs=1",
+            "https://cn.bing.com/sa/simg/hpb/LaDigue_EN-CA1115245085_1920x1080.jpg",
+            "https://wallpapercave.com/wp/S4qhtj3.jpg"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
