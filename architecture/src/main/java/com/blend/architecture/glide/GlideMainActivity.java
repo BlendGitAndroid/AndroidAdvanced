@@ -1,12 +1,12 @@
 package com.blend.architecture.glide;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.util.LruCache;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -17,7 +17,13 @@ import com.blend.architecture.glide.glide.request.RequestOptions;
 import java.io.File;
 
 /**
- *
+ * 1.Glide中印象最深的是什么？内存缓存(Lru和弱引用)和磁盘缓存机制。
+ * 2.Glide图片写入的顺序和读取的顺序是什么？写：弱引用、Lru、磁盘；读：Lru、弱引用、磁盘。
+ * 3.Glide中图片复用池是怎么设计的？
+ * 4.Glide中内存溢出的处理有哪些？内存占用问题？内存优化问题？
+ * 5.加载一张高像素的图片（1920*1080），其内部是如何处理的，图片是怎么压缩的；缩略图是怎么处理的。
+ * 6.Glide中用的到设计模式？加载不同的资源：策略模式；
+ * 7.叫你设计一款图片加载库，你会考虑哪些？缓存、复用池、多种图片加载方式、性能。
  */
 public class GlideMainActivity extends AppCompatActivity {
 
