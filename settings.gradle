@@ -1,3 +1,5 @@
+include ':taoplugin'
+include ':pluginstand'
 include ':routercore'
 include ':routercompiler'
 include ':routerannotation'
