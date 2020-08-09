@@ -1,4 +1,4 @@
-package com.blend.architecture.plug_in;
+package com.blend.architecture.plug_in.proxy;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
