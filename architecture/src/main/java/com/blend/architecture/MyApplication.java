@@ -7,7 +7,11 @@ import android.support.v7.app.AppCompatDelegate;
 import com.blend.architecture.change_skin.NightModeConfig;
 import com.blend.architecture.database_design.daopackage.DaoMaster;
 import com.blend.architecture.database_design.daopackage.DaoSession;
+import com.blend.architecture.plug_in.hook.os.DnAMSCheckEngine;
+import com.blend.architecture.plug_in.hook.os.DnActivityThread;
 import com.blend.skincore.SkinManager;
+
+import java.lang.reflect.InvocationTargetException;
 
 
 public class MyApplication extends Application {
@@ -25,6 +29,31 @@ public class MyApplication extends Application {
         // initSkin();
 
         initGreenDao();
+
+        plugin();
+    }
+
+    private void plugin() {
+        try {
+            DnAMSCheckEngine.mHookAMS(this);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            DnActivityThread dnActivityThread = new DnActivityThread(this);
+            dnActivityThread.mActivityThreadmHAction(this);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static MyApplication getInstance() {

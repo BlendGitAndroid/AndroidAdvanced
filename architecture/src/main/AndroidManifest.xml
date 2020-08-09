@@ -32,6 +32,12 @@
         <activity android:name=".change_skin.SkinMainActivity" />
         <activity android:name=".change_skin.SkinActivity" />
         <activity android:name=".plug_in.proxy.ProxyActivity" android:launchMode="standard" />
+        <activity android:name=".plug_in.hook.HookMainActivity" />
+        <activity android:name=".plug_in.hook.LoginActivity" />
+        <activity android:name=".plug_in.hook.ProxyActivity" />
+        <activity android:name=".plug_in.hook.SecondActivity" />
+        <activity android:name=".plug_in.hook.FourActivity" />
+        <activity android:name=".plug_in.hook.ThreeActivity" />
 
         <service android:name=".eventbus.service.HermesService" />
         <service android:name=".plug_in.proxy.ProxyService" />
