@@ -46,4 +46,14 @@
         style="@style/main_style"
         android:text="Glide" />
 
+    <Button
+        android:id="@+id/plugIn"
+        style="@style/main_style"
+        android:text="PlugIn" />
+
+    <Button
+        android:id="@+id/hook"
+        style="@style/main_style"
+        android:text="Hook" />
+
 </LinearLayout>

@@ -22,7 +22,7 @@ public class GirlAdapter extends RecyclerView.Adapter<GirlAdapter.MyViewHolder> 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position)
     {
-        holder.name.setText(position + "==alan");
+        holder.name.setText(position + "==blend");
     }
 
     @Override

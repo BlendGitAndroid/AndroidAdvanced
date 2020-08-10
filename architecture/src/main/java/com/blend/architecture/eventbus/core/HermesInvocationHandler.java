@@ -15,7 +15,7 @@ import java.lang.reflect.Method;
  * 再将处理结果进行返回。
  */
 public class HermesInvocationHandler implements InvocationHandler {
-    private static final String TAG = "alan";
+    private static final String TAG = "blend";
     private Class clazz;
     private static final Gson GSON = new Gson();
     private Class hermeService;

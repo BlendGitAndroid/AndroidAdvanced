@@ -63,9 +63,9 @@ public class GlideMainActivity extends AppCompatActivity {
         Glide.with(this).load(new File(Environment.getExternalStorageDirectory().getPath() + "/glide2.jpg")).into(iv2);
 
         //调用原生的Glide加载图片
-        com.bumptech.glide.Glide.with(this)
-                .load("https://tse3-mm.cn.bing.net/th/id/OIP.Gzze2RWjGPoKUivyJQvTrQHaE7?pid=Api&rs=1")
-                .into(iv2);
+        // com.bumptech.glide.Glide.with(this)
+        //         .load("https://tse3-mm.cn.bing.net/th/id/OIP.Gzze2RWjGPoKUivyJQvTrQHaE7?pid=Api&rs=1")
+        //         .into(iv2);
     }
 
     public void toNext(View view) {

@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.Button;
 
 import com.blend.architecture.glide.GlideMainActivity;
+import com.blend.architecture.plug_in.hook.HookMainActivity;
+import com.blend.architecture.plug_in.proxy.PlugInMainActivity;
 import com.blend.architecture.router.ARouterMainActivity;
 import com.blend.architecture.aop.AopMainActivity;
 import com.blend.architecture.change_skin.SkinMainActivity;
@@ -25,6 +27,8 @@ public class ArchitectureMainActivity extends AppCompatActivity {
     private Button dataBaseDesign;
     private Button aRouter;
     private Button glide;
+    private Button plugIn;
+    private Button hook;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +42,8 @@ public class ArchitectureMainActivity extends AppCompatActivity {
         dataBaseDesign = findViewById(R.id.dataBaseDesign);
         aRouter = findViewById(R.id.aRouter);
         glide = findViewById(R.id.glide);
+        plugIn = findViewById(R.id.plugIn);
+        hook = findViewById(R.id.hook);
 
         handleMessage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,6 +93,20 @@ public class ArchitectureMainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(ArchitectureMainActivity.this, GlideMainActivity.class));
+            }
+        });
+
+        plugIn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ArchitectureMainActivity.this, PlugInMainActivity.class));
+            }
+        });
+
+        hook.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ArchitectureMainActivity.this, HookMainActivity.class));
             }
         });
     }

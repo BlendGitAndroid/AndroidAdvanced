@@ -173,7 +173,7 @@ public class BaseDao<T> implements IBaseDao<T> {
     /*
        ContentValues contentValues = new ContentValues();
        contentValues.put("_id", 1);  getid
-       contentValues.put("name", "alan");
+       contentValues.put("name", "blend");
        contentValues.put("password", "123");
        sqLiteDatabase.insert(tableName, null, contentValues);
      */

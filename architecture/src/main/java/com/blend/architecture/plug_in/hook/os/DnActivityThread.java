@@ -98,7 +98,7 @@ public class DnActivityThread {
                     Intent targetIntent = proxyIntent.getParcelableExtra(TARGET_INTENT);
                     if (targetIntent != null) {
                         //集中式登录
-                        SharedPreferences share = context.getSharedPreferences("alan",
+                        SharedPreferences share = context.getSharedPreferences("blend",
                                 Context.MODE_PRIVATE);
                         if (share.getBoolean("login", false)) {
                             // 登录  还原  把原有的意图
@@ -153,7 +153,7 @@ public class DnActivityThread {
                     Intent targetIntent = proxyIntent.getParcelableExtra(TARGET_INTENT);
                     if (targetIntent != null) {
                         //集中式登录
-                        SharedPreferences share = context.getSharedPreferences("alan",
+                        SharedPreferences share = context.getSharedPreferences("blend",
                                 Context.MODE_PRIVATE);
                         if (share.getBoolean("login", false)) {
                             // 登录  还原  把原有的意图    放到realyIntent

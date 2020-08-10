@@ -33,7 +33,7 @@ public class HookMainActivity extends AppCompatActivity {
     }
 
     public void logout(View view) {
-        SharedPreferences share = this.getSharedPreferences("alan", MODE_PRIVATE);//实例化
+        SharedPreferences share = this.getSharedPreferences("blend", MODE_PRIVATE);//实例化
         SharedPreferences.Editor editor = share.edit(); //使处于可编辑状态
         editor.putBoolean("login",false);   //设置保存的数据
         Toast.makeText(this, "退出登录成功",Toast.LENGTH_SHORT).show();

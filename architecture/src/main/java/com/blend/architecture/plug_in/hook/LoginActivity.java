@@ -30,7 +30,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_hook_login);
         name = (EditText) findViewById(R.id.name);
         password = (EditText) findViewById(R.id.password);
-        share = this.getSharedPreferences("alan", MODE_PRIVATE);//实例化
+        share = this.getSharedPreferences("blend", MODE_PRIVATE);//实例化
         className = getIntent().getStringExtra("extraIntent");
         if (className != null) {
             ((TextView)findViewById(R.id.text)).setText(" 跳转界面："+className);
@@ -42,9 +42,9 @@ public class LoginActivity extends AppCompatActivity {
             Toast.makeText(this, "请填写用户名 或密码",Toast.LENGTH_SHORT).show();
             return;
         }
-        if ("alan".equals(name.getText().toString()) && "123456".equals(password.getText()
+        if ("blend".equals(name.getText().toString()) && "123456".equals(password.getText()
                 .toString())) {
-            SharedPreferences share = super.getSharedPreferences("alan", MODE_PRIVATE);//实例化
+            SharedPreferences share = super.getSharedPreferences("blend", MODE_PRIVATE);//实例化
             SharedPreferences.Editor editor = share.edit(); //使处于可编辑状态
             editor.putString("name", name.getText().toString());
             editor.putString("sex", password.getText().toString());

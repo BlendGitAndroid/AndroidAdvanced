@@ -19,7 +19,7 @@ public class ProxyActivity extends Activity {
     PayInterfaceActivity payInterfaceActivity;
 
     @Override
-    protected void onCreate( Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         className = getIntent().getStringExtra("className");
 

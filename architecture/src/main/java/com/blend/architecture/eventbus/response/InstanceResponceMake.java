@@ -17,7 +17,7 @@ public class InstanceResponceMake extends  ResponceMake {
         Object object = null;
         try {
             object = mMethod.invoke(null, mParameters);
-            Log.i("alan", "invokeMethod: " + object.toString());
+            Log.i("blend", "invokeMethod: " + object.toString());
 //
             //            保存对象
             OBJECT_CENTER.putObject(object.getClass().getName(), object);
