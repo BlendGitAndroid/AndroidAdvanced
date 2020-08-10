@@ -2,14 +2,17 @@ apply plugin: 'com.android.library'
 //声明添加的插件类型
 apply plugin: 'org.greenrobot.greendao'
 
+def cfg = rootProject.ext.android
+def dep = rootProject.ext.dependencies
+
 android {
-    compileSdkVersion 27
+    compileSdkVersion cfg.compileSdkVersion
 
     defaultConfig {
-        minSdkVersion 21
-        targetSdkVersion 27
-        versionCode 1
-        versionName "1.0"
+        minSdkVersion cfg.minSdkVersion
+        targetSdkVersion cfg.targetSdkVersion
+        versionCode cfg.versionCode
+        versionName cfg.versionName
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         consumerProguardFiles 'consumer-rules.pro'
@@ -42,9 +45,9 @@ greendao {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation 'com.android.support:appcompat-v7:27.0.0'
-    implementation 'com.android.support:design:27.0.0'
-    implementation 'com.android.support:recyclerview-v7:27.0.0'
+    implementation dep['appcompat-v7']
+    implementation dep['design']
+    implementation dep['recyclerview']
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
 
     //EventBus
