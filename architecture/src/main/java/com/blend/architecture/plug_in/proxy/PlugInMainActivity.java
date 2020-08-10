@@ -23,8 +23,7 @@ public class PlugInMainActivity extends AppCompatActivity {
 
     private static final String TAG = "PlugInMainActivity";
 
-    static final String ACTION = "com.blend.myapplication.Receive1.PLUGIN_ACTION";
-
+    static final String ACTION = "com.blend.tao.dynamic.broadcast.StaticReceiver";
 
     BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
@@ -32,7 +31,7 @@ public class PlugInMainActivity extends AppCompatActivity {
             Toast.makeText(context, " 我是宿主，收到你的消息,握手完成!", Toast.LENGTH_SHORT).show();
         }
     };
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,7 +55,7 @@ public class PlugInMainActivity extends AppCompatActivity {
         InputStream is = null;
         FileOutputStream os = null;
         try {
-            Log.i(TAG, "加载插件 " + new File(Environment.getExternalStorageDirectory(), name).getAbsolutePath());
+            Log.e(TAG, "加载插件 " + new File(Environment.getExternalStorageDirectory(), name).getAbsolutePath());
             is = new FileInputStream(new File(Environment.getExternalStorageDirectory(), name));
             os = new FileOutputStream(filePath);
             int len = 0;
@@ -70,14 +69,12 @@ public class PlugInMainActivity extends AppCompatActivity {
             }
             PluginManager.getInstance().loadPath(this);
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         } finally {
             try {
                 os.close();
                 is.close();
             } catch (IOException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }
@@ -93,7 +90,13 @@ public class PlugInMainActivity extends AppCompatActivity {
 
     public void sendBroadCast(View view) {
         Intent intent = new Intent();
-        intent.setAction("com.dn_alan.taopiaopiao.StaticReceiver");
+        intent.setAction("com.blend.tao.static.StaticReceiver");
         sendBroadcast(intent);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(mReceiver);
     }
 }

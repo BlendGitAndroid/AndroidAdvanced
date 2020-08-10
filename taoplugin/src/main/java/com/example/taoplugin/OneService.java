@@ -12,7 +12,7 @@ public class OneService extends BaseService{
             @Override
             public void run() {
                 while (true) {
-                    Log.i(TAG, "run: "+(i++));
+                    Log.e(TAG, "run: "+(i++));
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException e) {

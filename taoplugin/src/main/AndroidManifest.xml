@@ -20,9 +20,10 @@
 
         <receiver android:name=".StaticReceiver" >
             <intent-filter>
-                <action android:name="com.blend.taopiaopiao.StaticReceiver" />
+                <action android:name="com.blend.tao.static.StaticReceiver" />
             </intent-filter>
         </receiver>
+
     </application>
 
 </manifest>
