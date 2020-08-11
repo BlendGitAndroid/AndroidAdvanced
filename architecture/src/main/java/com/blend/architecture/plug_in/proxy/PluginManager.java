@@ -48,7 +48,7 @@ public class PluginManager {
         //resource
         try {
             AssetManager manager = AssetManager.class.newInstance();
-            Method addAssetPath = AssetManager.class.getMethod("addAssetPath", String.class);
+            Method addAssetPath = manager.getClass().getMethod("addAssetPath", String.class);
             addAssetPath.invoke(manager, path);
             resources = new Resources(manager,
                     context.getResources().getDisplayMetrics(),
