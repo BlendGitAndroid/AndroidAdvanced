@@ -133,7 +133,7 @@ public class Java8Feature {
         Convert<String, String> testStaticFunctionReference = Java8Feature::testStaticFunctionReference;
         testStaticFunctionReference.convert("Blend");
 
-        //这种方式，就是相当于传入
+        //这种方式，就是相当于传入方法
         java8Feature.setConvert(testObjectFunctionReference);
         java8Feature.setConvert(testStaticFunctionReference);
         java8Feature.setConvert(java8Feature::testObjectFunctionReference);
