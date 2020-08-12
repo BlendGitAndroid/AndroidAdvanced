@@ -26,6 +26,8 @@ public class PluginManager {
 
     private PackageInfo packageInfo;
 
+    private AssetManager manager;
+
     public static PluginManager getInstance() {
         return ourInstance;
     }
@@ -47,7 +49,7 @@ public class PluginManager {
 
         //resource
         try {
-            AssetManager manager = AssetManager.class.newInstance();
+            manager = AssetManager.class.newInstance();
             Method addAssetPath = manager.getClass().getMethod("addAssetPath", String.class);
             addAssetPath.invoke(manager, path);
             resources = new Resources(manager,
@@ -123,5 +125,9 @@ public class PluginManager {
 
     public PackageInfo getPackageInfo() {
         return packageInfo;
+    }
+
+    public AssetManager getAssetManager() {
+        return manager;
     }
 }

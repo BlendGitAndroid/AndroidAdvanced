@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.os.Bundle;
 
@@ -75,6 +76,11 @@ public class ProxyActivity extends Activity {
     @Override
     public Resources getResources() {
         return PluginManager.getInstance().getResources();
+    }
+
+    @Override
+    public AssetManager getAssets() {
+        return PluginManager.getInstance().getAssetManager();
     }
 
     @Override
