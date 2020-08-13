@@ -21,14 +21,39 @@ public class ReflectClass {
 
     private static final String TAG = "ReflectClass";
 
-    //创建对象
+    //创建对象方式1,一般使用第一种方式
     public static void reflectNewInstance() {
         try {
             Class<?> classBook = Class.forName("com.blend.routercompiler.reflect.Book");
             Object objectBook = classBook.newInstance();
             Book book = (Book) objectBook;
-            book.setAuthor("blend");
+            book.setAuthor("11111");
             System.out.println("reflect create obj: " + book.getAuthor());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    //创建对象方式2
+    public static void reflectNewInstance2() {
+        try {
+            Class<Book> bookClass = Book.class;
+            Book book = bookClass.newInstance();
+            book.setAuthor("22222");
+            System.out.println("reflect create obj2: " + book.getAuthor());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    //创建对象方式3
+    public static void reflectNewInstance3() {
+        try {
+            Book book = new Book();
+            Class<? extends Book> aClass = book.getClass();
+            Book reflectBook = aClass.newInstance();
+            reflectBook.setAuthor("3333");
+            System.out.println("reflect create obj3: " + reflectBook.getAuthor());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -80,6 +105,8 @@ public class ReflectClass {
 
     public static void main(String[] args) {
         reflectNewInstance();
+        reflectNewInstance2();
+        reflectNewInstance3();
         reflectPrivateConstractor();
         reflectPrivateField();
         reflectPrivateMethod();
