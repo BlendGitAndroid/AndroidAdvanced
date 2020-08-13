@@ -103,7 +103,7 @@ public class Genericity {
      * 3)无边界通配符，表明在使用泛型。
      */
     public static void showKeyValue(FruitClass<Number> obj) {
-
+        Number next = obj.next();
     }
 
     public static void showKeyValueWild(FruitClass<?> obj) {
