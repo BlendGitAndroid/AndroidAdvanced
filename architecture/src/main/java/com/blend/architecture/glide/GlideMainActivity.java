@@ -18,7 +18,7 @@ import java.io.File;
 
 /**
  * 1.Glide中印象最深的是什么？内存缓存(Lru和弱引用)和磁盘缓存机制。
- * 2.Glide图片写入的顺序和读取的顺序是什么？写：弱引用、Lru、磁盘；读：Lru、弱引用、磁盘。????
+ * 2.Glide图片写入的顺序和读取的顺序是什么？读：弱引用、Lru、磁盘；写：Lru、弱引用、磁盘。????
  * 3.Glide中图片复用池是怎么设计的？
  * 4.Glide中内存溢出的处理有哪些？内存占用问题？内存优化问题？
  * 5.加载一张高像素的图片（1920*1080），其内部是如何处理的，图片是怎么压缩的；缩略图是怎么处理的。
@@ -124,18 +124,15 @@ import java.io.File;
  * 2)onLoadStarted。当status的状态为running或者WAITING_FOR_SIZE的时候，就会调用该方法，它会调用target的onLoadStarted做一些准备工作，在ImageViewTarget类中就会设
  * 置placeholder和一些加载动画。
  * 3)onResourceReady,这个方法就是最后将获得数据装进ImageView或者返回给target的方法,并调动target的setResource进行数据的设置。
+ * <p>
  *
- *
- * 另一个参数是target对象，可以定制化一个target并返回。
  *
  * <p>
- * Request
- * request包下面的是封装的请求，里面有一个Request接口，估计所有的请求都是基于这个接口的。接口定义了对请求的开始、结束、状态获取、回收等
- * 操作，所以请求中不仅包含基本的信息，还负责管理请求。
- * Request主要的实现类有三个：
- * 1)SingleRequest。这个类负责执行请求并将结果反映到Target上。
- * 2)ThumbnailRequestCoordinator。
- * 3)ErrorRequestCoordinator。
+ * 缓存策略：
+ * 1)ActiveResources，第一级缓存，表示当前正在活动中的资源。Engine#load方法中构建好Key之后第一件事就是去这个缓存中获取资源，获取到则直接返回，获取不到才继续从其他缓存
+ * 中寻找。当资源加载成功，或者通过缓存中命中资源后都会将其放入ActivityResources中，资源被释放时移除出ActivityResources。由于其中的生命周期较短，所以没有大小限制。
+ * ActiveResources中通过一个Map来存储数据，数据保存在一个虚引用（WeakReference）中。
+ * 2)
  */
 public class GlideMainActivity extends AppCompatActivity {
 
