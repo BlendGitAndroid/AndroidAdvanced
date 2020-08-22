@@ -18,7 +18,7 @@ import java.io.File;
 
 /**
  * 1.Glide中印象最深的是什么？内存缓存(Lru和弱引用)和磁盘缓存机制。
- * 2.Glide图片写入的顺序和读取的顺序是什么？读：弱引用、Lru、磁盘；写：Lru、弱引用、磁盘。????
+ * 2.Glide图片写入的顺序和读取的顺序是什么？读：弱引用(活动资源)、Lru、磁盘；写：Lru、弱引用(活动资源)、磁盘。
  * 3.Glide中图片复用池是怎么设计的？
  * 4.Glide中内存溢出的处理有哪些？内存占用问题？内存优化问题？
  * 5.加载一张高像素的图片（1920*1080），其内部是如何处理的，图片是怎么压缩的；缩略图是怎么处理的。
@@ -131,8 +131,15 @@ import java.io.File;
  * 缓存策略：
  * 1)ActiveResources，第一级缓存，表示当前正在活动中的资源。Engine#load方法中构建好Key之后第一件事就是去这个缓存中获取资源，获取到则直接返回，获取不到才继续从其他缓存
  * 中寻找。当资源加载成功，或者通过缓存中命中资源后都会将其放入ActivityResources中，资源被释放时移除出ActivityResources。由于其中的生命周期较短，所以没有大小限制。
- * ActiveResources中通过一个Map来存储数据，数据保存在一个虚引用（WeakReference）中。
- * 2)
+ * ActiveResources中通过一个Map来存储数据，数据保存在一个虚引用（WeakReference）中， 定义为Map<Key, WeakReference<EngineResource<?>>>。此外还有一个引用队列：
+ * 每当向activeResource中添加一个WeakReference对象时都会将resourceReferenceQueue和这个WeakReference关联起来，用来跟踪这个WeakReference的gc，一旦这个弱引用被
+ * gc掉，就会将它从activeResource中移除，ReferenceQueue的具体作用可以自行谷歌，大概就是用来跟踪弱引用（或者软引用、虚引用）是否被gc的。
+ * 那么ReferenceQueue具体是在何时去判断WeakReference是否被gc了呢？
+ * Handler机制大家应该都知道，但不知道大家有没有用过MessageQueue.IdleHandler这个东西，可以调用MessageQueue#addIdleHandler添加一个MessageQueue.IdleHandler对象，
+ * Handler会在线程空闲时调用这个方法。resourceReferenceQueue在创建时会创建一个Engine#RefQueueIdleHandler对象并将其添加到当前线程的MessageQueue中，ReferenceQueue
+ * 会在IdleHandler回调的方法中去判断activeResource中的WeakReference是不是被gc了，如果是，则将引用从activeResource中移除。
+ *
+ * 2)MemorySizeCalculator，用来计算BitmapPool、ArrayPool以及MemoryCache大小的。
  */
 public class GlideMainActivity extends AppCompatActivity {
 
