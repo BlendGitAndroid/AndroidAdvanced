@@ -18,11 +18,14 @@ import java.io.File;
 
 /**
  * 1.Glide中印象最深的是什么？内存缓存(Lru和弱引用)和磁盘缓存机制。
- * 2.Glide图片写入的顺序和读取的顺序是什么？读：弱引用(活动资源)、Lru、磁盘；写：Lru、弱引用(活动资源)、磁盘。
+ * 2.Glide图片写入的顺序和读取的顺序是什么？
+ * 读(4.9版本)：Lru内存缓存、弱引用(活动资源)、磁盘；
+ * 读(4.0版本及以前)：弱引用(活动资源)、Lru内存缓存、磁盘；
+ * 存储：弱引用(活动资源)、Lru内存缓存、磁盘。
  * 3.Glide中图片复用池是怎么设计的？
  * 4.Glide中内存溢出的处理有哪些？内存占用问题？内存优化问题？
  * 5.加载一张高像素的图片（1920*1080），其内部是如何处理的，图片是怎么压缩的；缩略图是怎么处理的。
- * 6.Glide中用的到设计模式？加载不同的资源：策略模式；
+ * 6.Glide中用的到设计模式？加载不同的资源：策略模式；单列模式，工厂方法模式，建造者模式，策略模式。
  * 7.叫你设计一款图片加载库，你会考虑哪些？缓存、复用池、多种图片加载方式、性能。
  * <p>
  * Glide源码解读：
@@ -124,6 +127,9 @@ import java.io.File;
  * 2)onLoadStarted。当status的状态为running或者WAITING_FOR_SIZE的时候，就会调用该方法，它会调用target的onLoadStarted做一些准备工作，在ImageViewTarget类中就会设
  * 置placeholder和一些加载动画。
  * 3)onResourceReady,这个方法就是最后将获得数据装进ImageView或者返回给target的方法,并调动target的setResource进行数据的设置。
+ * 总结：发起网络请求前先判断是否有内存缓存，有则直接从内存缓存那里获取数据进行显示，没有则判断是否有磁盘缓存；有磁盘缓存则直接从磁盘缓存那里获取数据进行显示，没有才发起网络请求；
+ * 网络请求成功后将返回的数据存储到内存与磁盘缓存（如果有配置），最后将返回的输入流解码成Drawable显示在ImageView上。
+ *
  * <p>
  *
  *
@@ -138,8 +144,39 @@ import java.io.File;
  * Handler机制大家应该都知道，但不知道大家有没有用过MessageQueue.IdleHandler这个东西，可以调用MessageQueue#addIdleHandler添加一个MessageQueue.IdleHandler对象，
  * Handler会在线程空闲时调用这个方法。resourceReferenceQueue在创建时会创建一个Engine#RefQueueIdleHandler对象并将其添加到当前线程的MessageQueue中，ReferenceQueue
  * 会在IdleHandler回调的方法中去判断activeResource中的WeakReference是不是被gc了，如果是，则将引用从activeResource中移除。
- *
+ * <p>
  * 2)MemorySizeCalculator，用来计算BitmapPool、ArrayPool以及MemoryCache大小的。
+ * <p>
+ * 缓存机制：
+ * 一.缓存机制。默认情况下，Glide在加载图片之前会依次检查是否有以下缓存：也就是说Glide中实际有四级缓存，前两个属于内存缓存，后两个属于磁盘缓存。以上每步是按顺序检查的，
+ * 检查到哪一步有缓存就直接返回图片，否则继续检查下一步。如果都没有缓存，则Glide会从原始资源（File、Uri、远程图片 url 等）中加载图片。
+ * 1)活动资源 (Active Resources)：正在使用的图片。
+ * 2)内存缓存 (Memory cache)：内存缓存中的图片。
+ * 3)资源类型（Resource）：磁盘缓存中转换过后的图片。
+ * 4)数据来源 (Data)：磁盘缓存中的原始图片。
+ * 二.缓存Key。缓存功能必然要有一个唯一的缓存Key用来存储和查找对应的缓存数据。通过传入 model（File、Uri、远程图片 url 等）、签名、宽高（这里的宽高是指显示
+ * 图片的View的宽高，不是图片的宽高）等参数，然后通过EngineKeyFactory构建了一个EngineKey对象（即缓存Key），然后EngineKey通过重写equals()与
+ * hashCode()方法来保证缓存Key的唯一性。
+ * 问题：虽然决定缓存Key的参数很多，但是加载图片的代码写好后这些参数都是不会变的。很多人遇到的 “服务器返回的图片变了，但是前端显示的还是以前的图片”的问题就是这个原因，
+ * 因为虽然服务器返回的图片变了，但是图片url还是以前那个，其他决定缓存Key的参数也不会变，Glide就认为有该缓存，就会直接从缓存中获取，而不是重新下载，所以显示的还是以前的图片。
+ * 解决方案就是（1）图片url不要固定也就是说如果某个图片改变了，那么该图片的url也要跟着改变，（2）禁用缓存，前端加载图片的时候设置禁用内存与磁盘缓存，这样每次加载都会重新下载
+ * 最新的。
+ * 三.活动资源缓存。ActiveResources里面主要包含了一个HashMap的相关操作，然后HashMap中保存的值又是弱引用来引用的，也就是说这里是采用一个弱引用的 HashMap来缓存活动资源。
+ * 首先从HashMap中获取ResourceWeakReference（继承了弱引用），然后从弱引用中获取了活动资源（获取活动资源），即正在使用的图片。也就是说正在使用的图片实际是通过弱引用
+ * 维护，然后保存在HashMap中的。使用图片的时候，acquired变量+1，这个变量用来记录图片被引用的次数。该变量除了acquire()方法中做了+1操作，还在release()方法中做了-1的操作，
+ * 当acquired减到0的时候，又回调了Engine#onResourceReleased()。在onResourceReleased()方法中首先将活动资源从弱引用的HashMap中移除（清理活动资源），然后将它缓存到内
+ * 存缓存中（存储内存缓存）。也就是说，release()方法主要是释放资源，当我们从一屏滑动到下一屏的时候，上一屏的图片就会看不到，这个时候就会调用该方法。还有我们关闭当前显示图片的
+ * 页面时会调用onDestroy()方法，最终也会调用该方法。这两种情况很明显是不需要用到该图片了，那么理所当然的会调用release()方法来释放弱引用的 HashMap中缓存的活动资源。
+ * 四.内存Lru缓存。使用Lru算法实现的内存缓存。内存缓存主要是获取活动资源、清理活动资源、获取内存缓存、存储内存缓存。其中清理内存缓存的操作LRU算法已经自动帮我们实现了，存贮
+ * 活动缓存则是在从网络请求中返回的数据解码后存储的。
+ * 五.磁盘缓存。一共有五种策略：
+ * 1)ALL：既缓存原始图片，也缓存转换过后的图片。
+ * 2)NONE：不缓存任何内容。
+ * 3)DATA：只缓存原始图片。
+ * 4)RESOURCE：只缓存转换过后的图片。
+ * 5)AUTOMATIC：默认策略，它会尝试对本地和远程图片使用最佳的策略。如果是远程图片，则只缓存原始图片；如果是本地图片，那么只缓存转换过后的图片。
+ *
+ * 六.数据来源。该级缓存只缓存原始图片。
  */
 public class GlideMainActivity extends AppCompatActivity {
 
