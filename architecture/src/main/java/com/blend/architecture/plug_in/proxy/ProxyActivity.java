@@ -40,6 +40,7 @@ public class ProxyActivity extends Activity {
         }
     }
 
+    //插件的activity调用startActivity，实际上调用的就是这个方法
     @Override
     public void startActivity(Intent intent) {
         String className = intent.getStringExtra("className");

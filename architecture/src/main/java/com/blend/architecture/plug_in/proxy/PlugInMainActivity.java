@@ -19,6 +19,28 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+/**
+ * 动态加载技术：
+ * 原理：在应用程序运行时，动态加载一些程序中原本不存在的可执行文件并运行这些文件里的代码逻辑。可执行文件总的来说分为两个，一种是动态
+ * 链接库so，另一种是dex相关文件（dex文件包含jar/apk文件）。
+ * 分类：
+ * 1.插件化技术：主要用于解决应用越来越庞大的以及功能模块的解耦,所以小项目中一般用的不多
+ * 2.热修复技术：主要用来修复bug
+ * 实现插件化的方式：
+ * 1.插桩式（接口回调）
+ * 2.Hook技术
+ *
+ *
+ * 插桩式实现方式：
+ * 1.设计插件的标准接口。创建一个lib module,创建一个接口,主要用来传递给插件Context和管理插件的生命周期，如pluginstand module。
+ * 2.创建一个baseActivity和baseService实现特定一个的接口，接收context，并重写跟context有关的方法，插件中的Activity和service都继承各自的基类。
+ * 3.创建一个PluginManager的单例类，管理插件方法,获取插件的packageInfo,resources,dexClassLoader等，获取Resources时要通过反射调用
+ * AssetManager中的addAssetPath方法将插件的路径传给assetManager。
+ * 4.在application中提前加载插件，并将插件复制到app的私有目录。
+ * 5.从宿主跳转到插件的activity时,先跳转到插桩的activity中并携带上实际要调转的插件的activity类。在插桩的activity中解析实际要调转的activity并反
+ * 射获取该类对象强转为定义的接口，并将activity的生命周期在对应的方法中调用传递给插件。
+ *
+ */
 public class PlugInMainActivity extends AppCompatActivity {
 
     private static final String TAG = "PlugInMainActivity";
