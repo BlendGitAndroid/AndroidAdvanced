@@ -56,4 +56,9 @@
         style="@style/main_style"
         android:text="Hook" />
 
+    <Button
+        android:id="@+id/rxJava"
+        style="@style/main_style"
+        android:text="RxJava" />
+
 </LinearLayout>

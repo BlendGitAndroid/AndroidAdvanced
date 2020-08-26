@@ -16,6 +16,7 @@ import com.blend.architecture.database_design.DatabaseMainActivity;
 import com.blend.architecture.eventbus.EventBusMainActivity;
 import com.blend.architecture.eventbus.hermesevent.HermesEventBusMainActivity;
 import com.blend.architecture.handle_message.ActivityThreadActivity;
+import com.blend.architecture.rxjava.RxJavaMainActivity;
 
 public class ArchitectureMainActivity extends AppCompatActivity {
 
@@ -29,6 +30,7 @@ public class ArchitectureMainActivity extends AppCompatActivity {
     private Button glide;
     private Button plugIn;
     private Button hook;
+    private Button rxJava;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +46,7 @@ public class ArchitectureMainActivity extends AppCompatActivity {
         glide = findViewById(R.id.glide);
         plugIn = findViewById(R.id.plugIn);
         hook = findViewById(R.id.hook);
+        rxJava = findViewById(R.id.rxJava);
 
         handleMessage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,6 +110,13 @@ public class ArchitectureMainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(ArchitectureMainActivity.this, HookMainActivity.class));
+            }
+        });
+
+        rxJava.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ArchitectureMainActivity.this, RxJavaMainActivity.class));
             }
         });
     }

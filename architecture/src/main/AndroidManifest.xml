@@ -7,10 +7,11 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application android:name=".MyApplication">
+        <activity android:name=".rxjava.RxJavaMainActivity"></activity>
         <activity
             android:name=".plug_in.proxy.ProxyActivity"
             android:launchMode="standard" />
-        <activity android:name=".plug_in.proxy.PlugInMainActivity"></activity>
+        <activity android:name=".plug_in.proxy.PlugInMainActivity" />
         <activity android:name=".glide.GlideSecondActivity" />
         <activity android:name=".glide.GlideMainActivity" />
         <activity android:name=".router.ARouterSecondActivity" />
