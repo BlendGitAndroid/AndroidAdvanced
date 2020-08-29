@@ -12,6 +12,13 @@ import com.blend.architecture.rxjava.rxjava.ObservableEmitter;
 import com.blend.architecture.rxjava.rxjava.ObservableOnSubscribe;
 import com.blend.architecture.rxjava.rxjava.Observer;
 
+import org.reactivestreams.Subscriber;
+import org.reactivestreams.Subscription;
+
+import io.reactivex.BackpressureStrategy;
+import io.reactivex.Flowable;
+import io.reactivex.FlowableEmitter;
+import io.reactivex.FlowableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
@@ -31,9 +38,10 @@ public class RxJavaMainActivity extends AppCompatActivity {
 
         just();
 
+        flowable();
+
         customize();
     }
-
 
     private void just() {
         io.reactivex.Observable.just("BlendAndroid")   //添加被观察者
@@ -53,6 +61,40 @@ public class RxJavaMainActivity extends AppCompatActivity {
 
                     @Override
                     public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+    }
+
+
+
+    private void flowable() {
+        Flowable.create(new FlowableOnSubscribe<Integer>() {
+            @Override
+            public void subscribe(FlowableEmitter<Integer> emitter) throws Exception {
+
+            }
+        }, BackpressureStrategy.BUFFER) //默认
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(Schedulers.newThread())
+                .subscribe(new Subscriber<Integer>() {
+                    @Override
+                    public void onSubscribe(Subscription s) {   //这里的参数与之前的不同
+                        s.request(Long.MAX_VALUE);
+                    }
+
+                    @Override
+                    public void onNext(Integer integer) {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable t) {
 
                     }
 
