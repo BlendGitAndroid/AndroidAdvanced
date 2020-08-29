@@ -1,7 +1,6 @@
 package com.blend.architecture.rxjava;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.blend.architecture.R;
@@ -11,9 +10,13 @@ import com.blend.architecture.rxjava.rxjava.Observable;
 import com.blend.architecture.rxjava.rxjava.ObservableEmitter;
 import com.blend.architecture.rxjava.rxjava.ObservableOnSubscribe;
 import com.blend.architecture.rxjava.rxjava.Observer;
+import com.trello.rxlifecycle2.android.ActivityEvent;
+import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
 
 import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
+
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
@@ -21,13 +24,15 @@ import io.reactivex.FlowableEmitter;
 import io.reactivex.FlowableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Action;
+import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 
 /**
  * 设计模式：装饰着模式
  */
-public class RxJavaMainActivity extends AppCompatActivity {
+public class RxJavaMainActivity extends RxAppCompatActivity {
 
     private static final String TAG = "RxJavaMainActivity";
 
@@ -39,6 +44,8 @@ public class RxJavaMainActivity extends AppCompatActivity {
         just();
 
         flowable();
+
+        interval();
 
         customize();
     }
@@ -72,7 +79,6 @@ public class RxJavaMainActivity extends AppCompatActivity {
     }
 
 
-
     private void flowable() {
         Flowable.create(new FlowableOnSubscribe<Integer>() {
             @Override
@@ -80,7 +86,7 @@ public class RxJavaMainActivity extends AppCompatActivity {
 
             }
         }, BackpressureStrategy.BUFFER) //默认
-                .subscribeOn(Schedulers.newThread())
+                .subscribeOn(Schedulers.newThread())    //发送数据和接收数据在不同的线程
                 .observeOn(Schedulers.newThread())
                 .subscribe(new Subscriber<Integer>() {
                     @Override
@@ -101,6 +107,23 @@ public class RxJavaMainActivity extends AppCompatActivity {
                     @Override
                     public void onComplete() {
 
+                    }
+                });
+    }
+
+    //每隔一段时间发送一个事件，这个事件从0开始，不断增加1
+    private void interval() {
+        io.reactivex.Observable.interval(1, TimeUnit.SECONDS)
+                .doOnDispose(new Action() {
+                    @Override
+                    public void run() throws Exception {
+                        Log.e(TAG, "interval: 结束");
+                    }
+                }).compose(this.<Long>bindUntilEvent(ActivityEvent.PAUSE))  //自定义操作符，加入自己的代码，这里添加生命周期
+                .subscribe(new Consumer<Long>() {
+                    @Override
+                    public void accept(Long aLong) throws Exception {
+                        Log.e(TAG, "interval: 开始");
                     }
                 });
     }
