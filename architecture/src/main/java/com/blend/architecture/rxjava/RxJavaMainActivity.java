@@ -33,7 +33,6 @@ import io.reactivex.schedulers.Schedulers;
  * 设计模式：装饰着模式，观察者模式
  * 叫你去搭建RxJava框架，你会怎么设计？
  * 三要素：观察者，被观察者，订阅(被观察者订阅观察者)
- *
  */
 public class RxJavaMainActivity extends RxAppCompatActivity {
 
@@ -133,11 +132,21 @@ public class RxJavaMainActivity extends RxAppCompatActivity {
 
 
     private void customize() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                runCustomize();
+            }
+        }).start();
+
+    }
+
+    private void runCustomize() {
         Observable.create(new ObservableOnSubscribe<Integer>() {
 
             @Override
             public void subscribe(ObservableEmitter<Integer> emitter) throws Exception {
-                Log.e(TAG, "subscribe 事件发射");
+                Log.e(TAG, "subscribe 事件发射== " + Thread.currentThread().getName());
                 emitter.onNext(1);
                 emitter.onComplete();
             }
@@ -145,28 +154,31 @@ public class RxJavaMainActivity extends RxAppCompatActivity {
 
             @Override
             public String apply(Integer integer) {
+                Log.e(TAG, "apply===" + Thread.currentThread().getName());
                 return integer + "blend";
             }
-        }).subscribe(new Observer<String>() {
-            @Override
-            public void onSubscribe(Disposeble d) {
-                Log.e(TAG, "onSubscribe 成功");
-            }
+        }).subscribeOn()    //在这里进行线程切换
+                .observeOn()
+                .subscribe(new Observer<String>() {
+                    @Override
+                    public void onSubscribe(Disposeble d) {
+                        Log.e(TAG, "onSubscribe 成功 ==" + Thread.currentThread().getName());
+                    }
 
-            @Override
-            public void onNext(String s) {
-                Log.e(TAG, "onSubscribe===" + s);
-            }
+                    @Override
+                    public void onNext(String s) {
+                        Log.e(TAG, "onSubscribe===" + s + "==" + Thread.currentThread().getName());
+                    }
 
-            @Override
-            public void onError(Throwable e) {
-                Log.e(TAG, "onError");
-            }
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e(TAG, "onError");
+                    }
 
-            @Override
-            public void onComplete() {
-                Log.e(TAG, "onComplete");
-            }
-        });
+                    @Override
+                    public void onComplete() {
+                        Log.e(TAG, "onComplete");
+                    }
+                });
     }
 }

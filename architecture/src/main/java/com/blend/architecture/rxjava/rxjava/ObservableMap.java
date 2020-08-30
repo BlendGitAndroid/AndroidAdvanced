@@ -7,7 +7,7 @@ import com.blend.architecture.rxjava.rxjava.observable.BasicFuseableObserver;
 public class ObservableMap<T, U> extends AbstractObservableWithUpstream<T, U> {
     final Function<? super T, ? extends U> function;
 
-    public ObservableMap(ObservableSource<T> source, Function<? super T, ? extends U> function) {
+    public ObservableMap(ObserverbleSource<T> source, Function<? super T, ? extends U> function) {
         super(source);
         this.function = function;
     }

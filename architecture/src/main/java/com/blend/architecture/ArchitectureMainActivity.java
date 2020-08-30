@@ -6,16 +6,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
-import com.blend.architecture.glide.GlideMainActivity;
-import com.blend.architecture.plug_in.hook.HookMainActivity;
-import com.blend.architecture.plug_in.proxy.PlugInMainActivity;
-import com.blend.architecture.router.ARouterMainActivity;
 import com.blend.architecture.aop.AopMainActivity;
 import com.blend.architecture.change_skin.SkinMainActivity;
 import com.blend.architecture.database_design.DatabaseMainActivity;
 import com.blend.architecture.eventbus.EventBusMainActivity;
 import com.blend.architecture.eventbus.hermesevent.HermesEventBusMainActivity;
+import com.blend.architecture.glide.GlideMainActivity;
 import com.blend.architecture.handle_message.ActivityThreadActivity;
+import com.blend.architecture.okhttp.OkHttpMainActivity;
+import com.blend.architecture.plug_in.hook.HookMainActivity;
+import com.blend.architecture.plug_in.proxy.PlugInMainActivity;
+import com.blend.architecture.router.ARouterMainActivity;
 import com.blend.architecture.rxjava.RxJavaMainActivity;
 
 public class ArchitectureMainActivity extends AppCompatActivity {
@@ -31,6 +32,7 @@ public class ArchitectureMainActivity extends AppCompatActivity {
     private Button plugIn;
     private Button hook;
     private Button rxJava;
+    private Button okHttp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +49,7 @@ public class ArchitectureMainActivity extends AppCompatActivity {
         plugIn = findViewById(R.id.plugIn);
         hook = findViewById(R.id.hook);
         rxJava = findViewById(R.id.rxJava);
+        okHttp = findViewById(R.id.okHttp);
 
         handleMessage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,6 +120,13 @@ public class ArchitectureMainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(ArchitectureMainActivity.this, RxJavaMainActivity.class));
+            }
+        });
+
+        okHttp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ArchitectureMainActivity.this, OkHttpMainActivity.class));
             }
         });
     }
