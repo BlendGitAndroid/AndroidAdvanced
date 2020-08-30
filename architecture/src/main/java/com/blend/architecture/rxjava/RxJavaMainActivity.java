@@ -30,7 +30,10 @@ import io.reactivex.schedulers.Schedulers;
 
 
 /**
- * 设计模式：装饰着模式
+ * 设计模式：装饰着模式，观察者模式
+ * 叫你去搭建RxJava框架，你会怎么设计？
+ * 三要素：观察者，被观察者，订阅(被观察者订阅观察者)
+ *
  */
 public class RxJavaMainActivity extends RxAppCompatActivity {
 

@@ -1,7 +1,7 @@
 package com.blend.architecture.rxjava.rxjava;
 
 //被观察者
-public abstract class Observable<T> implements ObserverbleSource {
+public abstract class Observable<T> implements ObservableSource {
 
     //创造操作符
     public static <T> Observable<T> create(ObservableOnSubscribe<T> source) {
