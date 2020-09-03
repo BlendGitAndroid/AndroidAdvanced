@@ -19,7 +19,7 @@ public class ParcelClass implements Parcelable {
     //从序列化后的对象中创建原始对象，通过一系列的read方法来完成
     protected ParcelClass(Parcel in) {
         userId = in.readInt();
-        userName = in.readStringNoHelper();
+        userName = in.readString();
     }
 
     //反序列化
@@ -48,6 +48,6 @@ public class ParcelClass implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(userId);
-        dest.writeStringNoHelper(userName);
+        dest.writeString(userName);
     }
 }

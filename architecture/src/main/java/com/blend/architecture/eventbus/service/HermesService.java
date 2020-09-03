@@ -1,10 +1,10 @@
 package com.blend.architecture.eventbus.service;
 
-import android.annotation.Nullable;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.os.RemoteException;
+import android.support.annotation.Nullable;
 
 import com.blend.architecture.MyEventBusService;
 import com.blend.architecture.eventbus.Request;

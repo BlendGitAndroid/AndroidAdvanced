@@ -1,6 +1,5 @@
 package com.blend.ui.paint_gradient;
 
-import android.annotation.Nullable;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -8,6 +7,7 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Shader;
 import android.graphics.SweepGradient;
+import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 

@@ -1,6 +1,7 @@
 package com.blend.architecture.rxjava;
 
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.blend.architecture.R;
@@ -10,8 +11,6 @@ import com.blend.architecture.rxjava.rxjava.Observable;
 import com.blend.architecture.rxjava.rxjava.ObservableEmitter;
 import com.blend.architecture.rxjava.rxjava.ObservableOnSubscribe;
 import com.blend.architecture.rxjava.rxjava.Observer;
-import com.trello.rxlifecycle2.android.ActivityEvent;
-import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
 
 import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
@@ -23,8 +22,8 @@ import io.reactivex.Flowable;
 import io.reactivex.FlowableEmitter;
 import io.reactivex.FlowableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
@@ -48,6 +47,13 @@ import io.reactivex.schedulers.Schedulers;
  * 上，若多次设定，则只有第一次起作用，和调用的位置没有关系。
  * observeOn：指定一个观察者在哪个调度器上观察这个Observable，接收一个Scheduler参数，来指定下游操作运行在特定的线程调度器Scheduler上，
  * 若多次设定，每次均起作用，在这里可以进行线程的切换。
+ * 这两个操作符一般联合使用，第一步先使用subscribeOn指定这一行上面的代码执行线程，之后通过observeOn来切换线程。
+ * 注意：若有多个subscribeOn，只有第一个subscribeOn指定的线程生效；若有observeOn指定的线程，则observeOn之后进行线程切换，不管subscribeOn指定的
+ * 线程，即使subscribeOn是observeOn之后的第一个线程。
+ * 原因是：RxJava代码的执行是先从上到下，依次添加被观察者，当执行到subscribe注册观察者的时候，再反向执行注册包装的观察者，此时subscribeOn执行，所以
+ * subscribeOn是从下到上执行的，这也是为什么第一个subscribeOn指定的线程才生效；当执行到代码最顶部的时候，先进行onSubscribe回调，这也是为什么
+ * onSubscribe执行在代码运行的线程；然后，代码再从上到下执行，若subscribeOn有指定线程，则之后的代码都是运行在subscribeOn指定的线程中，直到遇到
+ * observeOn进行线程切换，若有多个observeOn，则线程进行多次切换。
  * <p>
  *
  * <p>
@@ -56,7 +62,7 @@ import io.reactivex.schedulers.Schedulers;
  * 溢出，这便是响应式编程中的背压（BackPressure）问题。
  * 解决思路：响应式拉取，响应式拉取是观察者主动去被观察者那里拉取事件，而被观察者则是被动等待通知再发射事件。
  */
-public class RxJavaMainActivity extends RxAppCompatActivity {
+public class RxJavaMainActivity extends AppCompatActivity {
 
     private static final String TAG = "RxJavaMainActivity";
 
@@ -71,9 +77,113 @@ public class RxJavaMainActivity extends RxAppCompatActivity {
 
         flowable();
 
-        interval();
+        // interval();
 
         customize();
+
+        subscribeOnTest();
+
+        doOnSubscribe();
+    }
+
+    /*
+    Observable每发送onSubscribe()之前都会回调这个方法。
+    RxJavaMainActivity: doOnSubscribe:RxCachedThreadScheduler-1
+    RxJavaMainActivity: create:RxNewThreadScheduler-1
+    RxJavaMainActivity: map:RxCachedThreadScheduler-2
+    RxJavaMainActivity: subscribe:main
+    出现上面这种日志的情况是：从下到上，第一个subscribeOn之后由于线程切换，又会在onSubscribe之前执行doOnSubscribe，所以doOnSubscribe
+    运行在这个subscribeOn的线程
+     */
+    private void doOnSubscribe() {
+        io.reactivex.Observable<Integer> observable = io.reactivex.Observable.create(new io.reactivex.ObservableOnSubscribe<Integer>() {
+            @Override
+            public void subscribe(io.reactivex.ObservableEmitter<Integer> observableEmitter) throws Exception {
+                Log.i(TAG, "create:" + Thread.currentThread().getName());
+                observableEmitter.onNext(1);
+                observableEmitter.onComplete();
+            }
+        });
+        observable.subscribeOn(Schedulers.newThread())
+                .observeOn(Schedulers.io())
+                .map(new io.reactivex.functions.Function<Integer, Integer>() {
+                    @Override
+                    public Integer apply(@NonNull Integer integer) throws Exception {
+                        Log.i(TAG, "map:" + Thread.currentThread().getName());
+                        return integer;
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe(new Consumer<Disposable>() {
+                    @Override
+                    public void accept(@NonNull Disposable disposable) throws Exception {
+                        Log.i(TAG, "doOnSubscribe:" + Thread.currentThread().getName());
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Consumer<Integer>() {
+                    @Override
+                    public void accept(@NonNull Integer integer) throws Exception {
+                        Log.i(TAG, "subscribe:" + Thread.currentThread().getName());
+                    }
+                });
+    }
+
+
+    /*
+    onSubscribe: main
+    map-1:RxNewThreadScheduler-1
+    map-2:RxNewThreadScheduler-1
+    map-3:RxNewThreadScheduler-1
+    onNext: RxNewThreadScheduler-1
+     */
+    private void subscribeOnTest() {
+        io.reactivex.Observable.just(1)
+                .map(new io.reactivex.functions.Function<Integer, Integer>() {
+                    @Override
+                    public Integer apply(@NonNull Integer integer) throws Exception {
+                        Log.i(TAG, "map-1:" + Thread.currentThread().getName());
+                        return integer;
+                    }
+                })
+                .subscribeOn(Schedulers.newThread())
+                .map(new io.reactivex.functions.Function<Integer, Integer>() {
+                    @Override
+                    public Integer apply(@NonNull Integer integer) throws Exception {
+                        Log.i(TAG, "map-2:" + Thread.currentThread().getName());
+                        return integer;
+                    }
+                })
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .map(new io.reactivex.functions.Function<Integer, Integer>() {
+                    @Override
+                    public Integer apply(@NonNull Integer integer) throws Exception {
+                        Log.i(TAG, "map-3:" + Thread.currentThread().getName());
+                        return integer;
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .subscribe(new io.reactivex.Observer<Integer>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        Log.i(TAG, "onSubscribe: " + Thread.currentThread().getName());
+                    }
+
+                    @Override
+                    public void onNext(Integer integer) {
+                        Log.i(TAG, "onNext: " + Thread.currentThread().getName());
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 
     private void create() {
@@ -167,22 +277,22 @@ public class RxJavaMainActivity extends RxAppCompatActivity {
                 });
     }
 
-    //每隔一段时间发送一个事件，这个事件从0开始，不断增加1
-    private void interval() {
-        io.reactivex.Observable.interval(1, TimeUnit.SECONDS)
-                .doOnDispose(new Action() {
-                    @Override
-                    public void run() throws Exception {
-                        Log.e(TAG, "interval: 结束");
-                    }
-                }).compose(this.<Long>bindUntilEvent(ActivityEvent.PAUSE))  //自定义操作符，加入自己的代码，这里添加生命周期
-                .subscribe(new Consumer<Long>() {
-                    @Override
-                    public void accept(Long aLong) throws Exception {
-                        Log.e(TAG, "interval: 开始");
-                    }
-                });
-    }
+    // //每隔一段时间发送一个事件，这个事件从0开始，不断增加1
+    // private void interval() {
+    //     io.reactivex.Observable.interval(1, TimeUnit.SECONDS)
+    //             .doOnDispose(new Action() {
+    //                 @Override
+    //                 public void run() throws Exception {
+    //                     Log.e(TAG, "interval: 结束");
+    //                 }
+    //             }).compose(this.<Long>bindUntilEvent(ActivityEvent.PAUSE))  //自定义操作符，加入自己的代码，这里添加生命周期
+    //             .subscribe(new Consumer<Long>() {
+    //                 @Override
+    //                 public void accept(Long aLong) throws Exception {
+    //                     Log.e(TAG, "interval: 开始");
+    //                 }
+    //             });
+    // }
 
 
     private void customize() {
