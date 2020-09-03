@@ -44,14 +44,16 @@ import io.reactivex.schedulers.Schedulers;
  *
  * <p>
  * 线程调度：简化了异步操作
- * subscribeOn：指定被观察者的线程，通过接收一个Scheduler参数，来指定对数据的处理运行在特定的线程调度器Scheduler上，若多次设定，则只有一次起作用。
- * observeOn：指定观察者的线程，接收一个Scheduler参数，来指定下游操作运行在特定的线程调度器Scheduler上，若多次设定，每次均起作用。
+ * subscribeOn：指定Observable这个被观察者自身在哪个调度器上执行，通过接收一个Scheduler参数，来指定对数据的处理运行在特定的线程调度器Scheduler
+ * 上，若多次设定，则只有第一次起作用，和调用的位置没有关系。
+ * observeOn：指定一个观察者在哪个调度器上观察这个Observable，接收一个Scheduler参数，来指定下游操作运行在特定的线程调度器Scheduler上，
+ * 若多次设定，每次均起作用，在这里可以进行线程的切换。
  * <p>
  *
- * <p>-
+ * <p>
  * 背压：当上下游在不同的线程中，通过Observable发射，处理，响应数据流时，如果上游发射数据的速度快于下游接收处理数据的速度，这样对于那些没来得及处理的数
  * 据就会造成积压，这些数据既不会丢失，也不会被垃圾回收机制回收，而是存放在一个异步缓存池中，如果缓存池中的数据一直得不到处理，越积越多，最后就会造成内存
- * 溢出，这便是响应式编程中的背压（backpressure）问题。
+ * 溢出，这便是响应式编程中的背压（BackPressure）问题。
  * 解决思路：响应式拉取，响应式拉取是观察者主动去被观察者那里拉取事件，而被观察者则是被动等待通知再发射事件。
  */
 public class RxJavaMainActivity extends RxAppCompatActivity {
