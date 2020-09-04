@@ -12,15 +12,13 @@ import com.blend.architecture.rxjava.rxjava.ObservableEmitter;
 import com.blend.architecture.rxjava.rxjava.ObservableOnSubscribe;
 import com.blend.architecture.rxjava.rxjava.Observer;
 
-import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
-
-import java.util.concurrent.TimeUnit;
 
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
 import io.reactivex.FlowableEmitter;
 import io.reactivex.FlowableOnSubscribe;
+import io.reactivex.FlowableSubscriber;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
@@ -29,8 +27,7 @@ import io.reactivex.schedulers.Schedulers;
 
 
 /**
- * 设计模式：装饰着模式，观察者模式
- * 叫你去搭建RxJava框架，你会怎么设计？
+ * 设计模式：装饰模式，观察者模式
  * <p>
  *
  * <p>
@@ -39,6 +36,21 @@ import io.reactivex.schedulers.Schedulers;
  * 使用场景：数据库的读写、大图片的载入、文件压缩/解压等各种需要放在后台工作的耗时操作
  * 三要素：被观察者(五种)，观察者，订阅。被观察者订阅观察者
  * 操作符：创建操作符、转换操作符、组合操作符、功能操作符、过滤操作符、条件操作符
+ * <p>
+ *
+ * <p>
+ * RxJava中还有Consumer和Action，也可以创建观察者。他们都是为了触发回调的，Consumer自带一个参数，Action不带餐宿。
+ * 当被观察者发射 onNext时，由于onNext带有参数，所以使用Consumer；
+ * 当被观察者发送onComplete时，由于onComplete不带参数，所以使用Action。
+ * subscribe的几个重载方法：
+ * 1)subscribe()不带任何参数，也就是说观察者没有任何回调。
+ * 2)subscribe(Observer<? super T> observer)将Observer作为参数，它有四个回调方法。
+ * 3)subscribe(Consumer<? super T> onNext)将Consumer作为参数，Consumer中有个回调方法accept，accept带有一个参数，接受被
+ * 观察者发射过来的数据，当被观察者发射onNext时，accept将被执行。
+ * 4)subscribe(Consume<? super T> onNext, Consumer<? super Throwable> onError)带有两个Consumer参数，分别负责onNext
+ * 和onError的回到。
+ * 5)subscribe(Consume<? super T> onNext, Consumer<? super Throwable> onError, Action onComplete)带有三个参数，分别
+ * 负责onNext、onError和onComplete的回调。
  * <p>
  *
  * <p>
@@ -61,6 +73,23 @@ import io.reactivex.schedulers.Schedulers;
  * 据就会造成积压，这些数据既不会丢失，也不会被垃圾回收机制回收，而是存放在一个异步缓存池中，如果缓存池中的数据一直得不到处理，越积越多，最后就会造成内存
  * 溢出，这便是响应式编程中的背压（BackPressure）问题。
  * 解决思路：响应式拉取，响应式拉取是观察者主动去被观察者那里拉取事件，而被观察者则是被动等待通知再发射事件。
+ * 策略：默认的缓冲池大小为BUFFER_SIZE = 128
+ * MISSING：在此策略下，通过Create方法创建的Flowable相当于没有指定背压策略，不会对通过onNext发射的数据做缓存或丢弃处理，当缓存池满了，提示缓存区满，
+ * 并抛出MissingBackpressureException异常。
+ * <p>
+ * ERROR：在此策略下，如果放入Flowable的异步缓存池中的数据超限了，则会抛出MissingBackpressureException异常。
+ * <p>
+ * BUFFER：内部维护了一个缓存池SpscLinkedArrayQueue，其大小不限，此策略下，如果Flowable默认的异步缓存池满了，会通过此缓存池暂存数据，
+ * 它与Observable的异步缓存池一样，可以无限制向里添加数据，不会抛出MissingBackpressureException异常，但会导致OOM。超过observeOn配
+ * 置的bufferSize则缓存到上游的缓冲队列，等待下游消耗了容量的3/4的事件之后，再继续发送上游缓存的事件给下游。
+ * <p>
+ * DROP：在此策略下，如果Flowable的异步缓存池满了，会丢掉上游发送的数据。
+ * <p>
+ * LATEST：与Drop策略一样，如果缓存池满了，会丢掉将要放入缓存池中的数据，不同的是，不管缓存池的状态如何，LATEST都会将最后一条数据强行放入缓存池中，
+ * 来保证观察者在接收到完成通知之前，能够接收到Flowable最新发射的一条数据。当缓存队列中的事件消耗了缓存总容量的3/4之后，会再去接受上游的发送事件；
+ * 如果在执行完等待队列3/4的事件之后，上游的事件还没发送结束，下游即会再次缓存上游发送过来的容量的3/4个事件。
+ * 最后一个事件是怎么发出的？上游发送的事件，每次都会存贮在AtomicReference变量中，下游再去上游请求事件时，如果上游的事件已经发送结束，则将最新的
+ * 这个值返回给下游。
  */
 public class RxJavaMainActivity extends AppCompatActivity {
 
@@ -254,7 +283,7 @@ public class RxJavaMainActivity extends AppCompatActivity {
         }, BackpressureStrategy.BUFFER) //默认
                 .subscribeOn(Schedulers.newThread())    //发送数据和接收数据在不同的线程
                 .observeOn(Schedulers.newThread())
-                .subscribe(new Subscriber<Integer>() {
+                .subscribe(new FlowableSubscriber<Integer>() {
                     @Override
                     public void onSubscribe(Subscription s) {   //这里的参数与之前的不同
                         s.request(Long.MAX_VALUE);
