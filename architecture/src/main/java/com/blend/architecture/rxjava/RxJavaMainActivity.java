@@ -27,7 +27,7 @@ import io.reactivex.schedulers.Schedulers;
 
 
 /**
- * 设计模式：装饰模式，观察者模式
+ * 设计模式：装饰模式，观察者模式，责任链模式，简单工厂模式
  * <p>
  *
  * <p>

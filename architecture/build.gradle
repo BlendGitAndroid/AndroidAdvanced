@@ -82,7 +82,7 @@ dependencies {
 //    implementation 'com.trello.rxlifecycle2:rxlifecycle-android:2.2.2'
 //    implementation 'com.trello.rxlifecycle2:rxlifecycle-components:2.2.2'
 
-
+    implementation("com.squareup.okhttp3:okhttp:3.14.9")
 
     //插件化
     implementation project(':pluginstand')
