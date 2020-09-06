@@ -16,6 +16,7 @@ import com.blend.architecture.handle_message.ActivityThreadActivity;
 import com.blend.architecture.okhttp.OkHttpMainActivity;
 import com.blend.architecture.plug_in.hook.HookMainActivity;
 import com.blend.architecture.plug_in.proxy.PlugInMainActivity;
+import com.blend.architecture.retrofit.RetrofitMainActivity;
 import com.blend.architecture.router.ARouterMainActivity;
 import com.blend.architecture.rxjava.RxJavaMainActivity;
 
@@ -33,6 +34,7 @@ public class ArchitectureMainActivity extends AppCompatActivity {
     private Button hook;
     private Button rxJava;
     private Button okHttp;
+    private Button retrofit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +52,7 @@ public class ArchitectureMainActivity extends AppCompatActivity {
         hook = findViewById(R.id.hook);
         rxJava = findViewById(R.id.rxJava);
         okHttp = findViewById(R.id.okHttp);
+        retrofit = findViewById(R.id.retrofit);
 
         handleMessage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -127,6 +130,13 @@ public class ArchitectureMainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(ArchitectureMainActivity.this, OkHttpMainActivity.class));
+            }
+        });
+
+        retrofit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ArchitectureMainActivity.this, RetrofitMainActivity.class));
             }
         });
     }

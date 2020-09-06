@@ -66,4 +66,9 @@
         style="@style/main_style"
         android:text="OkHttp" />
 
+    <Button
+        android:id="@+id/retrofit"
+        style="@style/main_style"
+        android:text="Retrofit" />
+
 </LinearLayout>
