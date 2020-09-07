@@ -20,9 +20,33 @@ import okhttp3.OkHttpClient;
 
 
 /**
- * 设计模式：建造者模式，责任链模式
+ * 设计模式：建造者模式，责任链模式，克隆模式(Call接口)
  * <p>
- * 在网络的请求和返回的过程中，对每一步的过程如拼接请求头，发射，连接等都封装成一个对象，目的是单一职责，为了更好的扩展
+ * 在网络的请求和返回的过程中，对每一步的过程如拼接请求头，发射，连接等都封装成一个对象，目的是单一职责，为了更好的扩展。
+ * <p>
+ * 网络请求发送的流程：
+ * 1.dns解析，域名对应 ip
+ * 2.TCP建立连接,三次握手
+ * 3.C端向S端发送请求行命令
+ * 4.C端发送请求头信息
+ * 5.S端应答，发送响应命令
+ * 6.S端发送响应头信息
+ * 7.S端向C端发送数据，以及消息体
+ * 8.S端关闭链接 tcp 四次挥手
+ * <p>
+ * okHttp的异步请求只是比同步请求增加了线程调度的功能，我们先来看下异步与同步请求不同的地方：
+ * 当我们调用call.enqueue(Callback)时，就会发起一个异步请求，实际执行的是realCall.enqueue(Callback)，它比同步请求只是
+ * 多了一个Callback参数，这个Callback就是用来进行回调，然后realCall.execute()中先把传进来的Callback包装成一个AsyncCall，
+ * 然后执行Dispatcher的enqueue(AsyncCall)把这个异步请求任务保存进readyAsyncCalls队列中，保存后开始执行promoteAndExecute()
+ * 进行异步任务的调度，它会先把符合条件的异步请求任务从readyAsyncCalls转移到runningAsyncCalls队列和添加到executableCalls列
+ * 表中去，然后遍历executableCalls列表，逐个执行AsyncCall的executeOn(ExecutorService)，然后在这个方法中AsyncCall会把自己
+ * 放进Dispatcher的线程池，等待线程池的调度。当线程池执行到这个AsyncCall时，它的run方法就会被执行，从而执行重写的execute()方法，
+ * execute()方法中的流程和同步请求流程大致相同。
+ * <p>
+ * okHttp的整个流程：
+ * 1.okhttp通过Builder模式创建OkHttpClient、Request和Response，
+ * 2.通过client.newCall(Resquest)创建一个Call，用于发起异步或同步请求
+ * 3.请求会经过Dispatcher、一系列拦截器，最后通过okio与服务器建立连接、发送数据并解析返回结果。
  */
 public class OkHttpMainActivity extends AppCompatActivity {
 
@@ -81,7 +105,7 @@ public class OkHttpMainActivity extends AppCompatActivity {
     private void test() {
         String url = "http://www.baidu.com";
         OkHttpClient client = new OkHttpClient();
-        OkHttpClient.Builder builder = new OkHttpClient().newBuilder();
+        OkHttpClient builder = new OkHttpClient().newBuilder().build(); //利用建造者模式，用于添加自定义属性
 
         okhttp3.Request request = new okhttp3.Request.Builder()
                 .url(url)
