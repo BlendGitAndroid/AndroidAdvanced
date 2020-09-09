@@ -12,10 +12,15 @@ import com.blend.architecture.okhttp.okhttp.Request;
 import com.blend.architecture.okhttp.okhttp.RequestBody;
 import com.blend.architecture.okhttp.okhttp.Response;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
 
+import okhttp3.FormBody;
+import okhttp3.Interceptor;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 
 
@@ -33,6 +38,15 @@ import okhttp3.OkHttpClient;
  * 6.S端发送响应头信息
  * 7.S端向C端发送数据，以及消息体
  * 8.S端关闭链接 tcp 四次挥手
+ * Http请求报文：
+ * 请求行：请求方法 + 空格 + URL + 空格 + 协议版本 + 回车符 + 换行符 (如GET www.baidu.com HTTP/1.1  )
+ * 请求头：头部字段名 + 冒号（:） + 值 + 回车符 + 换行符 (如Host: www.weather.com.cn  )
+ * 请求正文：一般使用在POST方法中，GET方法不存在请求正文。POST方法适用于需要客户填写表单的场合。与请求数据相关的最常使用的
+ * 请求头是Content-Type和Content-Length。
+ * Http响应报文：
+ * 状态行：协议版本 + 空格 + 状态码 + 空格 + 状态码描述 + 回车符 + 换行符 (如HTTP/1.1 200 OK)
+ * 响应头：头部字段名 + 冒号（:） + 值 + 回车符 + 换行符 (如Server: openresty  )
+ * 响应体：
  * <p>
  * okHttp的异步请求只是比同步请求增加了线程调度的功能，我们先来看下异步与同步请求不同的地方：
  * 当我们调用call.enqueue(Callback)时，就会发起一个异步请求，实际执行的是realCall.enqueue(Callback)，它比同步请求只是
@@ -64,17 +78,114 @@ public class OkHttpMainActivity extends AppCompatActivity {
 
     private static final String TAG = "OkHttpMainActivity";
 
-    private DNHttpClient client;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ok_http_main);
-        test();
 
-        client = new DNHttpClient();
-        getCustomizeTest();
-        postCustomizeTest();
+        // socketTest();
+
+        // new Thread(new Runnable() {
+        //     @Override
+        //     public void run() {
+        //         httpTest();
+        //     }
+        // }).start();
+        //
+        // httpPostTest();
+
+        interceptTest();
+
+        // getCustomizeTest();
+        // postCustomizeTest();
+    }
+
+    private void interceptTest() {
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .addInterceptor(new LoggingInterceptor())   //应用拦截器
+                .build();
+    }
+
+    /*
+    Post请求传递参数总结：
+    1.使用FormBody传递键值对参数
+    2.使用RequestBody传递Json或File对象
+    3.使用MultipartBody同时传递键值对参数和File对象
+    4.自定义RequestBody实现流的上传
+     */
+    private void httpPostTest() {
+        String url = "http://www.baidu.com";
+        OkHttpClient builder = new OkHttpClient()
+                .newBuilder()
+                .build(); //利用建造者模式，用于添加自定义属性
+
+        //1.FromBody是RequestBody的实现类
+        FormBody.Builder formBody = new FormBody.Builder();//创建表单请求体
+        formBody.add("json", "JSON");
+
+        //2.RequestBody是抽象类，故不能直接使用，但是他有静态方法create，使用这个方法可以得到RequestBody对象。
+        MediaType JSON = MediaType.parse("application/json; charset=utf-8");    //数据类型为json格式，
+        String jsonStr = "{\"username\":\"lisi\",\"nickname\":\"李四\"}"; //json数据.
+        okhttp3.RequestBody body = okhttp3.RequestBody.create(JSON, jsonStr);
+
+        //3.多重body。FromBody传递的是字符串型的键值对，RequestBody传递的是多媒体，二者都传递,此时就需要使用MultipartBody类。其实这个里面还是做了拼接操作
+        MultipartBody multipartBody = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("groupId", "11")//添加请求头键值对参数
+                .addFormDataPart("title", "title")
+                .addFormDataPart("file", "图片名字", okhttp3.RequestBody.create(MediaType.parse("image/jpeg"), new File("path")))//添加图片文件
+                .build();
+
+        okhttp3.Request request = new okhttp3.Request.Builder()
+                .url(url)
+                .addHeader("token", "myToken")     //添加请求头键值对
+                .post(formBody.build()) //添加请求体
+                .build();
+        final okhttp3.Call call = builder.newCall(request);
+        call.enqueue(new okhttp3.Callback() {   //异步
+            @Override
+            public void onFailure(okhttp3.Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    Log.e(TAG, "response.code()==" + response.code());  //"response.code()==200；"这个是Http协议里面自带的code
+                    Log.e(TAG, "response.message()==" + response.message());
+                    //response.body().string()只能调用一次，在第一次时有返回值，第二次再调用时将会返回null。
+                    // 原因是：response.body().string()的本质是输入流的读操作，必须有服务器的输出流的写操作时客户端的读操作才能得到数据。而服务器
+                    // 的写操作只执行一次，所以客户端的读操作也只能执行一次，第二次将返回null。
+                    Log.e(TAG, "res==" + response.body().string());
+                }
+            }
+        });
+
+    }
+
+    private void httpTest() {
+        String url = "http://www.baidu.com";
+        OkHttpClient client = new OkHttpClient();
+        OkHttpClient builder = new OkHttpClient().newBuilder().build(); //利用建造者模式，用于添加自定义属性
+
+        okhttp3.Request request = new okhttp3.Request.Builder()
+                .url(url)
+                .get()  //默认为GET请求，可以不写
+                .build();
+        final okhttp3.Call call = client.newCall(request);
+        try {
+            okhttp3.Response response = call.execute();//同步
+            if (response.isSuccessful()) {
+                Log.e(TAG, "response.code()==" + response.code());  //"response.code()==200；"这个是Http协议里面自带的code
+                Log.e(TAG, "response.message()==" + response.message());
+                //response.body().string()只能调用一次，在第一次时有返回值，第二次再调用时将会返回null。
+                // 原因是：response.body().string()的本质是输入流的读操作，必须有服务器的输出流的写操作时客户端的读操作才能得到数据。而服务器
+                // 的写操作只执行一次，所以客户端的读操作也只能执行一次，第二次将返回null。
+                Log.e(TAG, "res==" + response.body().string());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void postCustomizeTest() {
@@ -83,7 +194,7 @@ public class OkHttpMainActivity extends AppCompatActivity {
                 .add("key", "13cb58f5884f9749287abbead9c658f2");
         Request request = new Request.Builder().url("http://restapi.amap" +
                 ".com/v3/weather/weatherInfo").post(body).build();
-        client.newCall(request).enqueue(new Callback() {
+        new DNHttpClient().newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, Throwable throwable) {
                 throwable.printStackTrace();
@@ -100,7 +211,7 @@ public class OkHttpMainActivity extends AppCompatActivity {
         Request request = new Request.Builder()
                 .url("http://www.kuaidi100.com/query?type=yuantong&postid=11111111111")
                 .build();
-        Call call = client.newCall(request);
+        Call call = new DNHttpClient().newCall(request);
         call.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, Throwable throwable) {
@@ -114,38 +225,12 @@ public class OkHttpMainActivity extends AppCompatActivity {
         });
     }
 
-    private void test() {
-        String url = "http://www.baidu.com";
-        OkHttpClient client = new OkHttpClient();
-        OkHttpClient builder = new OkHttpClient().newBuilder().build(); //利用建造者模式，用于添加自定义属性
-
-        okhttp3.Request request = new okhttp3.Request.Builder()
-                .url(url)
-                .get()  //默认为GET请求，可以不写
-                .build();
-        final okhttp3.Call call = client.newCall(request);
-        try {
-            call.execute();//同步
-            call.enqueue(new okhttp3.Callback() {   //异步
-                @Override
-                public void onFailure(okhttp3.Call call, IOException e) {
-
-                }
-
-                @Override
-                public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
-
-                }
-            });
-            call.cancel();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+    private void socketTest() {
+        //客户端使用Socket进行连接
         Socket socket = null;
         try {
 //             socket = SSLSocketFactory.getDefault().createSocket("wwww.baidu.com", 443);
-            socket = new Socket("wwww.baidu.com/adb.js", 80);
+            socket = new Socket("www.weather.com.cn", 80);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -169,5 +254,22 @@ public class OkHttpMainActivity extends AppCompatActivity {
 
 //        OkHttpClient client1 = new OkHttpClient().newBuilder().addInterceptor();  // 应用拦截器
 //        OkHttpClient client2 = new OkHttpClient().newBuilder().addNetworkInterceptor();  // 网络拦截器
+    }
+}
+
+class LoggingInterceptor implements Interceptor {
+    @Override
+    public okhttp3.Response intercept(Chain chain) throws IOException {
+        okhttp3.Request request = chain.request();
+        long t1 = System.nanoTime();
+        Log.i("LoggingInterceptor", String.format("Sending request %s on %s%n%s",
+                request.url(), chain.connection(), request.headers()));
+
+        okhttp3.Response response = chain.proceed(request);
+
+        long t2 = System.nanoTime();
+        Log.i("LoggingInterceptor", String.format("Received response for %s in %.1fms%n%s",
+                response.request().url(), (t2 - t1) / 1e6d, response.headers()));
+        return response;
     }
 }
