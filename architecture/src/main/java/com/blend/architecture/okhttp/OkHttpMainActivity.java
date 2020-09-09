@@ -153,8 +153,8 @@ public class OkHttpMainActivity extends AppCompatActivity {
 
         try {
             OutputStream outputStream = socket.getOutputStream();
-            outputStream.write(("GET / HTTP/1.1\r\n" +
-                    "Host: wwww.baidu.com\r\n\r\n").getBytes());
+            outputStream.write(("GET /weather/101250101.shtml HTTP/1.1\r\n" +
+                    "Host: www.weather.com.cn\r\n\r\n").getBytes());
             outputStream.flush();
             byte[] bytes = new byte[1024];
             int len = 0;

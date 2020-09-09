@@ -82,9 +82,11 @@ dependencies {
 //    implementation 'com.trello.rxlifecycle2:rxlifecycle-android:2.2.2'
 //    implementation 'com.trello.rxlifecycle2:rxlifecycle-components:2.2.2'
 
-    implementation("com.squareup.okhttp3:okhttp:3.14.9")
+    //okhttp3.14.9要求26以上
+    implementation("com.squareup.okhttp3:okhttp:3.12.0")
+    //implementation("com.squareup.okhttp3:okhttp:3.14.9")
 
-    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+//    implementation("com.squareup.retrofit2:retrofit:2.9.0")
 
     //插件化
     implementation project(':pluginstand')

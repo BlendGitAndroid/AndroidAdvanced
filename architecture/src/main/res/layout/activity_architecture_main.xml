@@ -1,74 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".handle_message.ActivityThreadActivity">
+    android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/handleMessage"
-        style="@style/main_style"
-        android:text="HandleMessage" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".handle_message.ActivityThreadActivity">
 
-    <Button
-        android:id="@+id/aop"
-        style="@style/main_style"
-        android:text="AOP" />
+        <Button
+            android:id="@+id/handleMessage"
+            style="@style/main_style"
+            android:text="HandleMessage" />
 
-    <Button
-        android:id="@+id/eventBus"
-        style="@style/main_style"
-        android:text="EventBus" />
+        <Button
+            android:id="@+id/aop"
+            style="@style/main_style"
+            android:text="AOP" />
 
-    <Button
-        android:id="@+id/hermesEventBus"
-        style="@style/main_style"
-        android:text="HermesEventBus" />
+        <Button
+            android:id="@+id/eventBus"
+            style="@style/main_style"
+            android:text="EventBus" />
 
-    <Button
-        android:id="@+id/changeSkin"
-        style="@style/main_style"
-        android:text="ChangeSkin" />
+        <Button
+            android:id="@+id/hermesEventBus"
+            style="@style/main_style"
+            android:text="HermesEventBus" />
 
-    <Button
-        android:id="@+id/dataBaseDesign"
-        style="@style/main_style"
-        android:text="DataBaseDesign" />
+        <Button
+            android:id="@+id/changeSkin"
+            style="@style/main_style"
+            android:text="ChangeSkin" />
 
-    <Button
-        android:id="@+id/aRouter"
-        style="@style/main_style"
-        android:text="ARouter" />
+        <Button
+            android:id="@+id/dataBaseDesign"
+            style="@style/main_style"
+            android:text="DataBaseDesign" />
 
-    <Button
-        android:id="@+id/glide"
-        style="@style/main_style"
-        android:text="Glide" />
+        <Button
+            android:id="@+id/aRouter"
+            style="@style/main_style"
+            android:text="ARouter" />
 
-    <Button
-        android:id="@+id/plugIn"
-        style="@style/main_style"
-        android:text="PlugIn" />
+        <Button
+            android:id="@+id/glide"
+            style="@style/main_style"
+            android:text="Glide" />
 
-    <Button
-        android:id="@+id/hook"
-        style="@style/main_style"
-        android:text="Hook" />
+        <Button
+            android:id="@+id/plugIn"
+            style="@style/main_style"
+            android:text="PlugIn" />
 
-    <Button
-        android:id="@+id/rxJava"
-        style="@style/main_style"
-        android:text="RxJava" />
+        <Button
+            android:id="@+id/hook"
+            style="@style/main_style"
+            android:text="Hook" />
 
-    <Button
-        android:id="@+id/okHttp"
-        style="@style/main_style"
-        android:text="OkHttp" />
+        <Button
+            android:id="@+id/rxJava"
+            style="@style/main_style"
+            android:text="RxJava" />
 
-    <Button
-        android:id="@+id/retrofit"
-        style="@style/main_style"
-        android:text="Retrofit" />
+        <Button
+            android:id="@+id/okHttp"
+            style="@style/main_style"
+            android:text="OkHttp" />
 
-</LinearLayout>
+        <Button
+            android:id="@+id/retrofit"
+            style="@style/main_style"
+            android:text="Retrofit" />
+
+    </LinearLayout>
+</ScrollView>
