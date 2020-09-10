@@ -26,6 +26,7 @@ import okhttp3.OkHttpClient;
 
 /**
  * 设计模式：建造者模式，责任链模式，克隆模式(Call接口)
+ * builder模式是，先赋值正确，再创建对象。set是先给予默认值，然后修改。
  * <p>
  * 在网络的请求和返回的过程中，对每一步的过程如拼接请求头，发射，连接等都封装成一个对象，目的是单一职责，为了更好的扩展。
  * <p>
@@ -58,21 +59,38 @@ import okhttp3.OkHttpClient;
  * execute()方法中的流程和同步请求流程大致相同。
  * <p>
  * okHttp的整个流程：
- * 1.okhttp通过Builder模式创建OkHttpClient、Request和Response，
- * 2.通过client.newCall(Resquest)创建一个Call，用于发起异步或同步请求
- * 3.请求会经过Dispatcher、一系列拦截器，最后通过okio与服务器建立连接、发送数据并解析返回结果。
+ * 1.okhttp通过Builder模式创建OkHttpClient、Request和Response。OkHttpClient是okhttp中的大管家，它将具体的工作分发到各个子
+ * 系统中去完成，它使用Builder模式配置网络请求的各种参数如超时、拦截器、分发器等；Request代表着一个HTTP请求，它封装了请求的具体消息，
+ * 如url、header、body等，它和OkHttpClient一样都是使用Budiler模式来配置自己的参数；
+ * 2.通过client.newCall(Resquest)创建一个Call，用于发起异步或同步请求。Call是一个接口，它的具体实现类是RealCall，Call中定义了
+ * 一些enqueue(Callback)、execute()等关键方法。
+ * 3.请求会经过Dispatcher、一系列拦截器，最后通过okio与服务器建立连接、发送数据并解析返回结果。Dispatcher是一个任务调度器，它负责
+ * <p>
+ * 同步请求：当我们调用call.execute()时，就会发起一个同步请求，而call的实现类是RealCall，所以实际执行的是realCall.execute()，
+ * realCall.execute()中执行Dispatcher的executed(RealCall)把这个同步请求任务保存进runningSyncCalls队列中，（没有做事情，只是入队出队。）
+ * 然后RealCall执行getResponseWithInterceptorChain()处理同步请求，请求经过层层拦截器后到达最后一个拦截器CallServerInterceptor，
+ * 在这个拦截器中通过Exchange把请求发送到服务器，然后同样的通过Exchange获得服务器的响应，根据响应构造Response，然后返回，最后RealCall执行
+ * Dispatcher的finished(RealCall)把之前暂时保存的同步请求任务从runningSyncCalls队列中移除。
+ * <p>
+ * 异步请求：当我们调用call.enqueue()时，先把异步请求添加到readyAsyncCalls队列中，接着执行promoteAndExecute方法，主要有两个for循环，第1个
+ * for循环是把符合条件的异步请求任务从readyAsyncCalls转移（提升）到runningAsyncCalls队列和添加到executableCalls列表中去，第2个for循环就是
+ * 遍历executableCalls列表，从executableCalls列表中获取AsyncCall对象，并且调用它的executeOn()方法，然后进行异步任务的执行。首先调用RealCall
+ * 的getResponseWithInterceptorChain()方法处理请求请求处理完毕后，返回响应Response，这时回调我们调用Call.enqueue(Callback)时传进来的
+ * Callback的onResponse()方法，最后在finally语句中调用Dispatcher的finished(AsyncCall)方法来把异步请求任务从runningAsyncCalls队列中移除出去。
+ *
  * <p>
  * okHttp添加拦截器及具体的网络请求过程：
  * okHttp不管同步还是异步，最终都调用的是RealCall#getResponseWithInterceptorChain()方法，在这个方法中，依次添加到拦截器集合中，
  * 1.client.interceptors()使用者添加的应用拦截器：处理原始请求和最终的响应：可以添加自定义header、通用参数、参数加密、网关接入等等
- * 2.RetryAndFollowUpInterceptor(client)重试拦截器：处理错误重试和重定向
+ * 2.RetryAndFollowUpInterceptor(client)重试拦截器：处理错误重试和重定向。根据不同的错误状态码，生成新的Request请求，进行
  * 3.BridgeInterceptor(client.cookieJar())桥接拦截器：应用层和网络层的桥接拦截器，主要工作是为请求添加cookie、添加固定的header，
  * 比如Host、Content-Length、Content-Type、User-Agent等等，然后保存响应结果的cookie，如果响应使用gzip压缩过，则还需要进行解压。
  * 4.CacheInterceptor(client.internalCache())缓存拦截器：缓存拦截器，获取缓存、更新缓存。如果命中缓存则不会发起网络请求。
  * 5.ConnectInterceptor(client))连接拦截器：连接拦截器，内部会维护一个连接池，负责连接复用、创建连接（三次握手等等）、释放连接以及创建连接上的socket流。
  * 6.client.networkInterceptors()使用者添加的网络拦截器：用户自定义拦截器，通常用于监控网络层的数据传输。
  * 7.CallServerInterceptor(forWebSocket))请求网络服务拦截器：请求拦截器，在前置准备工作完成后，真正发起网络请求，进行IO读写。
- * 最后通过拦截器链，通过责任链模式，依次调用拦截器，最终返回response
+ * 最后通过拦截器链，通过责任链模式，依次调用拦截器，最终返回response。
+ *
  */
 public class OkHttpMainActivity extends AppCompatActivity {
 
