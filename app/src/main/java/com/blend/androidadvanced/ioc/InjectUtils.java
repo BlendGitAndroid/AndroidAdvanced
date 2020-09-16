@@ -32,7 +32,7 @@ public class InjectUtils {
             for (Annotation annotation : annotations) {
 
 //                annotation  ===OnClick  OnClick.class
-                Class<?> annotionClass = annotation.annotationType();
+                Class<?> annotionClass = annotation.annotationType();   //获取到annotation对象的类型，就是OnClick类型
                 EventBase eventBase = annotionClass.getAnnotation(EventBase.class);
                 //如果没有eventBase，则表示当前方法不是一个处理事件的方法
                 if (eventBase == null) {
@@ -59,11 +59,11 @@ public class InjectUtils {
                 Method valueMethod = null;
                 try {
                     //反射得到ID,再根据ID号得到对应的VIEW
-                    valueMethod = annotionClass.getDeclaredMethod("value");
+                    valueMethod = annotionClass.getDeclaredMethod("value"); //获取到onClick注解的value值，R.id.app_text的值
                     int[] viewId = (int[]) valueMethod.invoke(annotation);
                     for (int id : viewId) {
                         Method findViewById = clazz.getMethod("findViewById", int.class);
-                        View view = (View) findViewById.invoke(context, id);
+                        View view = (View) findViewById.invoke(context, id);    //通过findViewById拿到相应的View
                         if (view == null) {
                             continue;
                         }
@@ -76,8 +76,8 @@ public class InjectUtils {
                         Object proxy = Proxy.newProxyInstance(listenerType.getClassLoader(), new Class[]{listenerType}, listenerInvocationHandler);
 
                         //执行方法                                   setOnClickListener,new View.OnClickListener()
-                        Method onClickMethod = view.getClass().getMethod(listenerSetter, listenerType);
-                        onClickMethod.invoke(view, proxy);
+                        Method onClickMethod = view.getClass().getMethod(listenerSetter, listenerType); //获取到View的setOnClickListener方法，参数是View.OnClickListener
+                        onClickMethod.invoke(view, proxy);  //proxy就是View.OnClickListener()接口的实现
 
                     }
 
@@ -99,7 +99,7 @@ public class InjectUtils {
      */
     private static void injectView(Object context) {
         Class<?> aClass = context.getClass();
-        Field[] fields = aClass.getDeclaredFields();
+        Field[] fields = aClass.getDeclaredFields();    //拿到所有属性对象
 //        MainActivity mainActivity = (MainActivity) context;
 
         for (Field field : fields) {
@@ -108,10 +108,10 @@ public class InjectUtils {
                 int valueId = viewInject.value();
                 try {
                     Method method = aClass.getMethod("findViewById", int.class);
-                    View view = (View) method.invoke(context, valueId);
+                    View view = (View) method.invoke(context, valueId); //拿到View
 //                    View view= mainActivity.findViewById(valueId);
                     field.setAccessible(true);
-                    field.set(context, view);
+                    field.set(context, view);   //设置属性中，给Activity中对应的filed设置值
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
