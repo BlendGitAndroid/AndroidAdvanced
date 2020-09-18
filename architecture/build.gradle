@@ -31,6 +31,11 @@ android {
         }
     }
 
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
+    }
+
 }
 
 greendao {
@@ -82,15 +87,13 @@ dependencies {
 //    implementation 'com.trello.rxlifecycle2:rxlifecycle-android:2.2.2'
 //    implementation 'com.trello.rxlifecycle2:rxlifecycle-components:2.2.2'
 
-    //okhttp3.14.9要求26以上
-    implementation 'com.squareup.okhttp3:okhttp:3.12.0'
-    //implementation 'com.squareup.okhttp3:okhttp:3.14.9'
+    //okhttp
+    implementation 'com.squareup.okhttp3:okhttp:3.14.9'
 
-    //retrofit 2.9要求26以上
-    implementation 'com.squareup.retrofit2:retrofit:2.6.2'
-    implementation 'com.squareup.retrofit2:converter-gson:2.6.2'    //数据解析器
-    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.6.2'
-//    implementation com.squareup.retrofit2:retrofit:2.9.0'
+    //retrofit
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'    //数据解析器
+    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.9.0'
 
     //插件化
     implementation project(':pluginstand')

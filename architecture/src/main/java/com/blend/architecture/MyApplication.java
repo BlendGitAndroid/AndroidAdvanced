@@ -13,7 +13,7 @@ import com.blend.skincore.SkinManager;
 
 import java.lang.reflect.InvocationTargetException;
 
-
+//注意使用的时候要初始化
 public class MyApplication extends Application {
 
     private static MyApplication sMyApplication;

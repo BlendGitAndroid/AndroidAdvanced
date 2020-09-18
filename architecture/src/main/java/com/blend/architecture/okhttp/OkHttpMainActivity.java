@@ -184,7 +184,8 @@ public class OkHttpMainActivity extends AppCompatActivity {
     private void httpTest() {
         String url = "http://www.baidu.com";
         OkHttpClient client = new OkHttpClient();
-        OkHttpClient builder = new OkHttpClient().newBuilder().build(); //利用建造者模式，用于添加自定义属性
+        OkHttpClient builder = new OkHttpClient().newBuilder()
+                .build(); //利用建造者模式，用于添加自定义属性
 
         okhttp3.Request request = new okhttp3.Request.Builder()
                 .url(url)

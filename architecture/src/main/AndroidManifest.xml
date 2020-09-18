@@ -6,7 +6,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
 
-    <application android:name=".MyApplication">
+    <application>
         <activity android:name=".retrofit.RetrofitMainActivity"></activity>
         <activity android:name=".okhttp.OkHttpMainActivity" />
         <activity android:name=".rxjava.RxJavaMainActivity" />
