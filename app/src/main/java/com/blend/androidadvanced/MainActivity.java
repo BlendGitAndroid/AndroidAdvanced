@@ -4,8 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.blend.androidadvanced.ioc.IocMainActivity;
-import com.blend.architecture.ArchitectureMainActivity;
+import com.blend.optimization.OptimizationMainActivity;
 
 public class MainActivity extends Activity {
 
@@ -21,7 +20,10 @@ public class MainActivity extends Activity {
         // startActivity(new Intent(this, ArchitectureMainActivity.class));
 
         //IOC
-        startActivity(new Intent(this, IocMainActivity.class));
+        // startActivity(new Intent(this, IocMainActivity.class));
+
+        //性能优化
+        startActivity(new Intent(this, OptimizationMainActivity.class));
         finish();
     }
 }
