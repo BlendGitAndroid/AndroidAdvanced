@@ -90,7 +90,9 @@ import okhttp3.OkHttpClient;
  * 6.client.networkInterceptors()使用者添加的网络拦截器：用户自定义拦截器，通常用于监控网络层的数据传输。
  * 7.CallServerInterceptor(forWebSocket))请求网络服务拦截器：请求拦截器，在前置准备工作完成后，真正发起网络请求，进行IO读写。
  * 最后通过拦截器链，通过责任链模式，依次调用拦截器，最终返回response。
- *
+ * <p>
+ * 1.OkHttp中使用Okio来进行IO的操作，对这一部分还不是很了解，尤其是IO操作这一块？？？
+ * 2.使用Https进行网络通讯，这一部分是如何处理的？？？
  */
 public class OkHttpMainActivity extends AppCompatActivity {
 
