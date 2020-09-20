@@ -31,6 +31,38 @@ import com.blend.optimization.R;
  * window属性：windowIsTranslucent是false时，就一定是不透明；是true时，透明度由windowBackground决定。
  * windowDisablePreview：禁止窗口的启动动画，但是设置android:windowIsTranslucent属性一样，如果在MainActivity启动的时候，
  * 有过多复杂的操作，就会出现在手机中点击了应用程序的图标，但过两秒才会打开应用程序不好的卡顿体验效果。
+ * <p>
+ * APP启动时间查看：
+ * 1.通过Logcat输入Displayed筛选系统日志，并不过滤信息No Filters。
+ * 2.使用adb shell获取应用的启动时间
+ * // 其中的AppStartActivity全路径可以省略前面的packageName
+ * adb shell am start -W [packageName]/[AppStartActivity全路径]
+ * 执行后会得到三个时间：ThisTime、TotalTime和WaitTime，详情如下：
+ * ThisTime：最后一个Activity启动耗时。
+ * TotalTime：所有Activity启动耗时。
+ * WaitTime：AMS启动Activity的总耗时。
+ * 一般查看得到的TotalTime，即应用的启动时间，包括创建进程 + Application初始化 + Activity初始化到界面显示的过程。
+ * <p>
+ * TRACE工具分析代码执行时间：
+ * 用法：
+ * 1.Debug.startMethodTracing(filePath);
+ * 中间为需要统计执行时间的代码
+ * Debug.stopMethodTracing();
+ * 2.adb pull /storage/emulated/0/app1.trace把文件拉出来分析把pull到电脑上的文件拖到AS中就可以分析了。
+ * 优化方案：在Application中初始化的代码尽可能少，耗时操作尽量不要放在Application中初始化。
+ * 1.开线程。没建handler、没操作UI、对异步要求不高。
+ * 因为此时Handle还没有真正循环起来，肯定不可进行UI操作；对异步要求高，可能会出现空指针异常，因为当你使用的时候，发现还没有初始化完。
+ * 2.懒加载。用到的时候再初始化，如网络，数据库操作。
+ * <p>
+ * 应用启动类型：
+ * 1.冷启动：从点击应用图标到UI界面完全显示且用户可操作的全部过程。
+ * 启动流程：Click Event -> IPC -> Process.start -> ActivityThread -> bindApplication -> LifeCycle -> ViewRootImpl
+ * 2.热启动：因为会从已有的应用进程启动，此时的进程在内存中，所以不会再创建和初始化Application，只会重新创建并初始化Activity。
+ * 启动流程：LifeCycle -> ViewRootImpl。
+ * ViewRootImpl：ViewRoot是GUI管理系统与GUI呈现系统之间的桥梁。每一个ViewRootImpl关联一个Window，ViewRootImpl最终会通过它的
+ * setView方法绑定Window所对应的View，并通过其performTraversals方法对View进行布局、测量和绘制。
+ * 3.温启动：温启动包含了在冷启动期间发生的部分操作；同时，它的开销要比热启动高。有许多潜在状态可视为温启动。例如：用户按返回键退出应用后
+ * 又重新启动应用。这时进程已在运行，但应用必须通过调用 onCreate() 从头开始重新创建 Activity。
  */
 public class AppStartupMainActivity extends AppCompatActivity {
 
