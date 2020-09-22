@@ -20,6 +20,9 @@
             style="@style/main_style"
             android:text="UiDrawing" />
 
-
+        <Button
+            android:id="@+id/memory"
+            style="@style/main_style"
+            android:text="Memory" />
     </LinearLayout>
 </ScrollView>
