@@ -15,6 +15,11 @@
             style="@style/main_style"
             android:text="AppStartup" />
 
+        <Button
+            android:id="@+id/uiDrawing"
+            style="@style/main_style"
+            android:text="UiDrawing" />
+
 
     </LinearLayout>
 </ScrollView>
