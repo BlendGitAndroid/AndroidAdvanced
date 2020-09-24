@@ -1,6 +1,7 @@
 package com.blend.optimization.memory;
 
-public class MyObjectPool extends ObjectPool{
+public class MyObjectPool extends ObjectPool {
+
     public MyObjectPool(int initialCapacity, int maxCapacity) {
         super(initialCapacity, maxCapacity);
     }

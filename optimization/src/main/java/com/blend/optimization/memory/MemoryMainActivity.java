@@ -34,6 +34,8 @@ import com.blend.optimization.R;
  * 内存分析工具的使用：
  * Android Profiler结合Mat工具分析内存泄露，在Mat工具中，通过柱状图或查询语句查找内存泄露的类，在这个类中找到第一个不是自己
  * 写的语句，之后的调用就可以考虑断开引用链。
+ * Profiler还能分析内存抖动，在短时间内通过查看Allocations已分配和Deallocation已回收的数量，若是两者都比较多，则说明会发生
+ * 内存抖动，然后通过Allocation Call Stack来查看内存泄露的代码。
  * <p>
  * 处理方案：
  * 第三方SDK和Android源码引发的内存泄露：其目的就是断开引用链
@@ -44,19 +46,20 @@ import com.blend.optimization.R;
  * 回收算法：标记清除算法、复制算法、标记压缩算法、分代收集算法。
  * <p>
  * 优化内存良好的编码习惯：
- * 1.数据类型。不要使用比需求更占空间的基本数据类型。
- * 2.循环尽量用foreach,少用iterator，自动装箱尽量少用。
+ * 1.数据类型。不要使用比需求更占空间的基本数据类型，能使用Int的就不用Long。
+ * 2.循环尽量用foreach，少用iterator，自动装箱尽量少用。
  * 3.数据结构与算法(数组，链表，栈，树，图...)的解度处理。如数据量千级以内可以使用Sparse数组(key为整数)，ArrayMap（key为对象）
- * 性能不如HashMap但节约内存。
+ * 性能不如HashMap但节约内存，所以在大型公司中，不会使用HashMap。
  * 4.枚举优化。每一个枚举值都是一个单例对象,在使用它时会增加额外的内存消耗,所以枚举相比与Integer和String会占用更多的内存；
  * 较多的使用 Enum 会增加 DEX 文件的大小,会造成运行时更多的IO开销,使我们的应用需要更多的空间；特别是分dex多的大型APP，枚
  * 举的初始化很容易导致ANR。枚举可以进行改进，使用注解的形式。
  * 5.static和static final的问题，static会由编译器调用clinit方法进行初始化，static final不需要进行初始化工作，打包在dex文件中
  * 可以直接调用，并不会在类初始化申请内存。所以基本数据类型的成员，可以全写成static final。
- * 6.字符串的连接尽量少用加号(+)。
- * 7.同一个方法多次调用，如递归函数，回调函数中new对象,读流直接在循环中new对象等。不要在onMeasure()，onLayout(),onDraw()中去刷新
- * UI（requestLayout，invalid）。
+ * 6.字符串的连接尽量少用加号(+)，若这样进行频繁的操作，可能发生内存抖动。
+ * 7.同一个方法多次调用，如递归函数，回调函数中new对象，或者读流直接在循环中new对象等。如不要在onMeasure()，onLayout(),onDraw()中去
+ * 刷新UI（requestLayout，invalid）。
  * 8.避免GC回收将来要重用的对象。使用内存设计模式对象沲+LRU算法。
+ * 9.尽量不要使用WebView来加载H5界面，这样会发生内存泄露，是无解的。腾讯是使用到WebView的地方都会重新开一个进程。
  */
 public class MemoryMainActivity extends AppCompatActivity {
 

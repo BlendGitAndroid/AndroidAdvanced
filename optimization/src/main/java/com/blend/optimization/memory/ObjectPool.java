@@ -3,14 +3,15 @@ package com.blend.optimization.memory;
 import android.util.SparseArray;
 
 public abstract class ObjectPool<T> {
+
     //空闲沲，用户从这个里面拿对象
     private SparseArray<T> freePool;
+
     //正在使用沲，用户正在使用的对象放在这个沲记录
     private SparseArray<T> lentPool;
 
     //沲的最大值
     private int maxCapacity;
-
 
     public ObjectPool(int maxCapacity) {
         this(maxCapacity / 2, maxCapacity);
@@ -57,8 +58,6 @@ public abstract class ObjectPool<T> {
                 }
                 t = create();
                 lentPool.put(lentPool.size() + freeSize, t);
-
-
             }
         }
         return t;
