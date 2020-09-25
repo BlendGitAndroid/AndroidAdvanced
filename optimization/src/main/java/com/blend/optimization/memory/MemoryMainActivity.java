@@ -1,12 +1,19 @@
 package com.blend.optimization.memory;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.Button;
 
 import com.blend.optimization.R;
 
+import java.lang.ref.WeakReference;
+
 /**
+ * 大佬博客：https://juejin.im/post/6844904096541966350#heading-59
  * 常见的内存分析工具：
  * DDMS，MAT，Finder-Activity(MAT上的二次开发)，LeakCanary，LeakInspector
  * <p>
@@ -60,20 +67,109 @@ import com.blend.optimization.R;
  * 刷新UI（requestLayout，invalid）。
  * 8.避免GC回收将来要重用的对象。使用内存设计模式对象沲+LRU算法。
  * 9.尽量不要使用WebView来加载H5界面，这样会发生内存泄露，是无解的。腾讯是使用到WebView的地方都会重新开一个进程。
+ * 10.Activity组件造成的内存泄露。
+ * 1)非业务需要不要把activity的上下文做参数传递，可以传递application的上下文。
+ * 2)不要把和Activity有关联的对象写成static，如private static Button btn;private static Drawable drawable。
+ * 3)非静态内部类和匿名内部类会持有activity引用，建议大家单独写个文件，或者内部类通过弱引用来引用外部类。
+ * 4)单例模式持有activity引用。两种方式解决：一是使用弱引用；另外一种是使用全局application的Context，类似于1)。
+ * 5)handler.postDelayed()问题。如果开启的线程需要传入参数，用弱引接收可解决问题；handler记得清除removeCallbacksAndMessages(null)。
+ * 6)AsyncTask造成的内存泄露。这个时候可以使用弱引用，来规避内存泄露。
+ * 11.尽量使用IntentService,而不是Service。
  */
 public class MemoryMainActivity extends AppCompatActivity {
 
     private static final String TAG = "MemoryMainActivity";
+
+    private MyHandler handler = null;
+    private Button mButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_memory_main);
 
-        SHAPE s = new SHAPE();
-        s.setShape(SHAPE.CIRCLE | SHAPE.RECTANGLE);
-        System.out.println(s.getShape());
+        //枚举的替代方案
+        enumReplace();
 
+        //缓冲池
+        cachePool();
+
+        //单例引用
+        singleton();
+
+        //Handle造成的内存泄露
+        handle();
+
+        //AsyncTask造成的内存泄露，将Activity变弱引用的关系，在GC时就会被回收
+        new MyAsyncTask2(MemoryMainActivity.this).execute();
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        handler.removeCallbacksAndMessages(null);
+    }
+
+    static class MyHandler extends Handler {
+
+        private WeakReference<MemoryMainActivity> m;
+
+        public MyHandler(MemoryMainActivity activity) {
+            m = new WeakReference<>(activity);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            MemoryMainActivity activity = m.get();
+            if (activity != null) {
+                activity.mButton.setText("aa");
+            }
+        }
+    }
+
+    //这个类单独写个文件，然后使用弱引用
+    static class MyAsyncTask2 extends AsyncTask {
+
+        private WeakReference<MemoryMainActivity> activity;
+
+        public MyAsyncTask2(MemoryMainActivity activity) {
+            this.activity = new WeakReference<>(activity);
+        }
+
+        @Override
+        protected Object doInBackground(Object[] objects) {
+            return doSomeing();
+        }
+
+        private Object doSomeing() {
+            //做了很多事后
+            return new Object();
+        }
+    }
+
+    private void handle() {
+        handler = new MyHandler(this);
+        handler.post(new Runnable() {   //这里的runnable应该也要写成弱引用的方式
+            @Override
+            public void run() {
+
+            }
+        });
+
+    }
+
+    private void singleton() {
+        MemorySingleton.getInstance().setCallback(new MemorySingleton.Callback() {
+            @Override
+            public void callback() {
+
+            }
+        });
+    }
+
+    private void cachePool() {
         MyObjectPool pool = new MyObjectPool(2, 4);
         Object o1 = null;
         Object o2 = null;
@@ -95,5 +191,11 @@ public class MemoryMainActivity extends AppCompatActivity {
         Log.e(TAG, "Blend: " + o3.hashCode());
         Log.e(TAG, "Blend: " + o4.hashCode());
         // Log.e(TAG, "Blend: " + o5.hashCode());
+    }
+
+    private void enumReplace() {
+        SHAPE s = new SHAPE();
+        s.setShape(SHAPE.CIRCLE | SHAPE.RECTANGLE);
+        System.out.println(s.getShape());
     }
 }
