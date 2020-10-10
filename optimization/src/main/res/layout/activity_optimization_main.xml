@@ -24,5 +24,10 @@
             android:id="@+id/memory"
             style="@style/main_style"
             android:text="Memory" />
+
+        <Button
+            android:id="@+id/bitmapManage"
+            style="@style/main_style"
+            android:text="BitmapManage" />
     </LinearLayout>
 </ScrollView>

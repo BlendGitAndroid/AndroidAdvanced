@@ -3,7 +3,8 @@
     package="com.blend.optimization">
 
     <application android:name=".OptimizationApplication">
-        <activity android:name=".memory.MemoryMainActivity"></activity>
+        <activity android:name=".bitmapmanage.BitmapManageMainActivity"></activity>
+        <activity android:name=".memory.MemoryMainActivity" />
         <activity android:name=".uidrawing.UiDrawingMainActivity" />
         <activity android:name=".OptimizationMainActivity" />
         <activity android:name=".startup.AppStartupMainActivity" />
