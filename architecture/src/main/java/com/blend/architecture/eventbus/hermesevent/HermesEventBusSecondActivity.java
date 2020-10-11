@@ -34,6 +34,6 @@ public class HermesEventBusSecondActivity extends AppCompatActivity {
     public void getUser(View view) {
         //接收从服务端传过来的数据
         Toast.makeText(this, "-----> " + userManager.getFriend().toString(), Toast.LENGTH_SHORT).show();
-//        userManager.setFriend(new Friend("jett",20));
+//        userManager.setFriend(new Friend("BlendAndroid",20));
     }
 }

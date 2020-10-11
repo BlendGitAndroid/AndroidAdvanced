@@ -51,7 +51,7 @@ public class ImageAdapter extends BaseAdapter {
 
         Bitmap bitmap = ImageCache.getInstance().getBitmapFromMemory(String.valueOf(position));
         if (null == bitmap) {
-            //如果内存没数据，就去复用池找
+            //如果内存没数据，先去复用池找能复用的内存
             Bitmap reuseable = ImageCache.getInstance().getReuseable(60, 60, 1);
             //reuseable能复用的内存
             //从磁盘找
@@ -61,13 +61,13 @@ public class ImageAdapter extends BaseAdapter {
                 bitmap = ImageResize.resizeBitmap(context, R.drawable.wyz_p, 80, 80, false, reuseable);
                 ImageCache.getInstance().putBitmapToMemeory(String.valueOf(position), bitmap);
                 ImageCache.getInstance().putBitMapToDisk(String.valueOf(position), bitmap);
-                Log.i("jett", "从网络加载了数据");
+                Log.i("BlendAndroid", "从网络加载了数据");
             } else {
-                Log.i("jett", "从磁盘中加载了数据");
+                Log.i("BlendAndroid", "从磁盘中加载了数据");
             }
 
         } else {
-            Log.i("jett", "从内存中加载了数据");
+            Log.i("BlendAndroid", "从内存中加载了数据");
         }
 
 

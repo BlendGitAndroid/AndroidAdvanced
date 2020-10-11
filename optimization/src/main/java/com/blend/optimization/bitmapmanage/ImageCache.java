@@ -56,6 +56,9 @@ public class ImageCache {
     Thread clearReferenceQueue;
     boolean shutDown;
 
+    //不需要的内存块，手动Recycler，加快回收队列
+    //因为GC会扫描两次，第一次扫描就会加入到引用队列，等到第二次扫描才会回收，这里的处理时等加入到引用队列，就手动回收
+    //？？8.0之前Bitmap回收java和native
     private ReferenceQueue<Bitmap> getReferenceQueue() {
         if (null == referenceQueue) {
             //当弱用引需要被回收的时候，会进到这个队列中
@@ -120,7 +123,7 @@ public class ImageCache {
                     reuseablePool.add(new WeakReference<Bitmap>(oldValue, referenceQueue));
                 } else {
                     //oldValue就是移出来的对象
-                    oldValue.recycle();
+                    oldValue.recycle(); //直接回收内存块
                 }
 
 
@@ -164,7 +167,7 @@ public class ImageCache {
                     iterator.remove();
                     break;
                 } else {
-                    iterator.remove();
+                    iterator.remove();  //？？为什么要移除   Glide中的复用池思路再看下
                 }
             }
         }
@@ -173,7 +176,7 @@ public class ImageCache {
     }
 
     private boolean checkInBitmap(Bitmap bitmap, int w, int h, int inSampleSize) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {   //这里要区分版本
             return bitmap.getWidth() == w && bitmap.getHeight() == h && inSampleSize == 1;
         }
         if (inSampleSize >= 1) {

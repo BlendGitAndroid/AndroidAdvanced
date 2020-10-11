@@ -9,6 +9,9 @@ import android.widget.ListView;
 
 import com.blend.optimization.R;
 
+/**
+ * 图片管理，这只是一个思路，具体还要看Glide细节。
+ */
 public class BitmapManageMainActivity extends AppCompatActivity {
 
     @Override
@@ -16,7 +19,7 @@ public class BitmapManageMainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bitmap_manage_main);
 
-        ImageCache.getInstance().init(this, Environment.getExternalStorageDirectory() + "/dn");
+        ImageCache.getInstance().init(this, Environment.getExternalStorageDirectory() + "/Blend");
 
         ListView listView = findViewById(R.id.listView);
         listView.setAdapter(new ImageAdapter(this));
@@ -34,7 +37,7 @@ public class BitmapManageMainActivity extends AppCompatActivity {
     }
 
     void i(Bitmap bitmap) {
-        Log.i("jett", "图片" + bitmap.getWidth() + "x" + bitmap.getHeight() + " 内存大小是:" + bitmap.getByteCount());
+        Log.i("BlendAndroid", "图片" + bitmap.getWidth() + "x" + bitmap.getHeight() + " 内存大小是:" + bitmap.getByteCount());
     }
 
 }

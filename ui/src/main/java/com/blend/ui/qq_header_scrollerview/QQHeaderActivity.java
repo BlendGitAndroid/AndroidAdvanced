@@ -23,7 +23,7 @@ public class QQHeaderActivity extends AppCompatActivity {
                         "星期二	约见李彦宏",
                         "星期三 	约见乔布斯",
                         "星期四 	和Lance钓鱼",
-                        "星期五 	和Jett洽谈",
+                        "星期五 	和BlendAndroid洽谈",
                         "星期六 	和Jason洽谈",
                         "星期日 	和MZ洽谈",
                         "星期一 	和马云洽谈",
