@@ -29,5 +29,10 @@
             android:id="@+id/bitmapManage"
             style="@style/main_style"
             android:text="BitmapManage" />
+
+        <Button
+            android:id="@+id/bigView"
+            style="@style/main_style"
+            android:text="BigView" />
     </LinearLayout>
 </ScrollView>

@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
+import com.blend.optimization.bigview.BigView;
+import com.blend.optimization.bigview.BigViewMainActivity;
 import com.blend.optimization.bitmapmanage.BitmapManageMainActivity;
 import com.blend.optimization.memory.MemoryMainActivity;
 import com.blend.optimization.startup.AppStartupMainActivity;
@@ -42,6 +44,13 @@ public class OptimizationMainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(OptimizationMainActivity.this, BitmapManageMainActivity.class));
+            }
+        });
+
+        findViewById(R.id.bigView).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(OptimizationMainActivity.this, BigViewMainActivity.class));
             }
         });
     }
