@@ -12,16 +12,16 @@ public class ImageResize {
      * 缩放bitmap
      *
      * @param context
-     * @param id
-     * @param maxW
-     * @param maxH
-     * @return
+     * @param id    图片内容
+     * @param maxW  原始宽度
+     * @param maxH  原始高度
+     * @return      可复用的内存
      */
     public static Bitmap resizeBitmap(Context context, int id, int maxW, int maxH, boolean hasAlpha, Bitmap reusable) {
         Resources resources = context.getResources();
         BitmapFactory.Options options = new BitmapFactory.Options();
         // 只解码出 outxxx参数 比如 宽、高
-        options.inJustDecodeBounds = true;
+        options.inJustDecodeBounds = true;  //不被加载到内存中的前提下，获取Bitmap的原始宽高
         BitmapFactory.decodeResource(resources, id, options);
         //根据宽、高进行缩放
         int w = options.outWidth;
