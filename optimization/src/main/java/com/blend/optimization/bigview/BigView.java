@@ -109,8 +109,8 @@ public class BigView extends View implements GestureDetector.OnGestureListener, 
         mRect.left = 0;
         mRect.top = 0;
         mRect.right = mImageWidth;
-        //获取一个缩放因子
-        mScale = mViewWidth / (float) mImageWidth; //在这个例子中，mScale > 1
+        //获取一个缩放因子，根据这个缩放因子，确定Rect的高度，也就是区域解码器能一次性加载的View的高度
+        mScale = mViewWidth / (float) mImageWidth;  //在这个例子中，mScale > 1，宽度放大了2.45倍
         //高度就根据缩放比进行获取
         mRect.bottom = (int) (mViewHeight / mScale);
 
@@ -122,6 +122,7 @@ public class BigView extends View implements GestureDetector.OnGestureListener, 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        Log.e(TAG, "onDraw: ");
         //如果解码器拿不到，表示没有设置过要显示的图片
         if (null == mDecoder) {
             return;
@@ -162,10 +163,9 @@ public class BigView extends View implements GestureDetector.OnGestureListener, 
         return true;
     }
 
-
     /**
      * @param e1        手指第一次按上屏幕的起点
-     * @param e2        移动
+     * @param e2        手指每次移动的事件
      * @param distanceX 左右移动时的距离
      * @param distanceY 上下移动时的距离
      * @return
@@ -199,7 +199,7 @@ public class BigView extends View implements GestureDetector.OnGestureListener, 
      */
     @Override
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-        Log.e(TAG, "onFling");
+        Log.e(TAG, "onFling:" +  mRect.top);
         //做计算
         mScroller.fling(0, mRect.top,
                 0, (int) -velocityY,
