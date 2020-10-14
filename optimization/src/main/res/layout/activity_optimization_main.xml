@@ -34,5 +34,10 @@
             android:id="@+id/bigView"
             style="@style/main_style"
             android:text="BigView" />
+
+        <Button
+            android:id="@+id/apk"
+            style="@style/main_style"
+            android:text="Apk加固" />
     </LinearLayout>
 </ScrollView>
