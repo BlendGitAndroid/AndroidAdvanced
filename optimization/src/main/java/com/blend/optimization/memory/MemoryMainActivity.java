@@ -113,7 +113,7 @@ public class MemoryMainActivity extends AppCompatActivity {
 
     static class MyHandler extends Handler {
 
-        private WeakReference<MemoryMainActivity> m;
+        private WeakReference<MemoryMainActivity> m;    //如果一个类只有弱引用引用时，才会被回收
 
         public MyHandler(MemoryMainActivity activity) {
             m = new WeakReference<>(activity);
@@ -151,13 +151,23 @@ public class MemoryMainActivity extends AppCompatActivity {
 
     private void handle() {
         handler = new MyHandler(this);
-        handler.post(new Runnable() {   //这里的runnable应该也要写成弱引用的方式
-            @Override
-            public void run() {
+        handler.postDelayed(new MyRunnable(this), 5000);
+    }
 
+    static class MyRunnable implements Runnable { //这里的runnable应该也要写成弱引用的方式
+
+        private WeakReference<MemoryMainActivity> memoryActivity;
+
+        public MyRunnable(MemoryMainActivity activity) {
+            memoryActivity = new WeakReference<>(activity);
+        }
+
+        @Override
+        public void run() {
+            if (memoryActivity.get() != null) {
+                memoryActivity.get().mButton.setText("");
             }
-        });
-
+        }
     }
 
     private void singleton() {
