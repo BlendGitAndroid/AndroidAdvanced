@@ -35,7 +35,7 @@ public class ImageCache {
     private LruCache<String, Bitmap> memoryCache;
     private DiskLruCache diskLruCache;
 
-    BitmapFactory.Options options = new BitmapFactory.Options();
+    private BitmapFactory.Options options = new BitmapFactory.Options();
 
     /**
      * 定义一个复用沲
@@ -169,9 +169,6 @@ public class ImageCache {
 
     //获取复用池中的内容
     public Bitmap getReuseable(int w, int h, int inSampleSize) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
-            return null;
-        }
         Bitmap reuseable = null;
         Iterator<WeakReference<Bitmap>> iterator = reuseablePool.iterator();
         while (iterator.hasNext()) {
@@ -192,7 +189,7 @@ public class ImageCache {
     }
 
     private boolean checkInBitmap(Bitmap bitmap, int w, int h, int inSampleSize) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {   //这里要区分版本
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {   //这里要区分版本，19之后宽高和inSampleSize == 1才能复用
             return bitmap.getWidth() == w && bitmap.getHeight() == h && inSampleSize == 1;
         }
         if (inSampleSize >= 1) {

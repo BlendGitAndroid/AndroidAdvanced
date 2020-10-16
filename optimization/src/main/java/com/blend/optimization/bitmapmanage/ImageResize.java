@@ -12,10 +12,10 @@ public class ImageResize {
      * 缩放bitmap
      *
      * @param context
-     * @param id    图片内容
-     * @param maxW  原始宽度
-     * @param maxH  原始高度
-     * @return      可复用的内存
+     * @param id      图片内容
+     * @param maxW    原始宽度
+     * @param maxH    原始高度
+     * @return 可复用的内存
      */
     public static Bitmap resizeBitmap(Context context, int id, int maxW, int maxH, boolean hasAlpha, Bitmap reusable) {
         Resources resources = context.getResources();
