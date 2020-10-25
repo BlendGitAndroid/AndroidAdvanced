@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 
 import com.blend.optimization.R;
@@ -49,7 +50,7 @@ import com.blend.optimization.R;
  * 1.创建BaseDexClassLoader子类DexClassLoader。
  * 2.加载修复好的hotfix.dex(一般从服务器上下载)。
  * 3.将自己的dex和系统的dexElements进行合并(要将修复好的dex索引为0)。
- * 4.利用反射技术，赋值给系统的pathList。
+ * 4.利用反射技术，赋值给BaseDexClassLoader的pathList。
  * <p>
  * <p>
  * 热修复的未来：
@@ -57,14 +58,16 @@ import com.blend.optimization.R;
  * 更重要的能保证app的功能稳定，bug能及时修复。
  * <p>
  * <p>
- * 热修复8.0和9.0的区别：
+ * 修复so和资源文件：
  * 冷启动和实时修复：
  * 增量更新和差分包：
  * 应用分身原理：
  * 热修复时混淆：
- * 修复so和资源文件：
+ * 热修复和插件化的比较：
  */
 public class HotFixMainActivity extends AppCompatActivity {
+
+    private static final String TAG = "HotFixMainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +83,16 @@ public class HotFixMainActivity extends AppCompatActivity {
     }
 
     public void jump(View view) {
+        /*
+        本类加载器:ClassLoader: dalvik.system.PathClassLoader[DexPathList[[zip file "/data/app/com.blend.androidadvanced-2/base.apk"],nativeLibraryDirectories=[/vendor/lib64, /system/lib64]]]
+        PathClassLoader只能加载我们安装过的 apk
+        父类加载器:ClassLoader: java.lang.BootClassLoader@258d6872
+         */
+        ClassLoader loader = HotFixMainActivity.class.getClassLoader();
+        while (loader != null) {
+            Log.e(TAG, "ClassLoader: " + loader.toString());
+            loader = loader.getParent();
+        }
         startActivity(new Intent(this, SecondBugActivity.class));
     }
 }

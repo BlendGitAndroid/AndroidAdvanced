@@ -47,6 +47,11 @@ public class FixDexUtils {
         DexClassLoader classLoader;
         for (File dex : loadedDex) {
             //初始化类加载器
+            //参数：
+            //dex文件的路径(多个，默认以:隔开);
+            //缓存optimizedDirectory
+            //本地库的路径(多个)
+            //父加载器
             classLoader = new DexClassLoader(dex.getAbsolutePath(), optimizedDirectory, null,
                     context.getClassLoader());
             //热修复
