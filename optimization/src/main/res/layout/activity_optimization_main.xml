@@ -39,5 +39,10 @@
             android:id="@+id/apk"
             style="@style/main_style"
             android:text="Apk加固" />
+
+        <Button
+            android:id="@+id/hotFix"
+            style="@style/main_style"
+            android:text="HotFix" />
     </LinearLayout>
 </ScrollView>

@@ -9,6 +9,7 @@ import com.blend.optimization.apk.ApkMainActivity;
 import com.blend.optimization.bigview.BigView;
 import com.blend.optimization.bigview.BigViewMainActivity;
 import com.blend.optimization.bitmapmanage.BitmapManageMainActivity;
+import com.blend.optimization.hotfix.HotFixMainActivity;
 import com.blend.optimization.memory.MemoryMainActivity;
 import com.blend.optimization.startup.AppStartupMainActivity;
 import com.blend.optimization.uidrawing.UiDrawingMainActivity;
@@ -59,6 +60,13 @@ public class OptimizationMainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(OptimizationMainActivity.this, ApkMainActivity.class));
+            }
+        });
+
+        findViewById(R.id.hotFix).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(OptimizationMainActivity.this, HotFixMainActivity.class));
             }
         });
     }

@@ -2,14 +2,18 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.blend.optimization">
 
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <application android:name=".OptimizationApplication">
-        <activity android:name=".apk.ApkMainActivity"></activity>
+        <activity android:name=".hotfix.HotFixMainActivity"></activity>
+        <activity android:name=".apk.ApkMainActivity" />
         <activity android:name=".bigview.BigViewMainActivity" />
         <activity android:name=".bitmapmanage.BitmapManageMainActivity" />
         <activity android:name=".memory.MemoryMainActivity" />
         <activity android:name=".uidrawing.UiDrawingMainActivity" />
         <activity android:name=".OptimizationMainActivity" />
         <activity android:name=".startup.AppStartupMainActivity" />
+        <activity android:name=".hotfix.SecondBugActivity" />
     </application>
 
 </manifest>
