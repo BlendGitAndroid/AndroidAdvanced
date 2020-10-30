@@ -5,6 +5,13 @@
     android:orientation="vertical">
 
     <Button
+        android:id="@+id/hookTest"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Hook测试"
+        />
+
+    <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="跳转界面2"
