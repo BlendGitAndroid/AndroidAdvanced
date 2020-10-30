@@ -62,7 +62,7 @@ import com.blend.optimization.apk.encrypt.RSA;
  * APK瘦身七大步骤：
  * 1.将图片转换成webp格式。AndroidStudio一键转换工具，智能转换，能将大的图片转换成webp，小的就不转换了。
  * 2.去除多语言。resConfig。
- * 3.只保留armeabi-v7a的so动态库。abiFilters。
+ * 3.只保留armeabi-v7a的so动态库。abiFilters。微信也是只保留这个。
  * 4.移除无用资源。remove unused resources命令谨慎使用，因为对于动态获取的资源id，未直接使用R.id.xxx，则这个id会被认为没有使用过。
  * 如int id = getResource().getIdentifier()获取的id。这样的也会被删除。
  * 但是Lint检查。unusedresources命令，对于动态获取资源id也能检查到。
@@ -82,7 +82,7 @@ import com.blend.optimization.apk.encrypt.RSA;
  * <resources xmlns:tools="http://schemas.android.com/tools"
  * tools:keep="@layout/base_*"
  * tools:discard="@layout/unused2" />
- * 7.AndResGuar微信资源压缩方案。AndResGuard是一个缩小APK大小的工具，它的原理类似Java Proguard，但是只针对资源。它会将原本冗长的资
+ * 7.AndResGuard微信资源压缩方案。AndResGuard是一个缩小APK大小的工具，它的原理类似Java Proguard，但是只针对资源。它会将原本冗长的资
  * 源路径变短，例如将res/drawable/wechat变为r/d/a。
  */
 public class ApkMainActivity extends AppCompatActivity {
