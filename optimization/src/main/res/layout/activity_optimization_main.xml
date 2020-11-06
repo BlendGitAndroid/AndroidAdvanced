@@ -44,5 +44,10 @@
             android:id="@+id/hotFix"
             style="@style/main_style"
             android:text="HotFix" />
+
+        <Button
+            android:id="@+id/keepAlive"
+            style="@style/main_style"
+            android:text="KeepAlive" />
     </LinearLayout>
 </ScrollView>

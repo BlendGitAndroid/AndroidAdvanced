@@ -3,9 +3,11 @@
     package="com.blend.optimization">
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
 
     <application android:name=".OptimizationApplication">
-        <activity android:name=".hotfix.HotFixMainActivity"></activity>
+        <activity android:name=".keepalive.KeepAliveMainActivity"></activity>
+        <activity android:name=".hotfix.HotFixMainActivity" />
         <activity android:name=".apk.ApkMainActivity" />
         <activity android:name=".bigview.BigViewMainActivity" />
         <activity android:name=".bitmapmanage.BitmapManageMainActivity" />
