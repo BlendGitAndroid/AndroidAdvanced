@@ -1,10 +1,9 @@
 package com.blend.androidadvanced;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 
-import com.blend.optimization.OptimizationMainActivity;
+import com.blend.algorithm.stack.MyStack;
 
 public class MainActivity extends Activity {
 
@@ -23,7 +22,8 @@ public class MainActivity extends Activity {
         // startActivity(new Intent(this, IocMainActivity.class));
 
         //性能优化
-        startActivity(new Intent(this, OptimizationMainActivity.class));
-        finish();
+        // startActivity(new Intent(this, OptimizationMainActivity.class));
+        // finish();
+        MyStack.hanoi(3, 1, 2, 3);
     }
 }
