@@ -24,6 +24,8 @@ public class MainActivity extends Activity {
         //性能优化
         // startActivity(new Intent(this, OptimizationMainActivity.class));
         // finish();
-        MyStack.hanoi(3, 1, 2, 3);
+        MyStack.hanoi(3, "A", "B", "C");
+
+        MyStack.monkeyStealPeach();
     }
 }

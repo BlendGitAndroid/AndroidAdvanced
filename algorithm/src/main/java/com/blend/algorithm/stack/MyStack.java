@@ -40,13 +40,15 @@ public class MyStack {
 
     /**
      * 汉诺塔问题
+     * <p>
+     * 汉诺塔问题实质上就是树的中序遍历。
      *
      * @param n 盘子的个数
      * @param A 开始的柱子
      * @param B 中间的柱子
      * @param C 结果的柱子
      */
-    public static void hanoi(int n, int A, int B, int C) {
+    public static void hanoi(int n, String A, String B, String C) {
         if (n <= 1) {
             System.out.println(A + "----->" + C);
         } else {
@@ -54,5 +56,28 @@ public class MyStack {
             System.out.println(A + "----->" + C);   //输出移动的过程
             hanoi(n - 1, B, A, C);  //最后再将n-1由B移动到C
         }
+    }
+
+
+    /**
+     * 有五只猴子摘了一些桃子，打算隔天早上起来分了吃。
+     * 晚上的时候，第一只猴子偷偷起来把桃子分成五堆，还多了一个，就把多了的那个吃掉，并拿走了一堆。
+     * 第二只猴子也偷偷起来将桃子分成了五堆，还是又多了一个，同样吃掉了这一颗桃子，并拿走了其中一堆。
+     * 第三只、第四只、第五只猴子都做了同样的事情。请问这堆桃子最少有多少个？
+     */
+    public static int steal(int peach, int monkey) {
+        if ((peach - 1) % 5 != 0) { //前面几个猴子，桃子数-1都应该能整除，如果遇到不能整除的，就返回猴子数
+            return monkey;
+        }
+        peach = (peach - 1) / 5 * 4;
+        return steal(peach, monkey + 1);
+    }
+
+    public static void monkeyStealPeach() {
+        int peach = 1;
+        while (steal(peach, 0) != 5) {
+            peach++;
+        }
+        System.out.println("桃子：" + peach);
     }
 }
