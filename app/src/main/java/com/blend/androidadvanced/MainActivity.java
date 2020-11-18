@@ -34,8 +34,5 @@ public class MainActivity extends Activity {
 
         //启发式寻路
         startActivity(new Intent(this, HeuristicMainActivity.class));
-
-        //master分支做了一些更改
-        //new分支做了一些更改
     }
 }
