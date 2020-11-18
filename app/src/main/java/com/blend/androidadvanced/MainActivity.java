@@ -1,9 +1,11 @@
 package com.blend.androidadvanced;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.blend.algorithm.stack.MyStack;
+import com.blend.androidadvanced.heuristic.HeuristicMainActivity;
 
 public class MainActivity extends Activity {
 
@@ -21,11 +23,16 @@ public class MainActivity extends Activity {
         //IOC
         // startActivity(new Intent(this, IocMainActivity.class));
 
-        //性能优化
+        // 性能优化
         // startActivity(new Intent(this, OptimizationMainActivity.class));
         // finish();
+
+        //数据结构与算法
         MyStack.hanoi(3, "A", "B", "C");
 
         MyStack.monkeyStealPeach();
+
+        //启发式寻路
+        startActivity(new Intent(this, HeuristicMainActivity.class));
     }
 }
