@@ -11,14 +11,14 @@ public class MapUtils {
     public static int startCol = 0;
     public static int endRow = 0;
     public static int endCol = 0;
-    public static int touchFlag = 0;
+    public static int touchFlag = 0;    //用于判断已经确定起始点和终止点，通过刷新按钮重置
     public static Stack<Node> result = new Stack<>();
     public static Path path;
 
     public final static int WALL = 1; //  障碍
     public final static int PATH = 2; // 路径
 
-
+    //0表示草地，1表示墙
     public static int[][] map = {
             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
             {0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0},

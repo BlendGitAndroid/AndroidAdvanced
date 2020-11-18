@@ -7,9 +7,9 @@ public class Node implements Comparable<Node>
 {
 
 	public Coord coord; // 坐标
-	public Node parent; // 父结点
-	public int g; // G：是个准确的值，是起点到当前结点的代价
-	public int h; // H：是个估值，当前结点到目的结点的估计代价
+	public Node parent; // 父结点，一个点有八个子结点，但是只有一个父结点
+	public int g; // G：是个准确的值，是起点到当前结点的代价，也就是实际代价
+	public int h; // H：是个估值，当前结点到目的结点的估计代价，也就是预估代价
 
 	public Node(int x, int y)
 	{

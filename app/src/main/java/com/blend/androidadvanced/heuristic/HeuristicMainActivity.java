@@ -24,15 +24,25 @@ import static com.blend.androidadvanced.heuristic.manhattan.MapUtils.touchFlag;
 
 
 /**
- * 启发式寻路
+ * 启发式寻路：
+ * 麦哈顿距离，又称马氏距离、出租车距离。实际开发中非常常用,比如地图算最短距离,游戏地图等等。
+ * 启发式寻路算法就是根据曼哈顿距离而来,我们可以利用其进行麦哈顿距离估值。
+ * <p>
+ * 启发式寻路算法的思路：
+ * 1)假设从A点到B点,中间有障碍物I。
+ * 2)在寻路中,我们肯定要绕过障碍物I到达B点,所以,我们要寻找下一点C为过度,到达B点。所以,引出两个关键说明,即是实际代价(g)
+ * 和预估代价(h)。实际代价(g),就是A点到达C点实际需要的距离。
+ * 3)当过渡到C点后,我们还需要在C点处对目标点B点的距离进行估值,也就是预估代价(h),因为这里仅仅是举出一个过渡点C,现实开发
+ * 中,可不止一个过渡点C喔,有可能有D,E,F....点等。所以,每走到一个新的点上,我们需要再一次预估此点到目标终点的距离。
+ * 4)这就是启发式寻路算法,包含实际代价(g)和预估代价(h),所以不难得出表达式f(n)=g(n)+h(n)。
  */
 public class HeuristicMainActivity extends AppCompatActivity {
 
     private static final String TAG = "HeuristicMainActivity";
 
-    ShowMapView showMapView;
+    private ShowMapView showMapView;
 
-    Handler handler = null;
+    private Handler handler = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +59,6 @@ public class HeuristicMainActivity extends AppCompatActivity {
         Log.i(TAG, "end=" + endRow + " " + endCol);
         new Astar().start(info);
         new MoveThread(showMapView).start();
-
     }
 
     public void reset(View view) {
@@ -80,12 +89,9 @@ public class HeuristicMainActivity extends AppCompatActivity {
                 Log.e(TAG, result.size() + "");
                 Node node = result.pop();
                 map[node.coord.y][node.coord.x] = 2;
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        showMapView.invalidate();
-                    }
-                });
+                handler.post(() ->
+                        showMapView.invalidate()
+                );
 
                 try {
                     Thread.sleep(300);
@@ -93,7 +99,6 @@ public class HeuristicMainActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 map[node.coord.y][node.coord.x] = 0;
-
             }
             MapUtils.touchFlag = 0;
         }

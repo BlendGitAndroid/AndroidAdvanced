@@ -71,14 +71,14 @@ public class ShowMapView extends View {
         paint.setStrokeWidth(5);
         paint.setStyle(Paint.Style.STROKE);
         for (int i = 0; i < map.length; i++) {
-            for (int j = 0; j < map[i].length; j++) {
-                if (map[i][j] == 0) {
+            for (int j = 0; j < map[i].length; j++) { //遍历二维数组
+                if (map[i][j] == 0) {   //草地
                     Bitmap bm = BitmapFactory.decodeResource(this.getResources(), R.drawable.route);
                     canvas.drawBitmap(bm, j * 80, i * 80, paint);
-                } else if (map[i][j] == 1) {
+                } else if (map[i][j] == 1) {    //障碍
                     Bitmap bm = BitmapFactory.decodeResource(this.getResources(), R.drawable.wall);
                     canvas.drawBitmap(bm, j * 80, i * 80, paint);
-                } else if (map[i][j] == 2) {
+                } else if (map[i][j] == 2) {    //起始位置和终点位置
                     Bitmap bm = BitmapFactory.decodeResource(this.getResources(), R.drawable.path);
                     canvas.drawBitmap(bm, j * 80, i * 80, paint);
                 }
