@@ -20,7 +20,7 @@ public class Astar {
      * 计算H值
      */
     private int calcH(Coord end, Coord coord) {
-        return Math.abs(end.x - coord.x) + Math.abs(end.y - coord.y);
+        return (Math.abs(end.x - coord.x) + Math.abs(end.y - coord.y)) * 10;
     }
 
     /**
@@ -96,13 +96,13 @@ public class Astar {
 
     private void moveNodes(MapInfo mapInfo) {
         while (!openList.isEmpty()) {
-            if (isCoordInClose(mapInfo.end.coord)) {//如果已经是终点了
+            if (isCoordInClose(mapInfo.end.coord)) {//如果已经是终点了，那就跳出循环，开始计算路径
                 //统计结果
                 calcPath(mapInfo.end);
+                break;
             }
             //把open中最小的一个取出来 ,放到关闭列表close中
             Node current = openList.poll();
-            Log.e("moveNodes: ", current.g + " --- " + current.h);
             closeList.add(current);
             //开始扩展
             addNeighborNodeInOpen(mapInfo, current);
@@ -121,6 +121,7 @@ public class Astar {
         }
         while (end != null) { //把结果入栈
             MapUtils.path.lineTo(end.coord.x * 80 + 40, end.coord.y * 80 + 40); //从终点开始绘制
+            Log.e("calcPath: ", end.coord.x + " ---- " + end.coord.y);
             MapUtils.result.push(end);  //入栈操作
             end = end.parent;
         }
