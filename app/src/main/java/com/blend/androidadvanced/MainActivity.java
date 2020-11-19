@@ -1,11 +1,9 @@
 package com.blend.androidadvanced;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 
-import com.blend.algorithm.stack.MyStack;
-import com.blend.androidadvanced.heuristic.HeuristicMainActivity;
+import com.blend.algorithm.tree.HuffmanTree;
 
 public class MainActivity extends Activity {
 
@@ -28,11 +26,15 @@ public class MainActivity extends Activity {
         // finish();
 
         //数据结构与算法
-        MyStack.hanoi(3, "A", "B", "C");
+        // MyStack.hanoi(3, "A", "B", "C");
 
-        MyStack.monkeyStealPeach();
+        //猴子偷桃
+        // MyStack.monkeyStealPeach();
+
+        //哈夫曼树
+        new HuffmanTree().huffmanTest();
 
         //启发式寻路
-        startActivity(new Intent(this, HeuristicMainActivity.class));
+        // startActivity(new Intent(this, HeuristicMainActivity.class));
     }
 }

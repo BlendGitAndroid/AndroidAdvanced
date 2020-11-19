@@ -1,4 +1,4 @@
-package com.blend.algorithm.sorttree;
+package com.blend.algorithm.tree;
 
 import java.util.NoSuchElementException;
 
