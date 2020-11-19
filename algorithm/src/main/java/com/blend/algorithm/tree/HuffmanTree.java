@@ -132,11 +132,17 @@ public class HuffmanTree {
             parent = null;
         }
 
+        //https://article.itxueyuan.com/oJd4b4
+        // 降序排序
+        // 排序时是否需要调整元素位置是由对象o1、o2与数组中元素索引的对应关系 和 比较方法返回值的正负共同决定的。
+        // 索引大的放在前面
+        // 索引大的是调用者o1，索引小的为参数o2，若从大到下排序，若o1 > o2，说明索引大的大于索引小的，因此返回-1，
+        // 需要调整元素位置，将o1与o2互换位置，将大的数o2排在前面。
         @Override
         public int compareTo(TreeNode<T> o) {
             if (this.weight > o.weight) {
                 return -1;
-            } else if (this.weight < o.weight) {
+            } else if (this.weight < o.weight) {    //当前对象的weight小于参数对象时，返回正整数
                 return 1;
             } else {
                 return 0;
