@@ -74,7 +74,7 @@ public class Contiguous {
         }
     }
 
-    public static void bubbleSort(Cards[] array) {  //3-5个数据  78
+    public static void bubbleSort(Cards[] array) {  //3-5个数据  7，8个数据
         //1 2 3 4 5 9 4 6 7    n*(n-1)/2   n
         for (int i = array.length - 1; i > 0; i--) {
             boolean flag = true;
