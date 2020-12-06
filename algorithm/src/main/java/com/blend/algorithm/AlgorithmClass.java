@@ -1,5 +1,6 @@
 package com.blend.algorithm;
 
+import com.blend.algorithm.graph.Graph;
 import com.blend.algorithm.tree.AVLTree;
 import com.blend.algorithm.tree.HuffmanTree;
 
@@ -11,7 +12,7 @@ import com.blend.algorithm.tree.HuffmanTree;
  */
 public class AlgorithmClass {
 
-    public static void algorithm(){
+    public static void algorithm() {
         //数据结构与算法
         // MyStack.hanoi(3, "A", "B", "C");
 
@@ -26,6 +27,9 @@ public class AlgorithmClass {
 
         //平衡二叉搜索树
         new AVLTree().avl();
+
+        //图的深度和广度优先搜索
+        Graph.test();
     }
 
 }
