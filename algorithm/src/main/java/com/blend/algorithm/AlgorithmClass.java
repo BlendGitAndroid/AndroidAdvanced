@@ -1,7 +1,6 @@
 package com.blend.algorithm;
 
-import com.blend.algorithm.graph.Graph;
-import com.blend.algorithm.tree.AVLTree;
+import com.blend.algorithm.graph.MSTTree;
 import com.blend.algorithm.tree.HuffmanTree;
 
 /**
@@ -20,16 +19,23 @@ public class AlgorithmClass {
         // MyStack.monkeyStealPeach();
 
         //哈夫曼树
-        new HuffmanTree().huffmanTest();
+        // new HuffmanTree().huffmanTest();
 
         //启发式寻路
         // startActivity(new Intent(this, HeuristicMainActivity.class));
 
         //平衡二叉搜索树
-        new AVLTree().avl();
+        // new AVLTree().avl();
 
         //图的深度和广度优先搜索
-        Graph.test();
+        // Graph.test();
+
+        //最小生成树：
+        MSTTree.test();
+
+
+        //并查集
+        // UnionFindSet.test();
     }
 
 }
