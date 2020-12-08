@@ -34,12 +34,14 @@ public class AlgorithmClass {
         //最小生成树：
         // MSTTree.test();
 
+        //最短路径
+
 
         //并查集
         // UnionFindSet.test();
 
         //最长公共子序列
-        LCS.test();
+        // LCS.test();
     }
 
 }
