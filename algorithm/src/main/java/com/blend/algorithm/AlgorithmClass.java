@@ -1,5 +1,6 @@
 package com.blend.algorithm;
 
+import com.blend.algorithm.dp.LCS;
 import com.blend.algorithm.graph.MSTTree;
 import com.blend.algorithm.tree.HuffmanTree;
 
@@ -31,11 +32,14 @@ public class AlgorithmClass {
         // Graph.test();
 
         //最小生成树：
-        MSTTree.test();
+        // MSTTree.test();
 
 
         //并查集
         // UnionFindSet.test();
+
+        //最长公共子序列
+        LCS.test();
     }
 
 }
