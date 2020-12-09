@@ -1,5 +1,6 @@
 package com.blend.algorithm;
 
+import com.blend.algorithm.dp.KMP;
 import com.blend.algorithm.dp.LCS;
 import com.blend.algorithm.graph.MSTTree;
 import com.blend.algorithm.tree.HuffmanTree;
@@ -42,6 +43,9 @@ public class AlgorithmClass {
 
         //最长公共子序列
         // LCS.test();
+
+        //KMP算法
+        new KMP().test();
     }
 
 }
