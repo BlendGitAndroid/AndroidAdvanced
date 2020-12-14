@@ -75,5 +75,10 @@
             style="@style/main_style"
             android:text="Retrofit" />
 
+        <Button
+            android:id="@+id/fragment"
+            style="@style/main_style"
+            android:text="fragment" />
+
     </LinearLayout>
 </ScrollView>

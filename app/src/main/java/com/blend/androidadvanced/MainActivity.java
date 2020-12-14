@@ -1,10 +1,10 @@
 package com.blend.androidadvanced;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 
-import com.blend.algorithm.AlgorithmClass;
-import com.blend.algorithm.tree.HuffmanTree;
+import com.blend.architecture.ArchitectureMainActivity;
 
 public class MainActivity extends Activity {
 
@@ -18,7 +18,7 @@ public class MainActivity extends Activity {
         // startActivity(new Intent(this, UiMainActivity.class));
 
         //移动架构
-        // startActivity(new Intent(this, ArchitectureMainActivity.class));
+        startActivity(new Intent(this, ArchitectureMainActivity.class));
 
         //IOC
         // startActivity(new Intent(this, IocMainActivity.class));
@@ -28,6 +28,7 @@ public class MainActivity extends Activity {
         // finish();
 
         //数据结构与算法
-        AlgorithmClass.algorithm();
+        // AlgorithmClass.algorithm();
+        finish();
     }
 }

@@ -9,9 +9,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".heuristic.HeuristicMainActivity"></activity>
-        <activity
-            android:name=".MainActivity"
-            android:theme="@style/AppTheme.Launch">
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

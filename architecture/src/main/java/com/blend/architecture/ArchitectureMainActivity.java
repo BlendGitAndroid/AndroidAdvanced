@@ -11,6 +11,7 @@ import com.blend.architecture.change_skin.SkinMainActivity;
 import com.blend.architecture.database_design.DatabaseMainActivity;
 import com.blend.architecture.eventbus.EventBusMainActivity;
 import com.blend.architecture.eventbus.hermesevent.HermesEventBusMainActivity;
+import com.blend.architecture.fragment.FragmentMainActivity;
 import com.blend.architecture.glide.GlideMainActivity;
 import com.blend.architecture.handle_message.ActivityThreadActivity;
 import com.blend.architecture.okhttp.OkHttpMainActivity;
@@ -35,6 +36,7 @@ public class ArchitectureMainActivity extends AppCompatActivity {
     private Button rxJava;
     private Button okHttp;
     private Button retrofit;
+    private Button fragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +55,7 @@ public class ArchitectureMainActivity extends AppCompatActivity {
         rxJava = findViewById(R.id.rxJava);
         okHttp = findViewById(R.id.okHttp);
         retrofit = findViewById(R.id.retrofit);
+        fragment = findViewById(R.id.fragment);
 
         handleMessage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -137,6 +140,13 @@ public class ArchitectureMainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(ArchitectureMainActivity.this, RetrofitMainActivity.class));
+            }
+        });
+
+        fragment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ArchitectureMainActivity.this, FragmentMainActivity.class));
             }
         });
     }
