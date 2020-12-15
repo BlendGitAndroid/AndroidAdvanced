@@ -6,11 +6,13 @@
 
 
     <TextView
+        android:id="@+id/rightTv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="this is left" />
+        android:text="this is Right" />
 
     <Button
+        android:id="@+id/rightBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="Right"

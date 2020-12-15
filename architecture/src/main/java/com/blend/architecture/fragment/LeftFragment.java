@@ -8,18 +8,26 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.blend.architecture.R;
 
 public class LeftFragment extends Fragment {
 
+    private Button mLeft;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_left_layout, container, false);
+        View view = inflater.inflate(R.layout.fragment_left_layout, container, false);
+        mLeft = view.findViewById(R.id.leftBtn);
+        mLeft.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        return view;
     }
 
-    public void Left(View view){
-
-    }
 }

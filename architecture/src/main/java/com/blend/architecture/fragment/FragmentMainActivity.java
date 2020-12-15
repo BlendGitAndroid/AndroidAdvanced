@@ -1,6 +1,8 @@
 package com.blend.architecture.fragment;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -24,6 +26,42 @@ import com.blend.architecture.R;
  * 不能在onSaveInstanceState之后的生命周期里面commit fragment；
  * 不要在子线程commit已经走完onSaveInstanceState的fragment。
  * 4.fragment重叠。
+ * 原因：屏幕旋转onCreate又会执行，又会重新add一次fragment（fragment恢复了机制又会恢复一个）。
+ * 解决方案：
+ * 1)onSaveInstanceState activity失去自动存储的功能 super
+ * 2)if(savedInstanceState == null){add fragment }
+ * <p>
+ * 常见操作：
+ * 1.add(@IdRes int containerViewId, Fragment fragment,String tag)
+ * containerViewId：指定fragment添加到那个viewGroup。
+ * 2. fragment传参问题：不要写有参数的构造函数，这是错误的写法。
+ * 因为自动恢复机制：只会调用无参的构造函数，其成员变量都没有保存。
+ * 解决方案：
+ * public void setArguments(@Nullable Bundle args)
+ * Bundle getArguments()
+ * 3.回退栈问题。
+ * addToBackStack(@Nullable String name)
+ * popBackStack()：按照栈，入栈的顺序回退：abcd 则dcba
+ * popBackStack(@Nullable final String name, final int flags)：回退到特定的地方popBackStack(b,0)，则是回退到ab
+ * 单Activity + Fragment问题：
+ * 1)自定义
+ * class LifeCycleFragment : Fragment(), OnBackPressed，interface OnBackPressed{
+ * fun onBackPressed()
+ * }
+ * 在activity
+ * override fun onBackPressed() {
+ * super.onBackPressed()
+ * //自己管理回退
+ * }
+ * <p>
+ * 2)使用navigation来管理。
+ * 4.add 与 replace的区别。
+ * add往containerViewId的容器里面添加fragment view，replace将containerViewId的容器里面之前添加的view全部清空，
+ * add replace千万不要混合使用，要么全部用add，要么全部用replace。
+ * <p>
+ * <p>
+ * Fragment的原理知识：
+ *
  */
 public class FragmentMainActivity extends AppCompatActivity {
 
@@ -34,8 +72,19 @@ public class FragmentMainActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction transaction = fragmentManager.beginTransaction();
-            transaction.add(R.id.rightFragment, RightFragment.newInstance(), RightFragment.class.getName());
+            transaction.add(R.id.rightFragment, RightFragment.newInstance(mHandler, "Blend"), RightFragment.class.getName());
             transaction.commit();
         }
     }
+
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentTransaction transaction = fragmentManager.beginTransaction();
+            transaction.add(R.id.rightFragment, RightFragment.newInstance(mHandler, "Blend"), RightFragment.class.getName());
+            transaction.commit();
+        }
+    };
 }
