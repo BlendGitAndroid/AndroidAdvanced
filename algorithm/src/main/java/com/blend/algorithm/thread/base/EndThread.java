@@ -1,4 +1,4 @@
-package com.blend.algorithm.Thread;
+package com.blend.algorithm.thread.base;
 
 /**
  * 线程中止，要么是run方法执行完了，要么是抛出一个未处理的异常导致线程提前结束。

@@ -1,4 +1,4 @@
-package com.blend.algorithm.Thread;
+package com.blend.algorithm.thread.base;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;

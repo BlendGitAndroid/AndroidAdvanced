@@ -1,4 +1,4 @@
-package com.blend.algorithm.Thread;
+package com.blend.algorithm.thread;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadInfo;
