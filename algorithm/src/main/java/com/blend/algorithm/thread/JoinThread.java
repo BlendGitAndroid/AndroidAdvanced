@@ -1,4 +1,4 @@
-package com.blend.algorithm.thread.base;
+package com.blend.algorithm.thread;
 
 /**
  * join方法：把指定的线程加入到当前线程，可以将两个交替执行的线程合并为顺序执行的线程。

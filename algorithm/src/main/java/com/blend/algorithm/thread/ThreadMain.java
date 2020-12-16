@@ -47,6 +47,7 @@ import java.lang.management.ThreadMXBean;
  * 5.sleep和wait的区别。wait就是等到资源满足调用notify/notifyAll来唤醒；sleep则等待时间结束。
  * 6.线程的优先级和操作系统的优先级对不上号，不要指望使用线程的优先级来保证线程的执行顺序。
  * 7.保证线程的执行顺序应该使用：join或者CountDownLatch。
+ * 8.yield和sleep不会释放锁，wait会释放锁。
  * <p>
  * 额外：
  * 4.线程的所有方法有哪些？

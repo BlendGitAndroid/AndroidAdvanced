@@ -1,4 +1,4 @@
-package com.blend.algorithm.thread.base;
+package com.blend.algorithm.thread;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
