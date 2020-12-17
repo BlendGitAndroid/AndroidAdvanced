@@ -20,12 +20,13 @@ class LockAndRw implements GoodService {
         getLock.lock();
         try {
             Thread.sleep(5);
+            return mGoodsInfo;
         } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {
-            getLock.unlock();
-            return mGoodsInfo;
+            getLock.unlock();   //不建议在finally内执行return语句
         }
+        return null;
     }
 
     @Override
