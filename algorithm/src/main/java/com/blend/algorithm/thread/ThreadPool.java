@@ -80,8 +80,17 @@ import java.util.concurrent.atomic.AtomicInteger;
  * 5.SynchronousQueue：一个不存储元素的阻塞队列。
  * 6.LinkedTransferQueue：一个由链表结构组成的无界阻塞队列。
  * 7.LinkedBlockingDeque：一个由链表结构组成的双向阻塞队列。
+ * <p>
+ * 线程池execute和submit的区别：
+ * 1)接受的参数不一样。execute接收runnable的参数，submit可以接收callable参数获取返回值。
+ * 2)submit方便Exception处理。意思就是如果你在你的task里会抛出checked或者unchecked exception，而你又希望外面的调用者
+ * 能够感知这些exception并做出及时的处理，那么就需要用到submit，通过捕获Future.get抛出的异常。
  */
 class ThreadPool {
+
+    public static void main(String[] args) {
+
+    }
 
 
     private static class DispatcherExecutor {
@@ -137,7 +146,7 @@ class ThreadPool {
         private static final RejectedExecutionHandler S_HANDLER = new RejectedExecutionHandler() {
             @Override
             public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
-                Executors.newCachedThreadPool().execute(r);
+                Executors.newCachedThreadPool().submit(r);
             }
         };
 

@@ -53,6 +53,11 @@ import java.lang.management.ThreadMXBean;
  * 4.线程的所有方法有哪些？
  * join()：把指定的线程加入到当前线程，可以将两个交替执行的线程合并为顺序执行的线程。
  * yield()：使当前线程让出CPU占有权，但让出的时间是不可设定的。也不会释放锁资源，所有执行yield()的线程有可能在进入到可执行状态后马上又被执行。
+ * sleep()
+ * interrupt()
+ * start()
+ * 而wait()/notify()是Object的方法。
+ * <p>
  */
 class ThreadMain {
     public static void main(String[] args) {
