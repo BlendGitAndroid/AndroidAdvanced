@@ -33,7 +33,13 @@ class NewThread {
         new Thread(useRun).start();
 
         UseCall useCall = new UseCall();
-        FutureTask<String> futureTask = new FutureTask<>(useCall);
+        FutureTask<String> futureTask = new FutureTask<String>(useCall) {
+            @Override
+            protected void done() { //不管取消还是任务完成，该方法都会调用
+                super.done();
+                System.out.println("future is done!");
+            }
+        };
         new Thread(futureTask).start();
         Thread.sleep(1000);
         System.out.println("do my work");
