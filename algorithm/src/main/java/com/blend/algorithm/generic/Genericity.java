@@ -1,4 +1,4 @@
-package com.blend.routercompiler;
+package com.blend.algorithm.generic;
 
 public class Genericity {
 
