@@ -39,6 +39,20 @@ import java.lang.reflect.Proxy;
  * 2.从内存中。
  * 动态代理就是在内存中动态拿到代理者的java字节码的byte数组，然后加载字节码文件，进行类之后的操作。
  * 所以动态代理就是动态的生成代理者，不管静态代理还是动态代理，都得代理一个真实的对象。
+ * <p>
+ * 动态生成$Proxy0.class文件中的saleTools方法，可以看到起也会调用了InvocationHandler的invoke方法。
+ * this-->动态代理类自己
+ * m3--->被代理类的saleTools的方法
+ * var1 --->接口传入的参数
+ * public final void saleTools(String var1) throws  {
+ * try {
+ * super.h.invoke(this, m3, new Object[]{var1});
+ * } catch (RuntimeException | Error var3) {
+ * throw var3;
+ * } catch (Throwable var4) {
+ * throw new UndeclaredThrowableException(var4);
+ * }
+ * }
  */
 class ProxyMain {
 
