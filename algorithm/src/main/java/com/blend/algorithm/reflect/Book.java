@@ -1,6 +1,6 @@
-package com.blend.routercompiler.reflect;
+package com.blend.algorithm.reflect;
 
-public class Book {
+class Book {
 
     private static final String TAG = "Book";
 
@@ -10,7 +10,7 @@ public class Book {
     public Book() {
     }
 
-    private Book(String name, String author) {
+    public Book(String name, String author) {
         this.name = name;
         this.author = author;
     }

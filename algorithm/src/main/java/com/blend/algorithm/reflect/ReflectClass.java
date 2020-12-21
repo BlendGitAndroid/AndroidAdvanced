@@ -1,11 +1,10 @@
-package com.blend.routercompiler.reflect;
+package com.blend.algorithm.reflect;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-public class ReflectClass {
-
+class ReflectClass {
 
     /**
      * JAVA反射机制是在运行状态中，对于任意一个类，都能够知道这个类的所有属性和方法；对于任意一个对象，都能够调用它的任意
@@ -79,10 +78,10 @@ public class ReflectClass {
 
     private static final String TAG = "ReflectClass";
 
-    //创建对象方式1,一般使用第一种方式
+    //创建对象方式1,一般使用第一种方式,通过全类名获取.
     public static void reflectNewInstance() {
         try {
-            Class<?> classBook = Class.forName("com.blend.routercompiler.reflect.Book");
+            Class<?> classBook = Class.forName("com.blend.algorithm.reflect.Book");
             Object objectBook = classBook.newInstance();
             Book book = (Book) objectBook;
             book.setAuthor("11111");
@@ -92,7 +91,7 @@ public class ReflectClass {
         }
     }
 
-    //创建对象方式2
+    //创建对象方式2,通过类名获取
     public static void reflectNewInstance2() {
         try {
             Class<Book> bookClass = Book.class;
@@ -104,7 +103,7 @@ public class ReflectClass {
         }
     }
 
-    //创建对象方式3
+    //创建对象方式3,通过对象获取
     public static void reflectNewInstance3() {
         try {
             Book book = new Book();
@@ -121,8 +120,10 @@ public class ReflectClass {
     public static void reflectPrivateConstractor() {
         try {
             Class<?> classBook = Class.forName("com.blend.routercompiler.reflect.Book");
+            //创建构造器
             Constructor<?> declaredConstructor = classBook.getDeclaredConstructor(String.class, String.class);
             declaredConstructor.setAccessible(true);
+            //创建实例
             Object o = declaredConstructor.newInstance("Android study", "blend");
             Book book = (Book) o;
             System.out.println("reflect private constructor: " + book.getAuthor());
@@ -135,11 +136,14 @@ public class ReflectClass {
     public static void reflectPrivateField() {
         try {
             Class<?> aClass = Class.forName("com.blend.routercompiler.reflect.Book");
+            //这里也是先创建出构造器，然后通过无参构造函数实例化
             Object o = aClass.newInstance();
             Book book = (Book) o;
             book.setAuthor("private field");
+            //获取到字段名
             Field authorField = aClass.getDeclaredField("author");
             authorField.setAccessible(true);
+            //获取到字段值
             String author = (String) authorField.get(o);
             System.out.println("reflect private field: " + author);
         } catch (Exception e) {
@@ -151,9 +155,11 @@ public class ReflectClass {
     public static void reflectPrivateMethod() {
         try {
             Class<?> aClass = Class.forName("com.blend.routercompiler.reflect.Book");
+            //获取到方法名
             Method declaredMethod = aClass.getDeclaredMethod("declaredMethod", int.class);
             declaredMethod.setAccessible(true);
             Object o = aClass.newInstance();
+            //通过对象来调用方法
             String s = (String) declaredMethod.invoke(o, 0);
             System.out.println("reflect private method: " + s);
         } catch (Exception e) {
