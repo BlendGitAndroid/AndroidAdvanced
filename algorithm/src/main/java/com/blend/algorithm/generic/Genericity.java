@@ -102,7 +102,7 @@ public class Genericity {
      * 2）下边界通配符，为泛型添加下边界，即传入的类型实参必须是指定类型的父类型，super。
      * 3)无边界通配符，表明在使用泛型。
      */
-    public static void showKeyValue(FruitClass<Number> obj) {
+    public static void showKeyValue(FruitClass<? extends Number> obj) {
         Number next = obj.next();
     }
 
@@ -201,6 +201,7 @@ public class Genericity {
         //通配符
         FruitClass<Integer> integerFruitClass = new FruitClass<>();
         FruitClass<Number> numberFruitClass = new FruitClass<>();
+        showKeyValue(integerFruitClass);
         showKeyValue(numberFruitClass);
 
         //这里传Number的子类Integer是不行的，因为同一种泛型可以对应多个版本（因为参数类型是不确定的），不同版本的泛型类实例是不兼容的。

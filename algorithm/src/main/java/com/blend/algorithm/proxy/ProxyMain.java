@@ -66,7 +66,7 @@ class ProxyMain {
         System.out.println("-----------------------------");
 
         //动态代理
-        Factory factory1Real = new Factory(); //真实的工厂
+        Tools factory1Real = new Factory(); //真实的工厂
         InvocationHandler dynamic = new ProxyerDynamic(factory1Real);   //将工厂交给代理者
         //这里的返回值一定是接口，并且生成的类是：$Proxy0
         Tools factoryDynamic = (Tools) Proxy.newProxyInstance(factory1Real.getClass().getClassLoader(), factory1Real.getClass().getInterfaces(), dynamic);
