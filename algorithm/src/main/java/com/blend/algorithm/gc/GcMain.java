@@ -122,6 +122,20 @@ class GcMain {
         Object o1 = stack.pop(); //出栈
         System.out.println("o1=" + o1);
         System.out.println(stack.elements[0]); //打印栈中的数据
+
+        stringTest();
+    }
+
+    private static void stringTest() {
+        String s = new String("1");
+        s.intern();
+        String s2 = "1";
+        System.out.println(s == s2);
+
+        String s3 = new String("1") + new String("1");
+        s3.intern();
+        String s4 = "11";
+        System.out.println(s3 == s4);
     }
 
     private static class Stack {
