@@ -8,6 +8,7 @@ import android.widget.Button;
 
 import com.blend.architecture.aop.AopMainActivity;
 import com.blend.architecture.change_skin.SkinMainActivity;
+import com.blend.architecture.dagger2.zhuruyilai.ZhuruyilaiMainActivity;
 import com.blend.architecture.database_design.DatabaseMainActivity;
 import com.blend.architecture.eventbus.EventBusMainActivity;
 import com.blend.architecture.eventbus.hermesevent.HermesEventBusMainActivity;
@@ -37,6 +38,7 @@ public class ArchitectureMainActivity extends AppCompatActivity {
     private Button okHttp;
     private Button retrofit;
     private Button fragment;
+    private Button dagger2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +58,7 @@ public class ArchitectureMainActivity extends AppCompatActivity {
         okHttp = findViewById(R.id.okHttp);
         retrofit = findViewById(R.id.retrofit);
         fragment = findViewById(R.id.fragment);
+        dagger2 = findViewById(R.id.dagger2);
 
         handleMessage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -147,6 +150,13 @@ public class ArchitectureMainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(ArchitectureMainActivity.this, FragmentMainActivity.class));
+            }
+        });
+
+        dagger2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ArchitectureMainActivity.this, ZhuruyilaiMainActivity.class));
             }
         });
     }

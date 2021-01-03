@@ -80,5 +80,10 @@
             style="@style/main_style"
             android:text="fragment" />
 
+        <Button
+            android:id="@+id/dagger2"
+            style="@style/main_style"
+            android:text="Dagger2" />
+
     </LinearLayout>
 </ScrollView>
