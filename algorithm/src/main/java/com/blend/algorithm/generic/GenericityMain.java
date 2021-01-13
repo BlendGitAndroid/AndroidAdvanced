@@ -126,7 +126,7 @@ class GenericityMain {
         // apple.setData(new HongFuShi());
     }
 
-    //表示传递给方法的参数，必须是X的子类（包括X本身）
+    //表示传递给方法的参数，必须是X的父类（包括X本身）
     private static void printSuper(GenericInterfaceImpl1<? super Apple> apple) {
         Object data = apple.getData();
         // apple.setData(new Fruit());
