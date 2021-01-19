@@ -61,6 +61,10 @@ import java.io.Serializable;
  * Intent所携带的数据要能够在不同进程间传输。首先我们知道，Android是基于Linux系统，不同进程之间的java对象是无法传输，所以我们此处要对对象
  * 进行序列化，从而实现对象在应用程序进程和ActivityManagerService进程之间传输。而Parcel或者Serializable都可以将对象序列化，其中，Serializable
  * 使用方便，但性能不如Parcel容器，后者也是Android系统专门推出的用于进程间通信等的接口。
+ * <p>
+ * <p>
+ * 为什么Serializable使用的是反射呢？
+ * 因为readObject、writeObject、readResolve、writeReplace都是private，怎么调用他们的呢，答案是使用的是反射。
  */
 class Serialization implements Serializable {
 
