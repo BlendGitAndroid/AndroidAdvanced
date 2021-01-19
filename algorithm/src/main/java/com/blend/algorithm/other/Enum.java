@@ -31,7 +31,7 @@ public enum Enum {
      * //编译器为我们添加的静态的valueOf()方法，注意间接调用了Enum也类的valueOf方法
      * public static Day valueOf (String s)
      * {
-     * return (Day) Enum.valueOf(com / zejian / enumdemo / Day, s);
+     * return (Day) Enum.valueOf(com/zejian/enumdemo/Day, s);
      * }
      * //私有构造函数
      * private Day(String s, int i)
