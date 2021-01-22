@@ -65,6 +65,7 @@ import java.io.Serializable;
  * <p>
  * 为什么Serializable使用的是反射呢？
  * 因为readObject、writeObject、readResolve、writeReplace都是private，怎么调用他们的呢，答案是使用的是反射。
+ * 还有对象在反序列化的时候，也是使用反射来创建和赋值的。
  */
 class Serialization implements Serializable {
 
