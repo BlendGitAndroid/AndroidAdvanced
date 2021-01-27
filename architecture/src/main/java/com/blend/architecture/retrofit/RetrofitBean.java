@@ -2,10 +2,10 @@ package com.blend.architecture.retrofit;
 
 import java.util.List;
 
-public class RetrofitBean {
+public class RetrofitBean<T> {
     private int errorCode;
     private String errorMsg;
-    private List<DataBean> data;
+    private T data;
 
     public int getErrorCode() {
         return errorCode;
@@ -23,11 +23,11 @@ public class RetrofitBean {
         this.errorMsg = errorMsg;
     }
 
-    public List<DataBean> getData() {
+    public T getData() {
         return data;
     }
 
-    public void setData(List<DataBean> data) {
+    public void setData(T data) {
         this.data = data;
     }
 
