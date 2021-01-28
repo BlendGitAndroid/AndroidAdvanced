@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.FormBody;
 import okhttp3.Interceptor;
@@ -186,7 +187,8 @@ public class OkHttpMainActivity extends AppCompatActivity {
     private void httpTest() {
         String url = "http://www.baidu.com";
         OkHttpClient client = new OkHttpClient();
-        OkHttpClient builder = new OkHttpClient().newBuilder()
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .connectTimeout(300, TimeUnit.SECONDS)
                 .build(); //利用建造者模式，用于添加自定义属性
 
         okhttp3.Request request = new okhttp3.Request.Builder()
