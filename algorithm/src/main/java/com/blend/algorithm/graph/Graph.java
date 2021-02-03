@@ -15,7 +15,7 @@ import java.util.LinkedList;
  * 顶点未被访问，则需要另选一个未曾被访问过的顶点作为新的起始点，重复上述过程，直至图中所有顶点都被访问到为止。
  */
 public class Graph {
-    private int[] vertices; //顶点集
+    private int[] vertices; //顶点集，如0,1,2,3等等
     private int[][] matrix; //图的边的信息
     private int verticesSize;   //顶点个数
 
@@ -102,7 +102,7 @@ public class Graph {
      * 深度优先(很象二叉树的前序)
      */
     private void dfs() {
-        for (int i = 0; i < verticesSize; i++) {
+        for (int i = 0; i < verticesSize; i++) {    //不管怎么样，都要依次遍历
             if (!isVisited[i]) {
                 System.out.print(" " + i);
                 dfs(i);
@@ -111,8 +111,8 @@ public class Graph {
     }
 
     private void dfs(int i) {
-        isVisited[i] = true;
-        int v = getFirstNeighBar(i);
+        isVisited[i] = true;    //将访问标志位置为true
+        int v = getFirstNeighBar(i);    //找到一个邻居
         while (v != -1) {
             if (!isVisited[v]) {
                 System.out.print(" " + v);
@@ -139,7 +139,7 @@ public class Graph {
     }
 
     private void bfs(int i) {
-        LinkedList<Integer> queue = new LinkedList<>();
+        LinkedList<Integer> queue = new LinkedList<>(); //使用一个队列
         //找第一个邻接点
         int fn = getFirstNeighBar(i);
         if (fn == -1) {
@@ -148,7 +148,7 @@ public class Graph {
         if (!isVisited[fn]) {
             isVisited[fn] = true;
             System.out.print(" " + fn);
-            queue.offer(fn);
+            queue.offer(fn);    //入队
         }
         //开始把后面的邻接点都入队
         int next = getNextNeighBar(i, fn);
@@ -166,6 +166,10 @@ public class Graph {
             bfs(point);
         }
 
+    }
+
+    public static void main(String[] args) {
+        test();
     }
 
     public static void test() {
