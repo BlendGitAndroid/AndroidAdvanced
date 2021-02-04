@@ -1,7 +1,9 @@
 package com.blend.architecture.retrofit;
 
+import android.arch.lifecycle.LiveData;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
@@ -24,6 +26,13 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+/**
+ * CallAdapterFactory：请求适配器工厂，使用工厂方法模式来创建对象，并使用适配器模式，将网络请求结果适配成需要的结果，比如
+ * 默认的CallAdapterFactor的Call，Rxjava2的返回Observable，我们自定义的LiveData。
+ * <p>
+ * ConverterFactory：转换工厂，使用工厂方法模式来创建对象。用于将ResponseBody转换为type，和将type转换为requestBody。
+ *
+ */
 public class RetrofitMainActivity extends AppCompatActivity {
 
     private static final String TAG = "RetrofitMainActivity";
@@ -36,11 +45,13 @@ public class RetrofitMainActivity extends AppCompatActivity {
         // executeTest();
         // enqueueTest();
 
+        enqueueLiveDataTest();
+
         // withRxJava();
 
         // postTest();
 
-        loginTest();
+        // loginTest();
     }
 
     private void loginTest() {
@@ -134,6 +145,31 @@ public class RetrofitMainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    //异步请求
+    private void enqueueLiveDataTest() {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://www.wanandroid.com")
+                .addCallAdapterFactory(LiveDataCallAdapterFactory.create())
+                // .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(MyGsonConvertFactory.create())
+                .build();
+
+        RetrofitApi serviceApi = retrofit.create(RetrofitApi.class);
+        LiveData<RetrofitBean<List<RetrofitBean.DataBean>>> officialAccounts = serviceApi.getLiveDataOfficialAccounts();
+        officialAccounts.observe(this, new android.arch.lifecycle.Observer<RetrofitBean<List<RetrofitBean.DataBean>>>() {
+            @Override
+            public void onChanged(@Nullable RetrofitBean<List<RetrofitBean.DataBean>> listRetrofitBean) {
+                if (listRetrofitBean != null) {
+                    for (RetrofitBean.DataBean datum : listRetrofitBean.getData()) {
+                        Log.i("retrofit", "enqueue: " + datum.toString());
+                    }
+                } else {
+                    Log.i(TAG, "onChanged: no message");
+                }
+            }
+        });
     }
 
     //异步请求

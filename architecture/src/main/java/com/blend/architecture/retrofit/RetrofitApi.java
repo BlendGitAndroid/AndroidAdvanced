@@ -1,6 +1,9 @@
 package com.blend.architecture.retrofit;
 
 
+
+import android.arch.lifecycle.LiveData;
+
 import java.util.List;
 
 import io.reactivex.Maybe;
@@ -20,6 +23,9 @@ public interface RetrofitApi {
     //GET注解
     @GET("wxarticle/chapters/json")
     Call<RetrofitBean<List<RetrofitBean.DataBean>>> getOfficialAccounts();
+
+    @GET("wxarticle/chapters/json")
+    LiveData<RetrofitBean<List<RetrofitBean.DataBean>>> getLiveDataOfficialAccounts();
 
     @GET("wxarticle/chapters/json")
     Observable<RetrofitBean<List<RetrofitBean.DataBean>>> getOfficialAccountsObservable();
