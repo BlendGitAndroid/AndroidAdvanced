@@ -45,8 +45,8 @@ class EndThread {
             String name = Thread.currentThread().getName();
             System.out.println(name + " interrupt flag = " + isInterrupted());
             // while (!Thread.interrupted()){
-            while (!isInterrupted()) {  //其实这两个中断方法都是调用的一个native方法，只不过一个返回true，一个返回false
-                // while (true) {   在这种情况下即使调用了interrupt也没有被中断
+            // while (!isInterrupted()) {  //其实这两个中断方法都是调用的一个native方法，只不过一个返回true，一个返回false
+            while (true) {   //在这种情况下即使调用了interrupt也没有被中断
                 System.out.println(name + " inner interrupt flag = " + isInterrupted());
             }
             // System.out.println(name + " interrupt flag = " + isInterrupted());

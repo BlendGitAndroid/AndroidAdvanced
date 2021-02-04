@@ -37,11 +37,11 @@ class InterruptedExceptionThread {
                 try {
                     System.out.println("UseThread:" + formater.format(new Date()));
                     Thread.sleep(3000);
-                } catch (InterruptedException e) {
+                } catch (InterruptedException e) {  //这个只是捕获中断，但是捕获到中断后，将中断标志位置为false
                     System.out.println(threadName + " catch interrput flag is "
                             + isInterrupted() + " at "
                             + (formater.format(new Date())));
-                    interrupt();
+                    interrupt();    //在cache方法里面重新重点，才将中断标志位置为true，才能跳出循环
                     e.printStackTrace();
                 }
             }

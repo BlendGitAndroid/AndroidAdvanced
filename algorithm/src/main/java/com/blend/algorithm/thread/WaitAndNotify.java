@@ -87,8 +87,9 @@ class WaitAndNotify {
         }
 
         public synchronized void waitKm() {
-            while (this.km < 100) {
+            while (this.km < 100) { //这里使用while循环，就是为了防止调用notifyAll后，km不满足，但是也会被通知到
                 try {
+                    System.out.println("-----km---");
                     wait();
                     System.out.println("check km thread["
                             + Thread.currentThread().getName() + "] is be notifyed");
@@ -103,6 +104,7 @@ class WaitAndNotify {
         public synchronized void waitSite() {
             while (CITY.equals(this.site)) {
                 try {
+                    System.out.println("-----site-----");
                     wait();
                     System.out.println("check site thread["
                             + Thread.currentThread().getName() + "] is be notifyed");

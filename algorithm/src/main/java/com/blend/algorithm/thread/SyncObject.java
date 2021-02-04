@@ -14,19 +14,19 @@ package com.blend.algorithm.thread;
 class SyncObject {
 
     private long count = 0;
-    private Object obj = new Object();  //作为一个锁
+    private final Object obj = new Object();  //作为一个锁
 
     public synchronized void addCount() {
         count++;
     }
 
-    public synchronized void addCount2() {
+    public void addCount2() {
         synchronized (obj) {
             count++;
         }
     }
 
-    public synchronized void addCount3() {
+    public void addCount3() {
         synchronized (this) {
             count++;
         }
@@ -58,7 +58,7 @@ class SyncObject {
         public void run() {
             super.run();
             for (int i = 0; i < 1000; i++) {
-                obj.addCountClass2();
+                obj.addCount3();
             }
         }
     }
