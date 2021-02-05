@@ -176,7 +176,7 @@ public class RetrofitMainActivity extends AppCompatActivity {
                 // .addConverterFactory(GsonConverterFactory.create())
                 .addConverterFactory(MyGsonConvertFactory.create())
                 .build();
-
+        Class<RetrofitApi> retrofitApiClass = RetrofitApi.class;   //这个自动生成泛型的Class类对象
         RetrofitApi serviceApi = retrofit.create(RetrofitApi.class);
         LiveData<RetrofitBean<List<RetrofitBean.DataBean>>> officialAccounts = serviceApi.getLiveDataOfficialAccounts();
         officialAccounts.observe(this, new android.arch.lifecycle.Observer<RetrofitBean<List<RetrofitBean.DataBean>>>() {
