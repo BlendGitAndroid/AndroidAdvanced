@@ -17,6 +17,7 @@ import java.io.Writer;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
+import java.util.List;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
@@ -56,7 +57,7 @@ public class MyGsonConvertFactory extends Converter.Factory {
     @Override
     public Converter<ResponseBody, ?> responseBodyConverter(Type type, Annotation[] annotations, Retrofit retrofit) {
         TypeAdapter<?> adapter = mGson.getAdapter(TypeToken.get(type));
-        return new MyGsonResponseBodyConverter(mGson, adapter);
+        return new MyGsonResponseBodyConverter<>(mGson, adapter);
     }
 
     private class MyGsonRequestBodyConverter<T> implements Converter<T, RequestBody> {

@@ -31,7 +31,28 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * 默认的CallAdapterFactor的Call，Rxjava2的返回Observable，我们自定义的LiveData。
  * <p>
  * ConverterFactory：转换工厂，使用工厂方法模式来创建对象。用于将ResponseBody转换为type，和将type转换为requestBody。
- *
+ * <p>
+ * 用到的设计模式：
+ * 1.单例模式。饿汉式，获取Platform对象，是Android平台还是java8平台。
+ * 2.Build模式。Retrofit对象的创建，ServiceMethod对象的创建。
+ * 3.适配器模式。定义了适配和转换的接口。CallAdapter.Factory，比如将okhttp的请求，转换成自己定义的格式，使用Retrofit中的Call。
+ * 4.工厂模式。定义了各种对象创建的接口，比如CallAdapterFactory，ConvertFactory。
+ * 5.外观模式。在Retrofit接口中定义了很多网络请求方法，参数都在方法上进行定义，调用者只要传入参数，具体的逻辑不需要知道。对外提供了统一调度，
+ * 屏蔽了内部实现。
+ * 6.代理模式(静态代理和动态代理)。静态代理在DefaultCallAdapterFactory中，将okHttp对象进行代理。动态代理就是create方法中。
+ * 7.装饰模式。将一个现有的对象添加新的功能，但是不改变其结果。DefaultCallAdapterFactory中的ExecutorCallbackCall类就是一个
+ * 装饰模式，他装饰了OkHttpCall，添加新的功能时将返回结果切换到主线程去。
+ * 感觉装饰模式里面就会用到代理模式。
+ * <p>
+ * 1.Retrofit如何将定义的interface转换成网络请求？
+ * 通过动态代理。Retrofit的create方法添加网络接口类，生成具体的网络请求接口对象，然后通过这个对象在运行时通过动态代理InvocationHandler的
+ * invoke方法统一处理具体的网络方法。invoke方法通过构造一个ServiceMethod对象，并调用他的invoke方法，通过设置的CallAdapter对象的adapter
+ * 方法完成网络请求。ServiceMethod是对Host,URL,请求方法等封装，同时还存储了Okhttp对象的CallAdapter。
+ * 2.CallAdapter机制如何实现？
+ * 主要为了适配每一个网络请求方法返回不同的类型，Retrofit真正使用网络请求的是OkHttpCall这个类，这个类返回的是OkhttpCall的请求结果，但是怎么
+ * 返回每一个网络请求方法不同的类型，比如Call，LiveData，Observer，这个时候就需要CallAdapter来进行适配转换。
+ * 3.Convert机制如何实现？
+ * 将网络请求数据进行转换，进行数据解析。
  */
 public class RetrofitMainActivity extends AppCompatActivity {
 
