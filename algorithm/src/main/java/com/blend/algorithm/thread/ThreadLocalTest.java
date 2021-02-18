@@ -1,7 +1,7 @@
 package com.blend.algorithm.thread;
 
 /**
- * ThreadLocal，即线程变量，是一个以ThreadLocal对象为键、任意对象为值的存储结构。这个结构被附带在线程上，也就是说一个
+ * ThreadLocal，即线程本地变量，是一个以ThreadLocal对象为键、任意对象为值的存储结构。这个结构被附带在线程上，也就是说一个
  * 线程可以根据一个ThreadLocal对象查询到绑定在这个线程上的一个值, ThreadLocal往往用来实现变量在线程之间的隔离。
  * <p>
  * ThreadLocal类接口很简单，只有4个方法:
