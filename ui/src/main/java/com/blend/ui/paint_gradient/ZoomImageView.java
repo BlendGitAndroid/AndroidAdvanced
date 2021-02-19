@@ -9,6 +9,7 @@ import android.graphics.Matrix;
 import android.graphics.Shader;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -34,14 +35,21 @@ public class ZoomImageView extends View {
 
         mBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.xyjy3);
         mBitmapScale = mBitmap;
-        //放大后的整个图片
+
+        //新建一个放大后的整个图片
         mBitmapScale = Bitmap.createScaledBitmap(mBitmapScale, mBitmapScale.getWidth() * FACTOR,
                 mBitmapScale.getHeight() * FACTOR, true);
+
+        //Bitmap着色器
         BitmapShader bitmapShader = new BitmapShader(mBitmapScale, Shader.TileMode.CLAMP,
                 Shader.TileMode.CLAMP);
 
+        //构建一个圆形的Shape
         mShapeDrawable = new ShapeDrawable(new OvalShape());
+
+        //给Shape设置着色器
         mShapeDrawable.getPaint().setShader(bitmapShader);
+
         // 切出矩形区域，用来画圆（内切圆）
         mShapeDrawable.setBounds(0, 0, RADIUS * 2, RADIUS * 2);
 
@@ -67,7 +75,11 @@ public class ZoomImageView extends View {
 
         // 将放大的图片往相反的方向挪动
         mMatrix.setTranslate(RADIUS - x * FACTOR, RADIUS - y * FACTOR);
+        Log.e("onTouchEvent: ", (RADIUS - x * FACTOR) + "--" + (RADIUS - y * FACTOR));
+
+        //设置位移
         mShapeDrawable.getPaint().getShader().setLocalMatrix(mMatrix);
+
         // 切出手势区域点位置的圆
         mShapeDrawable.setBounds(x - RADIUS, y - RADIUS, x + RADIUS, y + RADIUS);
         invalidate();

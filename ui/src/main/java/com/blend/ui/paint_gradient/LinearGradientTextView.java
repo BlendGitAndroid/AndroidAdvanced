@@ -46,22 +46,34 @@ public class LinearGradientTextView extends AppCompatTextView {
         // 拿到TextView的画笔
         mPaint = getPaint();
         String text = getText().toString();
+
+        //返回TextView的宽度
         float textWith = mPaint.measureText(text);
+
+        //返回TextView的高度
         Paint.FontMetrics fontMetrics = mPaint.getFontMetrics();
         float hegiht = fontMetrics.bottom - fontMetrics.top;
+
+        //返回字体的大小
         float size = getTextSize();
+
+        //整体高度除以每个字体的大小为有多少行
         row = (int) (hegiht / size);
 
 
-        // 3个文字的宽度
+        // 3个文字的宽度，设置渐变的宽，TextView的宽度除以text的个数为一个字的宽度
         int gradientSize = (int) (textWith / text.length() * 3);
 
         // 从左边-gradientSize开始，即左边距离文字gradientSize开始渐变
-        mLinearGradient = new LinearGradient(-gradientSize, size * curRow, 0, size * curRow, new int[]{
+        //
+        mLinearGradient = new LinearGradient(-gradientSize, 0, 0, 0, new int[]{
                 0x22ffffff, 0xffffffff, 0x22ffffff}, null, Shader.TileMode.CLAMP
         );
 
         mPaint.setShader(mLinearGradient);
+
+        mMatrix = new Matrix();
+
     }
 
 
@@ -69,6 +81,8 @@ public class LinearGradientTextView extends AppCompatTextView {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         mTranslate += DELTAX;
+
+        //返回TextView的总体宽度
         float textWidth = getPaint().measureText(getText().toString());
         //到底部进行返回
         if (mTranslate > textWidth + 1 || mTranslate < 1) {
@@ -79,10 +93,11 @@ public class LinearGradientTextView extends AppCompatTextView {
             }
         }
 
-        mMatrix = new Matrix();
         mMatrix.setTranslate(mTranslate, 0);
+
+        //设置着色器平移
         mLinearGradient.setLocalMatrix(mMatrix);
-        postInvalidateDelayed(50);
+        postInvalidateDelayed(500);
 
     }
 }

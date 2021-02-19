@@ -18,7 +18,7 @@
     <com.blend.ui.paint_gradient.LinearGradientTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="欢迎同学们来到动脑学院高级UIadfsasfasdafsdfasdfadsf"
+        android:text="欢迎同学们学习自定义UIadfsasfasdafsdfasdfadsf"
         android:textColor="#666666"
         android:textSize="30sp"
         app:layout_constraintTop_toTopOf="parent" />
