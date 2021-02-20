@@ -1,12 +1,16 @@
 package com.blend.ui.flowlayout;
 
 import android.content.Context;
-import android.graphics.Canvas;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 
-
+/**
+ * xml里面设置的layout_，在解析xml的时候根据父布局的LayoutParam类生成自己的布局参数，
+ * 还是自己用java代码通过setLayoutParam加的LayoutParam，最后都会调用addView方法进行布局添加，若没有，
+ * 则生成默认的布局参数，这个默认就是父布局认为子布局默认的参数。
+ * 然后布局参数在父布局的onMeasure,onLayout中要使用。
+ */
 public class FlowLayout2 extends ViewGroup {
 
     public FlowLayout2(Context context) {
@@ -41,7 +45,7 @@ public class FlowLayout2 extends ViewGroup {
      */
     @Override
     protected LayoutParams generateDefaultLayoutParams() {
-        return super.generateDefaultLayoutParams();
+        return new MarginLayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
     }
 
     /**
@@ -49,7 +53,7 @@ public class FlowLayout2 extends ViewGroup {
      */
     @Override
     protected boolean checkLayoutParams(LayoutParams p) {
-        return super.checkLayoutParams(p);
+        return p instanceof MarginLayoutParams;
     }
 
     @Override
