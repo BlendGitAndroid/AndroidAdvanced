@@ -1,7 +1,10 @@
 package com.blend.ui.custom_view;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.ImageView;
 
 import com.blend.ui.R;
 
@@ -19,5 +22,13 @@ public class CustomViewActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_custom_view);
+
+
+        /**
+         * 自定义Drawable，也能设置圆角等
+         */
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.xyjy);
+        ImageView viewById = findViewById(R.id.customDrawable);
+        viewById.setImageDrawable(new CustomDrawable(bitmap));
     }
 }
