@@ -9,6 +9,12 @@ import android.graphics.Path;
 import android.view.MotionEvent;
 import android.view.View;
 
+/**
+ * 这里使用Bitmap来保存最后画出的结果，在onDraw里面还有一个绘制，是因为要保存绘制的路径。
+ * 这里有两个canvas，一个是绘制路径，一个是绘制结果。
+ * 绘制路径是因为在up事件的时候，要reset掉path，同时调用invalidate方法绘制，这样你绘制的
+ * 线路就被reset了，使用Bitmap来保存绘制后的结果，Bitmap的绘制也是在up事件。
+ */
 class HandDraw extends View {
 
     // 定义记录前一个拖动事件发生点的坐标

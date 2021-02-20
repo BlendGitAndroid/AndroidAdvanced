@@ -11,6 +11,12 @@ import android.support.v7.widget.AppCompatTextView;
 import android.text.TextPaint;
 import android.util.AttributeSet;
 
+/**
+ * 在这个例子中，因为继承的是AppCompatTextView，所以可以拿到TextView的画笔，那么给这个画笔设置上着色器，
+ * TextView在绘制的时候，就能按照这个画笔的设置来绘制出效果。
+ * 利用矩阵平移，给着色器设置上矩阵平移变化，然后在调用postInvalidateDelayed重新绘制一遍，这些连接起来，
+ * 我们就看到了从左到右的效果。
+ */
 public class LinearGradientTextView extends AppCompatTextView {
     private TextPaint mPaint;
 
@@ -70,6 +76,7 @@ public class LinearGradientTextView extends AppCompatTextView {
                 0x22ffffff, 0xffffffff, 0x22ffffff}, null, Shader.TileMode.CLAMP
         );
 
+        //给画笔设置着色器
         mPaint.setShader(mLinearGradient);
 
         mMatrix = new Matrix();
@@ -95,9 +102,8 @@ public class LinearGradientTextView extends AppCompatTextView {
 
         mMatrix.setTranslate(mTranslate, 0);
 
-        //设置着色器平移
+        //给线性渐变着色器设置本地矩阵，这个矩阵表示x向右平移
         mLinearGradient.setLocalMatrix(mMatrix);
         postInvalidateDelayed(500);
-
     }
 }

@@ -11,6 +11,11 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 
+/**
+ * 绘制雷达，设置两个画笔。
+ * 一个画笔绘制圆圈。
+ * 一个画笔绘制扫描，扫描使用扫描渐变，加上matrix旋转效果，通过postDelayed，不断的调用invalidate进行绘制。
+ */
 public class RadarGradientView extends View {
 
 
@@ -29,7 +34,6 @@ public class RadarGradientView extends View {
         mPaintRadar = new Paint();
         mPaintRadar.setStyle(Paint.Style.FILL_AND_STROKE); // 填充
         mPaintRadar.setAntiAlias(true); // 抗锯齿
-
 
 
         post(run);

@@ -39,7 +39,7 @@ class TestCanvas extends View {
 
         paint.setTextSize(24);
 
-        //设置渐变器
+        //设置着色器，线性渐变器
         Shader shader = new LinearGradient(0, 0, 100, 0, new int[]{Color.RED, Color.GREEN}, null, Shader.TileMode.REPEAT);
         paint.setShader(shader);
 
@@ -66,7 +66,7 @@ class TestCanvas extends View {
         path.close();
         canvas.drawPath(path, paint);
 
-        //设置放射性渐变器
+        //着色器，设置放射性渐变器
         paint.setShader(new RadialGradient(150, 150, 100,
                 new int[]{Color.RED, Color.YELLOW, Color.BLUE, Color.GREEN}, new float[]{0.1f, 0.3f, 0.6f, 0.9f},
                 Shader.TileMode.MIRROR));

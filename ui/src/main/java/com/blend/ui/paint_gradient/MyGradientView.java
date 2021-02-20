@@ -6,18 +6,31 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.ComposeShader;
-import android.graphics.LinearGradient;
+import android.graphics.Matrix;
 import android.graphics.Paint;
-import android.graphics.PorterDuff;
 import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.OvalShape;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 
 import com.blend.ui.R;
 
+/**
+ * 绘制图片，使用BitmapShape，把这个Bitmap着色器设置给画笔，那么这个画笔就拿到了这个Bitmap，就能利用canvas设置不同形状的
+ * Bitmap图片了。
+ * <p>
+ * 同样，只要是着色器，就有CLAMP，MIRROR，REPEAT三种扩充渲染。
+ * 着色器是设置给画笔的。
+ * <p>
+ * <p>
+ * 同样，圆形也能通过ShapeDrawable来实现，拿到ShapeDrawable的画笔，设置上Bitmap着色器，并设置ShapeDrawable的宽高，设置
+ * 要绘制的canvas画布，就能在canvas上显示圆形图片了。因为ShapeDrawable是没有宽高等属性的，所以要设置形状，设置宽高，设置画布等。
+ * <p>
+ * 通过给着色器设置本地矩阵setLocalMatrix，来完成一些平移等一系列操作。
+ */
 public class MyGradientView extends View {
     private Paint mPaint;
     private Bitmap mBitMap = null;
@@ -53,27 +66,31 @@ public class MyGradientView extends View {
          * TileMode.REPEAT 重复图片平铺整个画面（电脑设置壁纸）
          * 在图片和显示区域大小不符的情况进行扩充渲染
          */
-       /*BitmapShader bitMapShader = new BitmapShader(mBitMap, Shader.TileMode.REPEAT,
-                Shader.TileMode.REPEAT);
+        BitmapShader bitMapShader = new BitmapShader(mBitMap, Shader.TileMode.CLAMP,
+                Shader.TileMode.CLAMP);
+
+        //给画笔设置着色器，这样这个画笔就知道画什么了，这个是给画笔设置一个Bitmap
         mPaint.setShader(bitMapShader);
         mPaint.setAntiAlias(true);
         //设置像素矩阵，来调整大小，为了解决宽高不一致的问题。
-        float scale = Math.max(mWidth,mHeight) / Math.min(mWidth,mHeight);*/
+        float scale = Math.max(mWidth, mHeight) / Math.min(mWidth, mHeight);
 
-        //Matrix matrix = new Matrix();
-        //matrix.setScale(scale,scale);
-        //bitMapShader.setLocalMatrix(matrix);
+        Matrix matrix = new Matrix();
+        matrix.setScale(scale, scale);
 
-        //canvas.drawCircle(mHeight / 2,mHeight / 2, mHeight / 2 ,mPaint);
+        //设置本地矩阵，这个矩阵是缩放的
+        bitMapShader.setLocalMatrix(matrix);
+
+        // canvas.drawCircle(mHeight / 2, mHeight / 2, mHeight / 2, mPaint);
         // canvas.drawOval(new RectF(0 , 0, mWidth, mHeight),mPaint);
-
-        //canvas.drawRect(new Rect(0,0 , 1000, 1600),mPaint);
+        //
+        // canvas.drawRect(new Rect(0, 0, 1000, 1600), mPaint);
 
         //通过shapeDrawable也可以实现
-        //ShapeDrawable shapeDrawble = new ShapeDrawable(new OvalShape());
-        //shapeDrawble.getPaint().setShader(bitMapShader);
-        //shapeDrawble.setBounds(0,0,mWidth,mWidth);
-        //shapeDrawble.draw(canvas);
+        ShapeDrawable shapeDrawble = new ShapeDrawable(new OvalShape());
+        shapeDrawble.getPaint().setShader(bitMapShader);
+        shapeDrawble.setBounds(0, 0, mWidth, mWidth);
+        shapeDrawble.draw(canvas);
 
         /**线性渐变
          * x0, y0, 起始点
@@ -101,18 +118,18 @@ public class MyGradientView extends View {
 
         /***************用ComposeShader即可实现心形图渐变效果*********************************/
         //创建BitmapShader，用以绘制心
-        Bitmap mBitmap = ((BitmapDrawable) getResources().getDrawable(R.drawable.heart)).getBitmap();
-        BitmapShader bitmapShader = new BitmapShader(mBitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
-        //创建LinearGradient，用以产生从左上角到右下角的颜色渐变效果
-        LinearGradient linearGradient = new LinearGradient(0, 0, mWidth, mHeight, Color.GREEN, Color.BLUE, Shader.TileMode.CLAMP);
-        //bitmapShader对应目标像素，linearGradient对应源像素，像素颜色混合采用MULTIPLY模式
-        ComposeShader composeShader = new ComposeShader(bitmapShader, linearGradient, PorterDuff.Mode.MULTIPLY);
-        //ComposeShader composeShader2 = new ComposeShader(composeShader, linearGradient, PorterDuff.Mode.MULTIPLY);
-        //将组合的composeShader作为画笔paint绘图所使用的shader
-        mPaint.setShader(composeShader);
-
-        //用composeShader绘制矩形区域
-        canvas.drawRect(0, 0, mBitmap.getWidth(), mBitmap.getHeight(), mPaint);
+        // Bitmap mBitmap = ((BitmapDrawable) getResources().getDrawable(R.drawable.heart)).getBitmap();
+        // BitmapShader bitmapShader = new BitmapShader(mBitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
+        // //创建LinearGradient，用以产生从左上角到右下角的颜色渐变效果
+        // LinearGradient linearGradient = new LinearGradient(0, 0, mWidth, mHeight, Color.GREEN, Color.BLUE, Shader.TileMode.CLAMP);
+        // //bitmapShader对应目标像素，linearGradient对应源像素，像素颜色混合采用MULTIPLY模式
+        // ComposeShader composeShader = new ComposeShader(bitmapShader, linearGradient, PorterDuff.Mode.MULTIPLY);
+        // //ComposeShader composeShader2 = new ComposeShader(composeShader, linearGradient, PorterDuff.Mode.MULTIPLY);
+        // //将组合的composeShader作为画笔paint绘图所使用的shader
+        // mPaint.setShader(composeShader);
+        //
+        // //用composeShader绘制矩形区域
+        // canvas.drawRect(0, 0, mBitmap.getWidth(), mBitmap.getHeight(), mPaint);
 
 
         //所谓渲染就是对于我们绘制区域进行按照上诉渲染规则进行色彩的填充
