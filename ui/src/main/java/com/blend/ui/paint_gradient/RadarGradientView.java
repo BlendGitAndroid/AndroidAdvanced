@@ -73,7 +73,11 @@ public class RadarGradientView extends View {
         // 画布的旋转变换 需要调用save() 和 restore()
         canvas.save();
 
-        canvas.concat(matrix);
+        //这种实现方法虽然也能实现旋转，但是是通过旋转坐标系来做的
+        // canvas.concat(matrix);
+
+
+        canvas.drawRect(0, 0, 200, 200, mPaintCircle);
         canvas.drawCircle(mWidth / 2, mHeight / 2, mWidth * pots[4], mPaintRadar);
 
         canvas.restore();
@@ -99,8 +103,12 @@ public class RadarGradientView extends View {
         @Override
         public void run() {
             matrix.postRotate(scanSpeed, mWidth / 2, mHeight / 2); // 旋转矩阵
+
+            //这种方式实现的旋转，是通过对着色器设置旋转矩阵
+            scanShader.setLocalMatrix(matrix);
+
             invalidate(); // 通知view重绘，调用onDraw
-            postDelayed(run, 50); // 调用自身 重复绘制
+            postDelayed(run, 500); // 调用自身 重复绘制
         }
     };
 
