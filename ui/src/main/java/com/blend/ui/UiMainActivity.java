@@ -9,7 +9,6 @@ import android.widget.Button;
 import com.blend.ui.MenuDrawerLayout.MenuDrawerLayoutActivity;
 import com.blend.ui.animation.AnimationMainActivity;
 import com.blend.ui.animation_framework.AnimatorFrameworkMainActivity;
-import com.blend.ui.custom_recycler.CustomRecyclerView;
 import com.blend.ui.custom_recycler.CustomRecyclerViewActivity;
 import com.blend.ui.custom_view.CustomViewActivity;
 import com.blend.ui.flowlayout.FlowLayoutActivity;
@@ -19,6 +18,7 @@ import com.blend.ui.nested_scrolling.NestedScrollingActivity;
 import com.blend.ui.paint_gradient.PaintGradientActivity;
 import com.blend.ui.qq_header_scrollerview.QQHeaderActivity;
 import com.blend.ui.recyclerview.RefreshRecyclerViewActivity;
+import com.blend.ui.viewstub.ViewStubActivity;
 
 /**
  * 1.属性动画的问题？
@@ -42,6 +42,7 @@ public class UiMainActivity extends AppCompatActivity {
     private Button customViewBtn;
     private Button qqHeaderBtn;
     private Button customRecyclerViewBtn;
+    private Button viewStub;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +60,7 @@ public class UiMainActivity extends AppCompatActivity {
         customViewBtn = findViewById(R.id.customViewBtn);
         qqHeaderBtn = findViewById(R.id.qqHeaderBtn);
         customRecyclerViewBtn = findViewById(R.id.customRecyclerViewBtn);
+        viewStub = findViewById(R.id.viewStub);
 
         flowLayoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -138,6 +140,13 @@ public class UiMainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(UiMainActivity.this, CustomRecyclerViewActivity.class));
+            }
+        });
+
+        viewStub.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(UiMainActivity.this, ViewStubActivity.class));
             }
         });
     }

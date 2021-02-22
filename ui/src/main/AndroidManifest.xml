@@ -3,7 +3,8 @@
     package="com.blend.ui">
 
     <application>
-        <activity android:name=".custom_recycler.CustomRecyclerViewActivity"></activity>
+        <activity android:name=".viewstub.ViewStubActivity"></activity>
+        <activity android:name=".custom_recycler.CustomRecyclerViewActivity" />
         <activity android:name=".qq_header_scrollerview.QQHeaderActivity" />
         <activity android:name=".custom_view.CustomViewActivity" />
         <activity android:name=".MenuDrawerLayout.MenuDrawerLayoutActivity" />

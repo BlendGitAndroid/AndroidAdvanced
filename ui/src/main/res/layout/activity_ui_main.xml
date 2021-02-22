@@ -69,5 +69,10 @@
             android:id="@+id/customRecyclerViewBtn"
             style="@style/main_style"
             android:text="CustomRecyclerView" />
+
+        <Button
+            android:id="@+id/viewStub"
+            style="@style/main_style"
+            android:text="ViewStub" />
     </LinearLayout>
 </android.support.v4.widget.NestedScrollView>
