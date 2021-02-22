@@ -23,6 +23,8 @@ package com.blend.architecture.binder;
  * 控制Window的显示和触摸逻辑，设置软键盘的弹出策略等。
  * 虽然它里面也有View的add，remove，update，但是它不是真正的操作，真正的操作都是交给WindowManagerGlobal。
  * 也可以把这个View树理解成Window。
+ * WindowManagerImpl是一个桥接模式，因为它的addView，removeView，updateView的真正实现，是桥接给了WindowManagerGlobal，它里面并没有
+ * 真正的实现。
  * <p>
  * WindowManagerGlobal：单例的，每一个应用都有一个WindowManagerGlobal，里面保存View，ViewRootImpl，ParamLayout3个List，创建出WindowSession。
  * 是真正封装Window的添加(add)，删除(remove)和更新的(update)逻辑的。是用来管理一个应用的全部View。
