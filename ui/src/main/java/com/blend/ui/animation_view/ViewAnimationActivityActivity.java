@@ -16,6 +16,9 @@ import com.blend.ui.R;
 /**
  * View动画，也叫作视图动画，也叫作补间动画。
  * AnimationSet是一个特殊的Animation，对它设置的插值器，会应用到它所有的子Animation上。
+ * <p>
+ * View#clearAnimation();是取消Animation和View的关系，将View中的mCurrentAnimation置为null，停止动画绘制。
+ * 而Animation#cancel()只是单纯的取消停止动画，只是将继续绘制动画标志位mMore置为false，停止动画绘制。
  */
 public class ViewAnimationActivityActivity extends AppCompatActivity {
 
@@ -123,7 +126,6 @@ public class ViewAnimationActivityActivity extends AppCompatActivity {
         setAnimation.setInterpolator(new BounceInterpolator());
 
         ivShuihu.startAnimation(setAnimation);
-
 
         rotate.setAnimationListener(new Animation.AnimationListener() {
             @Override
