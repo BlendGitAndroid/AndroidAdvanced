@@ -36,6 +36,11 @@
             android:text="Animator" />
 
         <Button
+            android:id="@+id/myAnimatorBtn"
+            style="@style/main_style"
+            android:text="MyAnimator" />
+
+        <Button
             android:id="@+id/animatorFrameworkBtn"
             style="@style/main_style"
             android:text="AnimatorFramework" />

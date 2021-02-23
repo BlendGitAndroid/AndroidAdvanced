@@ -3,7 +3,6 @@ package com.blend.ui;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 
@@ -11,6 +10,7 @@ import com.blend.ui.MenuDrawerLayout.MenuDrawerLayoutActivity;
 import com.blend.ui.animation.AnimationMainActivity;
 import com.blend.ui.animation_framework.AnimatorFrameworkMainActivity;
 import com.blend.ui.animation_view.ViewAnimationActivityActivity;
+import com.blend.ui.animator.MyAnimatorActivity;
 import com.blend.ui.custom_recycler.CustomRecyclerViewActivity;
 import com.blend.ui.custom_view.CustomViewActivity;
 import com.blend.ui.flowlayout.FlowLayoutActivity;
@@ -37,6 +37,7 @@ public class UiMainActivity extends AppCompatActivity {
     private Button itemTouchBtn;
     private Button animatorBtn;
     private Button animationBtn;
+    private Button myAnimatorBtn;
     private Button animatorFrameworkBtn;
     private Button materialDesignBtn;
     private Button refreshRecyclerViewBtn;
@@ -56,6 +57,7 @@ public class UiMainActivity extends AppCompatActivity {
         itemTouchBtn = findViewById(R.id.itemTouchBtn);
         animatorBtn = findViewById(R.id.animatorBtn);
         animationBtn = findViewById(R.id.animationBtn);
+        myAnimatorBtn = findViewById(R.id.myAnimatorBtn);
         animatorFrameworkBtn = findViewById(R.id.animatorFrameworkBtn);
         materialDesignBtn = findViewById(R.id.materialDesignBtn);
         refreshRecyclerViewBtn = findViewById(R.id.refreshRecyclerViewBtn);
@@ -160,10 +162,13 @@ public class UiMainActivity extends AppCompatActivity {
                 startActivity(new Intent(UiMainActivity.this, ViewAnimationActivityActivity.class));
             }
         });
+
+        myAnimatorBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(UiMainActivity.this, MyAnimatorActivity.class));
+            }
+        });
     }
 
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
-        return super.dispatchTouchEvent(ev);
-    }
 }
