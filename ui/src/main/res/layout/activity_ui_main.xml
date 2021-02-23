@@ -26,6 +26,11 @@
             android:text="ItemTouch" />
 
         <Button
+            android:id="@+id/animationBtn"
+            style="@style/main_style"
+            android:text="Animation" />
+
+        <Button
             android:id="@+id/animatorBtn"
             style="@style/main_style"
             android:text="Animator" />
