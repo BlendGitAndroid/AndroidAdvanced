@@ -3,6 +3,7 @@ package com.blend.ui.animation;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
+import android.animation.Keyframe;
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.animation.TypeEvaluator;
@@ -24,7 +25,28 @@ import com.blend.ui.R;
  * 其原理是：属性动画要求动画作用的对象提供该属性的set和get方法，属性对象根据外界传过来的该属性的初始值和最终值（通过反射的调用set），
  * 整个过程是通过Handler，以动画的效果多次调用set方法，每次传递给set方法的值都不一样，确切的说是随着时间的推移，所传递的值越来越接近最终值。
  * <p>
- * 属性动画注意内存泄漏
+ * 属性动画注意内存泄漏。
+ * <p>
+ * 属性动画原理：当调用start方法后，之后会注册AnimationHandler回调，在这个回调中，是使用Choreographer机制，每隔10ms回调doFrame方法，
+ * 在这个方法中，mAnimationCallbacks这个List如果大于0，就能继续接收回调，当动画执行完或者取消动画的时候，mAnimationCallbacks的大小
+ * 就会等于0，就不会接收Choreographer回调了。
+ * Choreographer回调中会返回当前时间，利用(当前时间 - 开始时间)/动画时长就能得到fraction，调用插值器计算出真正时间的百分比（也可以理解成）
+ * 属性的百分比，然后PropertyValuesHolder根据这个百分比，然后调用估值器，最后的属性值就在估值器里面计算。
+ * 计算完之后回调AnimatorUpdateListener接口，在这个接口里就能拿到getAnimatedValue估值器结算完的值。
+ * <p>
+ * 属性动画每一个属性，都会对应一个PropertyValuesHolder对象，每一个PropertyValuesHolder至少有两个KeyFrame，这个KeyFrame就是时间百分比和
+ * 属性值的一对一对应。
+ * 在动画中设置的values值，最后都会对应上KeyFrame，有几个值，就对应几个KeyFrame。
+ * <p>
+ * 而在ObjectAnimator方法中，在initAnimation方法中会调用PropertyValuesHolder的setupSetterAndGetter方法，会点加上set和Get，并使用
+ * 反射来调用。会在doFrame后的animateValue重写这个方法，在这个方法中使用反射来调用。
+ *
+ * <p>
+ * <p>
+ * AnimatorUpdateListener这个接口是特有的，就是用来取估值器的计算出来的值，这些值都是保存在PropertyValuesHolder中。
+ * animateValue方法中先根据插值器计算出属性变化的百分比，然后再调用KeyFrame，根据估值器计算出属性变化的值。
+ * 在ObjectAnimator中使用这个值反射调用方法，在ValueAnimator中则是使用AnimatorUpdateListener回调给调用者处理。
+ * 在ObjectAnimator方法中反射调用方法会该表属性的值，但是若是在这个方法中没有动画变化的，还需要调用者自己处理。
  */
 public class AnimationMainActivity extends AppCompatActivity {
 
@@ -54,7 +76,36 @@ public class AnimationMainActivity extends AppCompatActivity {
             startEvaluator(iv);
         } else if (id == R.id.btn_splash) {
             startSplash();
+        } else if (id == R.id.btn_layout) {
+            startActivity(new Intent(this, LayoutTransitionActivity.class));
+        } else if (id == R.id.btn_key_frame) {
+            startKeyFrame(iv);
         }
+
+    }
+
+    /**
+     * 一个PropertyValuesHolder可以对应多个KeyFrame，是一对多的关系。
+     * 一个PropertyValuesHolder至少对应两个KeyFrame，一个是开始，一个是结束。
+     * 使用KeyFrameSet来管理KeyFrame。
+     * <p>
+     * KeyFrame就是一个记录fraction和其相对应的value值。
+     */
+    private void startKeyFrame(View view) {
+        Keyframe scale1 = Keyframe.ofFloat(0, 0);
+        Keyframe scale2 = Keyframe.ofFloat(0.5f, 0.5f);
+        Keyframe scale3 = Keyframe.ofFloat(1.0f, 1.0f);
+        PropertyValuesHolder propertyValuesHolder = PropertyValuesHolder.ofKeyframe("scale", scale1, scale2, scale3);
+        ValueAnimator valueAnimator = ValueAnimator.ofPropertyValuesHolder(propertyValuesHolder);
+        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                float scale = (float) animation.getAnimatedValue("scale");
+                view.setScaleX(scale);
+                view.setScaleY(scale);
+            }
+        });
+        valueAnimator.start();
 
     }
 
@@ -117,7 +168,7 @@ public class AnimationMainActivity extends AppCompatActivity {
 
     public void startPropertyValueHolderAnim(View v) {
         PropertyValuesHolder holder1 = PropertyValuesHolder.ofFloat("alpha", 1f, 0.5f);
-        PropertyValuesHolder holder2 = PropertyValuesHolder.ofFloat("scaleX", 1f, 0.5f);
+        PropertyValuesHolder holder2 = PropertyValuesHolder.ofFloat("scaleX", 1f, 2f);
         PropertyValuesHolder holder3 = PropertyValuesHolder.ofFloat("scaleY", 1f, 0.5f);
         ObjectAnimator animator = ObjectAnimator.ofPropertyValuesHolder(v, holder1, holder2, holder3);
         animator.setDuration(200);

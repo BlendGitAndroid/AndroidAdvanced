@@ -73,6 +73,24 @@
             android:onClick="startAnimator"
             android:text="splash"
             android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/btn_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:onClick="startAnimator"
+            android:text="layout"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/btn_key_frame"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:onClick="startAnimator"
+            android:text="KeyFrame"
+            android:textAllCaps="false" />
     </com.blend.ui.flowlayout.FlowLayout2>
 
     <ImageView
