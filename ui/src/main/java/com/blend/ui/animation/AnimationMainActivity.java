@@ -31,7 +31,8 @@ import com.blend.ui.R;
  * 在这个方法中，mAnimationCallbacks这个List如果大于0，就能继续接收回调，当动画执行完或者取消动画的时候，mAnimationCallbacks的大小
  * 就会等于0，就不会接收Choreographer回调了。
  * Choreographer回调中会返回当前时间，利用(当前时间 - 开始时间)/动画时长就能得到fraction，调用插值器计算出真正时间的百分比（也可以理解成）
- * 属性的百分比，然后PropertyValuesHolder根据这个百分比，然后调用估值器，最后的属性值就在估值器里面计算。
+ * 属性的百分比，然后PropertyValuesHolder根据这个百分比，然后调用估值器，最后的属性值就在估值器里面计算，估值器计算的参数就是keyFrame的
+ * 值，指的是两个关键帧之间的估值。
  * 计算完之后回调AnimatorUpdateListener接口，在这个接口里就能拿到getAnimatedValue估值器结算完的值。
  * <p>
  * 属性动画每一个属性，都会对应一个PropertyValuesHolder对象，每一个PropertyValuesHolder至少有两个KeyFrame，这个KeyFrame就是时间百分比和

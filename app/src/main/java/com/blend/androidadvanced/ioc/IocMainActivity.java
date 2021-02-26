@@ -1,11 +1,15 @@
 package com.blend.androidadvanced.ioc;
 
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
 import com.blend.androidadvanced.R;
+
+import java.util.Set;
 
 /**
  * 记一个坑：R文件在library中不是final的，只有在主工程中是final的
@@ -17,6 +21,8 @@ import com.blend.androidadvanced.R;
 @ContentView(R.layout.activity_ioc_main)
 public class IocMainActivity extends BaseActivity {
 
+    private static final String TAG = "IocMainActivity";
+
     @ViewInject(R.id.app_text)
     private Button textView;
     @ViewInject(R.id.app_text1)
@@ -26,6 +32,16 @@ public class IocMainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // setContentView(R.layout.activity_ioc_main);
+        if (getIntent() != null) {
+            String scheme = getIntent().getScheme();
+            Uri data = getIntent().getData();
+            int port = data.getPort();
+
+            Log.e(TAG, "port: " + port);
+            Log.e(TAG, "scheme: " + scheme);
+            Log.e(TAG, "data: " + data.toString());
+
+        }
     }
 
     @Deprecated
