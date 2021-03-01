@@ -81,6 +81,11 @@
             android:text="CustomRecyclerView" />
 
         <Button
+            android:id="@+id/recyclerViewBtn"
+            style="@style/main_style"
+            android:text="RecyclerView" />
+
+        <Button
             android:id="@+id/viewStub"
             style="@style/main_style"
             android:text="ViewStub" />

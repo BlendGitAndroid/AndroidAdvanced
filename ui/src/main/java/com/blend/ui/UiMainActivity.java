@@ -19,6 +19,7 @@ import com.blend.ui.material_design.MaterialDesignMainActivity;
 import com.blend.ui.nested_scrolling.NestedScrollingActivity;
 import com.blend.ui.paint_gradient.PaintGradientActivity;
 import com.blend.ui.qq_header_scrollerview.QQHeaderActivity;
+import com.blend.ui.recyclerview.RecyclerViewActivity;
 import com.blend.ui.recyclerview.RefreshRecyclerViewActivity;
 import com.blend.ui.viewstub.ViewStubActivity;
 
@@ -46,6 +47,7 @@ public class UiMainActivity extends AppCompatActivity {
     private Button customViewBtn;
     private Button qqHeaderBtn;
     private Button customRecyclerViewBtn;
+    private Button recyclerViewBtn;
     private Button viewStub;
 
     @Override
@@ -66,6 +68,7 @@ public class UiMainActivity extends AppCompatActivity {
         customViewBtn = findViewById(R.id.customViewBtn);
         qqHeaderBtn = findViewById(R.id.qqHeaderBtn);
         customRecyclerViewBtn = findViewById(R.id.customRecyclerViewBtn);
+        recyclerViewBtn = findViewById(R.id.recyclerViewBtn);
         viewStub = findViewById(R.id.viewStub);
 
         flowLayoutBtn.setOnClickListener(new View.OnClickListener() {
@@ -167,6 +170,13 @@ public class UiMainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(UiMainActivity.this, MyAnimatorActivity.class));
+            }
+        });
+
+        recyclerViewBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(UiMainActivity.this, RecyclerViewActivity.class));
             }
         });
     }

@@ -3,7 +3,8 @@
     package="com.blend.ui">
 
     <application>
-        <activity android:name=".animation.LayoutTransitionActivity"></activity>
+        <activity android:name=".recyclerview.RecyclerViewActivity"></activity>
+        <activity android:name=".animation.LayoutTransitionActivity" />
         <activity android:name=".animator.MyAnimatorActivity" />
         <activity android:name=".animation_view.ViewAnimationActivityActivity" />
         <activity android:name=".viewstub.ViewStubActivity" />
