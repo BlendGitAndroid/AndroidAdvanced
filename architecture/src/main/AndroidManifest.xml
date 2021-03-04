@@ -7,7 +7,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application>
-        <activity android:name=".dagger2.zhuruyilai.ZhuruyilaiMainActivity"></activity>
+        <activity android:name=".database_design.MyDatabaseActivity"></activity>
+        <activity android:name=".dagger2.zhuruyilai.ZhuruyilaiMainActivity" />
         <activity android:name=".asynctask.AsyncTaskMainActivity" />
         <activity android:name=".fragment.FragmentMainActivity" />
         <activity android:name=".retrofit.RetrofitMainActivity" />
