@@ -1,13 +1,14 @@
 package com.blend.architecture.fragment;
 
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
+import android.os.PersistableBundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 
 import com.blend.architecture.R;
+
+import java.util.List;
 
 /**
  * fragment知识点：
@@ -61,7 +62,6 @@ import com.blend.architecture.R;
  * <p>
  * <p>
  * Fragment的原理知识：
- *
  */
 public class FragmentMainActivity extends AppCompatActivity {
 
@@ -72,19 +72,33 @@ public class FragmentMainActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction transaction = fragmentManager.beginTransaction();
-            transaction.add(R.id.rightFragment, RightFragment.newInstance(mHandler, "Blend"), RightFragment.class.getName());
+            transaction.add(R.id.rightFragment, RightFragment.newInstance("blend"), RightFragment.class.getName());
             transaction.commit();
         }
     }
 
-    private Handler mHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            FragmentTransaction transaction = fragmentManager.beginTransaction();
-            transaction.add(R.id.rightFragment, RightFragment.newInstance(mHandler, "Blend"), RightFragment.class.getName());
-            transaction.commit();
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        FragmentManager fm = getSupportFragmentManager();
+        List fragmentList = fm.getFragments();
+        if (fragmentList.size() == 0) {
+            super.onSaveInstanceState(outState, outPersistentState);
         }
-    };
+    }
+
+    // private Handler mHandler = new Handler() {
+    //     @Override
+    //     public void handleMessage(Message msg) {
+    //         super.handleMessage(msg);
+    //         FragmentManager fragmentManager = getSupportFragmentManager();
+    //         FragmentTransaction transaction = fragmentManager.beginTransaction();
+    //         transaction.add(R.id.rightFragment, RightFragment.newInstance(mHandler, "Blend"), RightFragment.class.getName());
+    //         transaction.commit();
+    //     }
+    // };
 }

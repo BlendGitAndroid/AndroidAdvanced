@@ -1,11 +1,11 @@
 package com.blend.architecture.fragment;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,13 +21,21 @@ public class RightFragment extends Fragment {
     private Handler mHandler;
     private String mName;
 
-    public static Fragment newInstance(Handler handler, String name) {
+    public static Fragment newInstance(String name) {
         RightFragment fragment = new RightFragment();
-        fragment.setHandle(handler);
         Bundle args = new Bundle();
         args.putString("name", name);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    public RightFragment() {
+
+    }
+
+    @SuppressLint("ValidFragment")
+    public RightFragment(String name) {
+        mName = name;
     }
 
     @Override
@@ -40,6 +48,12 @@ public class RightFragment extends Fragment {
         mHandler = handler;
     }
 
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -49,11 +63,19 @@ public class RightFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 // bug1();
+
             }
         });
+
         mRightTv = view.findViewById(R.id.rightTv);
         mRightTv.setText(mName);
         return view;
+
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
     }
 
