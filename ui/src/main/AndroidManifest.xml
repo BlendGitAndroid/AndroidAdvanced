@@ -3,9 +3,10 @@
     package="com.blend.ui">
 
     <application>
+        <activity android:name=".material_design.MaterialTestActivity"></activity>
         <activity
             android:name=".material_design.FirstLinearActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar"></activity>
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity android:name=".recyclerview.RecyclerViewActivity" />
         <activity android:name=".animation.LayoutTransitionActivity" />
         <activity android:name=".animator.MyAnimatorActivity" />
