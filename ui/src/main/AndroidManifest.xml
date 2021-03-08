@@ -3,7 +3,10 @@
     package="com.blend.ui">
 
     <application>
-        <activity android:name=".recyclerview.RecyclerViewActivity"></activity>
+        <activity
+            android:name=".material_design.FirstLinearActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar"></activity>
+        <activity android:name=".recyclerview.RecyclerViewActivity" />
         <activity android:name=".animation.LayoutTransitionActivity" />
         <activity android:name=".animator.MyAnimatorActivity" />
         <activity android:name=".animation_view.ViewAnimationActivityActivity" />
@@ -30,6 +33,9 @@
         <activity android:name=".paint_gradient.PaintGradientActivity" />
         <activity android:name=".flowlayout.FlowLayoutActivity" />
         <activity android:name=".UiMainActivity" />
+        <activity
+            android:name=".material_design.FruitActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
     </application>
 
 </manifest>
