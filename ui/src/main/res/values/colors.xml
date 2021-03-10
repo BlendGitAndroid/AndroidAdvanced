@@ -12,6 +12,7 @@
     <color name="green">#00E099</color>
     <color name="pink">#FF3892</color>
     <color name="deep_red">#FF0900</color>
+    <color name="mainWhite">#ffffff</color>
 
     <array name="splash_circle_colors">
         <item>@color/blue</item>

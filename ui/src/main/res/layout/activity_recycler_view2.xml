@@ -6,7 +6,7 @@
     android:orientation="vertical"
     tools:context=".recyclerview.RecyclerViewActivity">
 
-    <android.support.v7.widget.RecyclerView
+    <com.blend.ui.recyclerview.BaseRecyclerView
         android:id="@+id/rv"
         android:layout_width="match_parent"
         android:layout_height="0dp"

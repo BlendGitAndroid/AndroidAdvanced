@@ -3,7 +3,10 @@
     package="com.blend.ui">
 
     <application>
-        <activity android:name=".material_design.MaterialTestActivity"></activity>
+        <activity
+            android:name=".judge_nested_scroll.JudgeActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
+        <activity android:name=".material_design.MaterialTestActivity" />
         <activity
             android:name=".material_design.FirstLinearActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar" />

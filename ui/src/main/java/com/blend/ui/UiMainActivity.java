@@ -15,6 +15,7 @@ import com.blend.ui.custom_recycler.CustomRecyclerViewActivity;
 import com.blend.ui.custom_view.CustomViewActivity;
 import com.blend.ui.flowlayout.FlowLayoutActivity;
 import com.blend.ui.item_touch_event.ItemTouchMainActivity;
+import com.blend.ui.judge_nested_scroll.JudgeActivity;
 import com.blend.ui.material_design.MaterialDesignMainActivity;
 import com.blend.ui.nested_scrolling.NestedScrollingActivity;
 import com.blend.ui.paint_gradient.PaintGradientActivity;
@@ -33,6 +34,7 @@ import com.blend.ui.viewstub.ViewStubActivity;
 
 public class UiMainActivity extends AppCompatActivity {
 
+    private Button judgeBtn;
     private Button flowLayoutBtn;
     private Button paintGradientBtn;
     private Button itemTouchBtn;
@@ -54,6 +56,7 @@ public class UiMainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ui_main);
+        judgeBtn = findViewById(R.id.judgeBtn);
         flowLayoutBtn = findViewById(R.id.flowLayoutBtn);
         paintGradientBtn = findViewById(R.id.paintGradientBtn);
         itemTouchBtn = findViewById(R.id.itemTouchBtn);
@@ -177,6 +180,13 @@ public class UiMainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(UiMainActivity.this, RecyclerViewActivity.class));
+            }
+        });
+
+        judgeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(UiMainActivity.this, JudgeActivity.class));
             }
         });
     }
