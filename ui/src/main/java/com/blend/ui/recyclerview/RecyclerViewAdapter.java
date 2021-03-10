@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.blend.ui.R;
 
@@ -35,7 +36,19 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Custo
     @Override
     public void onBindViewHolder(RecyclerViewAdapter.CustomViewHolder holder, int position) {
         holder.iv.setImageResource(list.get(position));
-        holder.bind(onItemClickListener);
+        // holder.bind(onItemClickListener);
+        holder.iv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Toast.makeText(context, "aaa" + position, Toast.LENGTH_SHORT).show();
+                // list.remove(position);
+                // notifyItemRemoved(position);
+                // notifyItemRangeChanged(position, list.size() - position);
+                Toast.makeText(context, "aaa" + holder.getAdapterPosition(), Toast.LENGTH_SHORT).show();
+                list.remove(holder.getAdapterPosition());
+                notifyItemRemoved(holder.getAdapterPosition());
+            }
+        });
         Log.e(TAG, "onBindViewHolder: " + position);
     }
 

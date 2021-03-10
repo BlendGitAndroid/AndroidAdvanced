@@ -31,7 +31,7 @@ public class RecyclerViewActivity extends AppCompatActivity {
         rv.setLayoutManager(new GridLayoutManager(this, 1));
 
         final List<Integer> list = new ArrayList<>();
-        for (int i = 0; i < 300; i++) {
+        for (int i = 0; i < 5; i++) {
             list.add(iv[0]);
         }
         final RecyclerViewAdapter adapter = new RecyclerViewAdapter(this, list);
@@ -40,12 +40,17 @@ public class RecyclerViewActivity extends AppCompatActivity {
         clickRv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                list.set(2, R.drawable.avatar);
+                list.add(2, R.drawable.avatar);
                 adapter.notifyItemInserted(2);
+                adapter.notifyItemRangeChanged(2, list.size() - 2);
             }
         });
 
-
-        adapter.setOnItemClickListener(position -> Toast.makeText(RecyclerViewActivity.this, "第几个：" + position, Toast.LENGTH_SHORT).show());
+        adapter.setOnItemClickListener(new RecyclerViewAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                Toast.makeText(RecyclerViewActivity.this, "第几个：" + position, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }
