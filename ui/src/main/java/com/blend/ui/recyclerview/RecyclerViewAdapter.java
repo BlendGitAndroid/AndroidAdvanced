@@ -52,6 +52,8 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Custo
         Log.e(TAG, "onBindViewHolder: " + position);
     }
 
+
+
     @Override
     public int getItemCount() {
         return list.size();

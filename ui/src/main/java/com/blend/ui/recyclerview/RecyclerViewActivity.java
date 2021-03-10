@@ -15,7 +15,7 @@ import java.util.List;
 
 public class RecyclerViewActivity extends AppCompatActivity {
 
-    private RecyclerView rv;
+    private BaseRecyclerView rv;
     private Button clickRv;
     private int[] iv = new int[]{
             R.drawable.duo,
@@ -50,6 +50,13 @@ public class RecyclerViewActivity extends AppCompatActivity {
             @Override
             public void onItemClick(int position) {
                 Toast.makeText(RecyclerViewActivity.this, "第几个：" + position, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        rv.setOnItemClickListener(new BaseRecyclerView.OnItemClickListener() {
+            @Override
+            public void onItemClick(View item, int adapterPosition, RecyclerView.Adapter adapter) {
+                Toast.makeText(RecyclerViewActivity.this, "adapterPosition:" + adapterPosition, Toast.LENGTH_SHORT).show();
             }
         });
     }
