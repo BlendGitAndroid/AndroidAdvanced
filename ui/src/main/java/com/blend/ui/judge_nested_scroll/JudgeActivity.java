@@ -24,8 +24,8 @@ public class JudgeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_ui);
-        // mToolbar = findViewById(R.id.toolbar);
-        // setSupportActionBar(mToolbar);
+        mToolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
         mTabLayout = findViewById(R.id.tabLayout);
         mViewPager = findViewById(R.id.viewPager);
         mViewPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager(), getFragments()));

@@ -2,6 +2,7 @@ package com.blend.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -15,6 +16,7 @@ import com.blend.ui.custom_recycler.CustomRecyclerViewActivity;
 import com.blend.ui.custom_view.CustomViewActivity;
 import com.blend.ui.flowlayout.FlowLayoutActivity;
 import com.blend.ui.item_touch_event.ItemTouchMainActivity;
+import com.blend.ui.judge_nested_scroll.CoordinatorActivity;
 import com.blend.ui.judge_nested_scroll.JudgeActivity;
 import com.blend.ui.material_design.MaterialDesignMainActivity;
 import com.blend.ui.nested_scrolling.NestedScrollingActivity;
@@ -34,6 +36,7 @@ import com.blend.ui.viewstub.ViewStubActivity;
 
 public class UiMainActivity extends AppCompatActivity {
 
+    private Button coordinatorBtn;
     private Button judgeBtn;
     private Button flowLayoutBtn;
     private Button paintGradientBtn;
@@ -56,6 +59,7 @@ public class UiMainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ui_main);
+        coordinatorBtn = findViewById(R.id.coordinatorBtn);
         judgeBtn = findViewById(R.id.judgeBtn);
         flowLayoutBtn = findViewById(R.id.flowLayoutBtn);
         paintGradientBtn = findViewById(R.id.paintGradientBtn);
@@ -73,6 +77,13 @@ public class UiMainActivity extends AppCompatActivity {
         customRecyclerViewBtn = findViewById(R.id.customRecyclerViewBtn);
         recyclerViewBtn = findViewById(R.id.recyclerViewBtn);
         viewStub = findViewById(R.id.viewStub);
+
+        coordinatorBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(UiMainActivity.this, CoordinatorActivity.class));
+            }
+        });
 
         flowLayoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override

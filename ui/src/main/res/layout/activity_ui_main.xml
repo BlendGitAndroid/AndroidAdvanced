@@ -11,6 +11,11 @@
         tools:context=".UiMainActivity">
 
         <Button
+            android:id="@+id/coordinatorBtn"
+            style="@style/main_style"
+            android:text="CoordinatorLayout" />
+
+        <Button
             android:id="@+id/judgeBtn"
             style="@style/main_style"
             android:text="Judge" />
