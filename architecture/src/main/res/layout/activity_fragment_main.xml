@@ -3,19 +3,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".fragment.FragmentMainActivity">
 
-    <fragment
-        android:id="@+id/leftFragment"
-        android:name="com.blend.architecture.fragment.LeftFragment"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_weight="1" />
+    <!--    <fragment-->
+    <!--        android:id="@+id/leftFragment"-->
+    <!--        android:name="com.blend.architecture.fragment.LeftFragment"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="match_parent"-->
+    <!--        android:layout_weight="1" />-->
 
     <FrameLayout
         android:id="@+id/rightFragment"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_weight="1" />
+
+    <Button
+        android:id="@+id/fragmentBtn"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="add" />
 
 </LinearLayout>

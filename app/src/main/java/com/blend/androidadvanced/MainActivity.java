@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.blend.ui.UiMainActivity;
+import com.blend.architecture.ArchitectureMainActivity;
 
 public class MainActivity extends Activity {
 
@@ -15,10 +15,10 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         //高级UI
-        startActivity(new Intent(this, UiMainActivity.class));
+        // startActivity(new Intent(this, UiMainActivity.class));
 
         //移动架构
-        // startActivity(new Intent(this, ArchitectureMainActivity.class));
+        startActivity(new Intent(this, ArchitectureMainActivity.class));
 
         //IOC
         // startActivity(new Intent(this, IocMainActivity.class));
