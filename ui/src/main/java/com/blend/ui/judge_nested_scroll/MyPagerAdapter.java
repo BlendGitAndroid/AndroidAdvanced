@@ -31,8 +31,10 @@ class MyPagerAdapter extends FragmentPagerAdapter {
     public CharSequence getPageTitle(int position) {
         if (position == 0) {
             return "文章";
-        } else {
+        } else if (position == 1) {
             return "故事";
+        } else {
+            return "小说";
         }
     }
 }

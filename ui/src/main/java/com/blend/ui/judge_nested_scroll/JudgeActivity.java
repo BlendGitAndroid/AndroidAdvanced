@@ -36,6 +36,7 @@ public class JudgeActivity extends AppCompatActivity {
         List<Fragment> fragments = new ArrayList<>();
         fragments.add(ArticleFragment.getInstance());
         fragments.add(PictureFragment.getInstance());
+        fragments.add(ArticleFragment.getInstance());
         return fragments;
     }
 
