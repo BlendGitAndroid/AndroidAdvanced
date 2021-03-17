@@ -18,14 +18,12 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ArticleV
     private List<ArticleBean> mArticleBeans;
 
     public ArticleAdapter(List<ArticleBean> arrayList) {
-        Log.e(TAG, "ArticleAdapter: ");
         mArticleBeans = arrayList;
     }
 
 
     @Override
     public ArticleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Log.e(TAG, "onCreateViewHolder: ");
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_article_item, parent, false);
         return new ArticleViewHolder(view);
     }
@@ -38,7 +36,6 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ArticleV
 
     @Override
     public int getItemCount() {
-        Log.e(TAG, "getItemCount: " + mArticleBeans.size());
         return mArticleBeans.size();
     }
 

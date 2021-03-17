@@ -130,11 +130,14 @@ public class FragmentMainActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        Log.e(TAG, "onSaveInstanceState: ");
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
+        Log.e(TAG, "onRestoreInstanceState: ");
+
     }
 
     @Override
