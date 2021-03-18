@@ -1,7 +1,6 @@
 package com.blend.ui.judge_nested_scroll;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +31,19 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ArticleV
     public void onBindViewHolder(ArticleViewHolder holder, int position) {
         ArticleBean articleBean = mArticleBeans.get(position);
         holder.mTextView.setText(articleBean.getContent());
+    }
+
+    @Override
+    public void onBindViewHolder(ArticleViewHolder holder, int position, List<Object> payloads) {
+        super.onBindViewHolder(holder, position, payloads);
+        if (payloads.isEmpty()) {
+            onBindViewHolder(holder, position);
+        } else {
+            String s = payloads.get(0).toString();
+            if ("textChange".equalsIgnoreCase(s)) {
+                holder.mTextView.setText(s);
+            }
+        }
     }
 
     @Override

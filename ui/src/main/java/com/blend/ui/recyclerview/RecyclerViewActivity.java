@@ -31,7 +31,7 @@ public class RecyclerViewActivity extends AppCompatActivity {
         rv.setLayoutManager(new GridLayoutManager(this, 1));
 
         final List<Integer> list = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 50; i++) {
             list.add(iv[0]);
         }
         final RecyclerViewAdapter adapter = new RecyclerViewAdapter(this, list);

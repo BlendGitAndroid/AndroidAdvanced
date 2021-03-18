@@ -29,7 +29,7 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Custo
     @Override
     public CustomViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.item_rv, parent, false);
-        Log.e(TAG, "onCreateViewHolder: " + getItemCount());
+        Log.e(TAG, "onCreateViewHolder: ");
         return new CustomViewHolder(view);
     }
 
@@ -51,7 +51,6 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Custo
         });
         Log.e(TAG, "onBindViewHolder: " + position);
     }
-
 
 
     @Override
