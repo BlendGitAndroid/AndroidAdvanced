@@ -67,4 +67,11 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="testAttrsStyle">
+        <item name="discrollve_alpha">false</item>
+    </style>
+
+    <style name="testAttrsTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="discrollve_alpha">false</item>
+    </style>
 </resources>
