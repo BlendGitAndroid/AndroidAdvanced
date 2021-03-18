@@ -1,11 +1,15 @@
 package com.blend.algorithm.reflect;
 
-class Book {
+import java.util.List;
+
+class Book<T> {
 
     private static final String TAG = "Book";
 
     private String name;
     private String author;
+    private List<String> mStringList;
+    private T t;
 
     public Book() {
     }

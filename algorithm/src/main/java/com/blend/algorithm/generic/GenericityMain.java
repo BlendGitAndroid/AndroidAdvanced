@@ -58,6 +58,7 @@ class GenericityMain {
     public static void main(String[] args) {
         //未传入泛型实参，需要指定具体类型
         GenericInterfaceImpl1<Integer> impl1 = new GenericInterfaceImpl1<Integer>();
+        impl1.setData(5);
         System.out.println(impl1.next(5));
 
         //但是，对于未传入泛型实参的，调用的时候就不传入，出来的结果也是5，但是如果输出的类型强制转换为String，
@@ -116,7 +117,7 @@ class GenericityMain {
 
     }
 
-    //表示传递给方法的参数，必须是X的子类（包括X本身）
+    //表示传递给方法的参数，必须是X的子类（包括X本身），这个就是协变
     private static void printExtends(GenericInterfaceImpl1<? extends Apple> apple) {
         Apple data = apple.getData();
         //但是下面的三个方法设置参数是不允许的，因为程序不知道你setData的值有多小，只知道你传入的是Apple的子类
@@ -126,7 +127,7 @@ class GenericityMain {
         // apple.setData(new HongFuShi());
     }
 
-    //表示传递给方法的参数，必须是X的父类（包括X本身）
+    //表示传递给方法的参数，必须是X的父类（包括X本身），这个就是逆变
     private static void printSuper(GenericInterfaceImpl1<? super Apple> apple) {
         Object data = apple.getData();
         // apple.setData(new Fruit());
@@ -139,10 +140,12 @@ class GenericityMain {
     public static void setList(List<?> list) {
         // list.add("Blend"); 但是这个是不能添加的
         // list.add(1);
+        Object o = list.get(1);
+
     }
 
     public static void use() {
-        GenericInterfaceImpl1<Fruit> furit = new GenericInterfaceImpl1<>();
+        GenericInterfaceImpl1<Fruit> furit = new GenericInterfaceImpl1<Fruit>();
         GenericInterfaceImpl1<Apple> apple = new GenericInterfaceImpl1<>();
         print(furit);
         // print(apple);//这里是编译不了的，因为GenericInterfaceImpl1<Fruit> 和 GenericInterfaceImpl1<Apple>没有关系

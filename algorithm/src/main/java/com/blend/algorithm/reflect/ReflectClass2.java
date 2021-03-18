@@ -4,6 +4,9 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.List;
 
 /**
  * 反射的作用：
@@ -58,9 +61,29 @@ class ReflectClass2 {
             /*方法相关*/
             testMethod();
 
+            System.out.println("-------------------------");
+
+            /*泛型反射*/
+            testGeneric();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private static void testGeneric() throws NoSuchFieldException {
+        Class<Book> bookClass = Book.class;
+        Field mStringList = bookClass.getDeclaredField("mStringList");
+        System.out.println(mStringList.getType());
+        if (List.class.isAssignableFrom(mStringList.getType())) {
+            Type genericType = mStringList.getGenericType();
+            System.out.println(genericType);
+            if (genericType instanceof ParameterizedType) {
+                Type actualTypeArgument = ((ParameterizedType) genericType).getActualTypeArguments()[0];
+                System.out.println(actualTypeArgument);
+            }
+        }
+
     }
 
     private static void testMethod() throws ClassNotFoundException, NoSuchMethodException,
