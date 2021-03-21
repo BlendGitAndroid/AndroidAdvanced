@@ -101,6 +101,12 @@ public class EventBusMainActivity extends AppCompatActivity implements View.OnCl
         tv_desc.setText(msg.message);
     }
 
+    //发送Object事件
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMainEventObject(Object msg) {
+        Log.e(TAG, msg.toString());
+    }
+
     //后台线程
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onBackgroundEventBus(BackgroundMessage msg) {
