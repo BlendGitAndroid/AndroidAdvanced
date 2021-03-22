@@ -71,19 +71,35 @@ class ReflectClass2 {
         }
     }
 
+    //getType和getGenericType在不是泛型的时候返回都是一样的
+    //但是如果是有泛型的情况下，会根据是否有getGenericSignature来判断
+    //需要注意区分的是：获取泛型属性和泛型类是不同的，泛型属性直接通过Field#getGenericType()获取
+    //获取泛型类，是需要通过自定义TypeToken，通过getGenericSuperclass获取
     private static void testGeneric() throws NoSuchFieldException {
         Class<Book> bookClass = Book.class;
         Field mStringList = bookClass.getDeclaredField("mStringList");
-        System.out.println(mStringList.getType());
-        if (List.class.isAssignableFrom(mStringList.getType())) {
+        //注意区分这里的Field#getType，返回到是Class对象
+        Class<?> classType = mStringList.getType();
+        System.out.println(classType);
+        if (List.class.isAssignableFrom(classType)) {
+            //这里Field#getGenericType返回的是Type对象
             Type genericType = mStringList.getGenericType();
             System.out.println(genericType);
+            //如果这个是参数化类型
             if (genericType instanceof ParameterizedType) {
                 Type actualTypeArgument = ((ParameterizedType) genericType).getActualTypeArguments()[0];
+                Type getRawType = ((ParameterizedType) genericType).getRawType();
+                Type getOwnerType = ((ParameterizedType) genericType).getOwnerType();
                 System.out.println(actualTypeArgument);
+                System.out.println(getRawType);
+                System.out.println(getOwnerType);
             }
         }
 
+        Type type = new MyTypeToken<List<String>>() {
+        }.getType();
+
+        System.out.println(type);
     }
 
     private static void testMethod() throws ClassNotFoundException, NoSuchMethodException,
@@ -168,4 +184,22 @@ class ReflectClass2 {
         System.out.println(classLoader);
     }
 
+    public static abstract class MyTypeToken<T> {
+        private final Type type;
+
+        //因为这里是抽象类，所以使用的是getGenericSuperclass
+        protected MyTypeToken() {
+            Type genericSuperclass = getClass().getGenericSuperclass();
+            if (genericSuperclass instanceof Class) {
+                throw new RuntimeException("Missing type parameter.");
+            }
+            ParameterizedType parameterizedType = (ParameterizedType) genericSuperclass;
+            Type[] typeArguments = parameterizedType.getActualTypeArguments();
+            type = typeArguments[0];
+        }
+
+        public Type getType() {
+            return type;
+        }
+    }
 }
