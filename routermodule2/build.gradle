@@ -57,6 +57,9 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
+    //每一个module都要引用router编译
     annotationProcessor project(':routercompiler')
+
+    //服务调用方只依赖于服务提供商的暴露组件，这里是依赖于routermodule1
     implementation project(':routerbase')
 }

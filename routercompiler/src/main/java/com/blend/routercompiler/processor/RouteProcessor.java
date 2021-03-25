@@ -40,7 +40,7 @@ import javax.lang.model.util.Types;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
 /**
- * 编译器注解的核心原理依赖APT（Annotation Processing Tools）实现，著名的ButterKnife、Dagger、Retrofit等开源库都是基于APT。
+ * 编译器注解的核心原理依赖APT（Annotation Processing Tools）实现，著名的ButterKnife、Dagger、等开源库都是基于APT。
  * 基本原理是在某些代码元素上（如类型、函数、字段）添加注解，在编译时编译器会检查AbstractProcessor的子类，并且调用该类型的process
  * 函数，将添加了注解的所有元素都传递到process函数中，使得开发人员可以在编译期进行相应的处理，例如根据注解生成新的java类，在编译时生
  * 成一些重复性操作的Java代码，或者不需要程序员去关心的Java代码等。
@@ -123,7 +123,8 @@ public class RouteProcessor extends AbstractProcessor {
         typeUtils = processingEnvironment.getTypeUtils();   //返回实现Types接口的对象，用于处理类型的工具类。
         filerUtils = processingEnvironment.getFiler();  //返回实现Filer接口的对象，用于创建文件、类和辅助文件。
         //参数是模块名 为了防止多模块/组件化开发的时候 生成相同的 xx$$ROOT$$文件
-        Map<String, String> options = processingEnvironment.getOptions();   //返回指定的额外参数选项。
+        //返回指定的额外参数选项，在@SupportedOptions注解中有赋值，这个值取的是build.gradle中配置的，一般是module的名字
+        Map<String, String> options = processingEnvironment.getOptions();
         if (!Utils.isEmpty(options)) {
             moduleName = options.get(Consts.ARGUMENTS_NAME);
         }
@@ -164,6 +165,7 @@ public class RouteProcessor extends AbstractProcessor {
 
     private void parseRoutes(Set<? extends Element> routeElements) throws IOException {
         //支持配置路由类的类型
+        //这一步主要是判断注解上的是activity和service
         TypeElement activity = elementUtils.getTypeElement(Consts.ACTIVITY);
         //节点自描述 Mirror，表示Java编程语言中的类型。这些类型包括基本类型、引用类型、数组类型、类型变量和null类型等等
         TypeMirror type_Activity = activity.asType();
@@ -196,6 +198,7 @@ public class RouteProcessor extends AbstractProcessor {
         }
 
         //生成类需要实现的接口
+        //下面是用来判断是否实现了group或者root接口
         TypeElement iRouteGroup = elementUtils.getTypeElement(Consts.IROUTE_GROUP);
         log.i("---------" + iRouteGroup.getSimpleName());
         TypeElement iRouteRoot = elementUtils.getTypeElement(Consts.IROUTE_ROOT);
@@ -212,6 +215,7 @@ public class RouteProcessor extends AbstractProcessor {
 
     }
 
+    //这里的iRouteGroup就是一个接口
     private void generatedGroup(TypeElement iRouteGroup) throws IOException {
         //参数  Map<String,RouteMeta>
         ParameterizedTypeName atlas = ParameterizedTypeName.get(
