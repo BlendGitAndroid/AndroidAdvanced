@@ -17,6 +17,7 @@ class DiskClassLoader extends ClassLoader {
         this.path = path;
     }
 
+    //重写findClass方法，并且defineClass中有安全性校验，类名以"java"开头的，都不能由自定义类加载器加载，大部分都是以引导类加载器加载的
     @Override
     protected Class<?> findClass(String name) throws ClassNotFoundException {
         Class clazz = null;
@@ -27,6 +28,26 @@ class DiskClassLoader extends ClassLoader {
             clazz = defineClass(name, classData, 0, classData.length);
         }
         return clazz;
+    }
+
+    /**
+     * 打破双亲委派机制
+     */
+    @Override
+    protected Class<?> loadClass(String s, boolean b) throws ClassNotFoundException {
+        Class<?> c = findLoadedClass(s);
+        if (c == null) {
+            if ("com.blend.Study".equalsIgnoreCase(s)) {
+                c = findClass(s);
+            } else {
+                //交由父加载器去加载
+                c = getParent().loadClass(s);
+            }
+        }
+        if (b) {
+            resolveClass(c);
+        }
+        return c;
     }
 
     private byte[] loadClassData(String name) {
@@ -94,5 +115,8 @@ class DiskClassLoader extends ClassLoader {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
+
+        //这个获取到的就是Application ClassLoader
+        ClassLoader systemClassLoader = ClassLoader.getSystemClassLoader();
     }
 }
