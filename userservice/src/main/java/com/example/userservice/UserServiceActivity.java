@@ -29,7 +29,12 @@ public class UserServiceActivity extends Activity {
     private Button mButton;
     private RecyclerView mRecyclerView;
 
-    private Handler mHandler = new Handler() {
+    private Handler mHandler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+            return false;
+        }
+    }) {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);

@@ -36,21 +36,25 @@ public class PluginManager {
     }
 
     public void loadPath(Context context) {
+        //获取私有目录的apk地址，这就是插件的地址
         File filesDir = context.getDir("plugin", Context.MODE_PRIVATE);
         String name = "plugin.apk";
         String path = new File(filesDir, name).getAbsolutePath();
 
         PackageManager packageManager = context.getPackageManager();
+        //获取的是插件的packageInfo信息
         packageInfo = packageManager.getPackageArchiveInfo(path, PackageManager.GET_ACTIVITIES);
 
-        //activity
+        //activity，创建自定义类加载器，用于架子Dex文件，保存dex的私有地址
         File dex = context.getDir("dex", Context.MODE_PRIVATE);
         dexClassLoader = new DexClassLoader(path, dex.getAbsolutePath(), null, context.getClassLoader());
 
         //resource
         try {
+            //创建AssetManager和Context，用于加载插件的资源
             manager = AssetManager.class.newInstance();
             Method addAssetPath = manager.getClass().getMethod("addAssetPath", String.class);
+            //根据传入的地址，获取AssetManager的信息
             addAssetPath.invoke(manager, path);
             resources = new Resources(manager,
                     context.getResources().getDisplayMetrics(),

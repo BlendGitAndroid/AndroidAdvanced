@@ -30,10 +30,10 @@ public class MyApplication extends Application {
 
         initGreenDao();
 
-        plugin();
+        hook();
     }
 
-    private void plugin() {
+    private void hook() {
         try {
             DnAMSCheckEngine.mHookAMS(this);
         } catch (ClassNotFoundException e) {

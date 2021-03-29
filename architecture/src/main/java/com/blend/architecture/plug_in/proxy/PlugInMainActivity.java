@@ -29,8 +29,8 @@ import java.io.InputStream;
  * 实现插件化的方式：
  * 1.插桩式（接口回调）
  * 2.Hook技术
- *
- *
+ * <p>
+ * <p>
  * 插桩式实现方式：
  * 1.设计插件的标准接口。创建一个lib module,创建一个接口,主要用来传递给插件Context和管理插件的生命周期，如pluginstand module。
  * 2.创建一个baseActivity和baseService实现特定一个的接口，接收context，并重写跟context有关的方法，插件中的Activity和service都继承各自的基类。
@@ -39,7 +39,14 @@ import java.io.InputStream;
  * 4.在application中提前加载插件，并将插件复制到app的私有目录。
  * 5.从宿主跳转到插件的activity时,先跳转到插桩的activity中并携带上实际要调转的插件的activity类。在插桩的activity中解析实际要调转的activity并反
  * 射获取该类对象强转为定义的接口，并将activity的生命周期在对应的方法中调用传递给插件。
- *
+ * <p>
+ * 插件化有三种实现方式：
+ * HOOK：hook IActivityManager和hook Instrumentation，这两个不同的是前者是由动态代理实现的，因为前者是接口是可以通过动态代理来实现的，
+ * 后者是静态代理的。这种方式的Activity是有生命周期的，因为mToken机制，并且是有context的，可以在插件APP中生成AssetManager和Resource。
+ * 还有一种方式是通过接口的方式：这种方式是没有context的，需要通过接口传递生命周期和context。在插件的Activity中的context就是ProxyActivity
+ * 的Context。然后重写类加载器，重写AssetManager，重写Resources类进行插件资源的回调，重写生命周期进行回调。在插件类中调用context的一些方法
+ * 都是回调到宿主的Activity，其实就是两边进行相互回调。宿主Activity回调自定义接口到插件Activity，插件Activity回调Context到宿主实现，是有一定的局限性。
+ * 最后一种是反射，因为性能原因，没有框架使用。
  */
 public class PlugInMainActivity extends AppCompatActivity {
 
@@ -66,7 +73,9 @@ public class PlugInMainActivity extends AppCompatActivity {
         loadPlugin();
     }
 
+    //将apk加载到私有目录
     private void loadPlugin() {
+        ///data/user/0/com.blend.androidadvanced/app_plugin
         File filesDir = this.getDir("plugin", Context.MODE_PRIVATE);
         String name = "plugin.apk";
         String filePath = new File(filesDir, name).getAbsolutePath();
@@ -106,6 +115,7 @@ public class PlugInMainActivity extends AppCompatActivity {
 
     public void click(View view) {
         Intent intent = new Intent(this, ProxyActivity.class);
+        //获取插件APK的第一个Activity的类名
         intent.putExtra("className", PluginManager.getInstance().getPackageInfo().activities[0].name);
         startActivity(intent);
     }

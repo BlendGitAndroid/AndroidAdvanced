@@ -25,10 +25,11 @@ public class ProxyActivity extends Activity {
         className = getIntent().getStringExtra("className");
 
         try {
-            //TaoMainActivity
+            //TaoMainActivity，拿到类名反射获取
             Class<?> aClass = getClassLoader().loadClass(className);
             Constructor constructor = aClass.getConstructor(new Class[]{});
             Object in = constructor.newInstance(new Object[]{});
+            //通过接口进行回调
             payInterfaceActivity = (PayInterfaceActivity) in;
             payInterfaceActivity.attach(this);
 
