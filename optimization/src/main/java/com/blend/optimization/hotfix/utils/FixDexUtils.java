@@ -21,7 +21,10 @@ public class FixDexUtils {
         if (context == null)
             return;
         //dex文件目录
+        //data/user/0/com.blend.androidadvanced/app_odex
+        //拿到hotfix的dex文件
         File fileDir = context.getDir("odex", Context.MODE_PRIVATE);
+        //依次取出dex下面的文件
         File[] files = fileDir.listFiles();
         for (File file : files) {
             if (file.getName().endsWith(".dex") && !"classes.dex".equals(file.getName())) {
@@ -32,6 +35,7 @@ public class FixDexUtils {
         //创建类加载器
         createDexClassLoader(context, fileDir);
     }
+
     /**
      * 创建类加载器
      *
@@ -40,6 +44,7 @@ public class FixDexUtils {
      */
     private static void createDexClassLoader(Context context, File fileDir) {
         String optimizedDirectory = fileDir.getAbsolutePath() + File.separator + "opt_dex";
+        //创建出优化后的dex目录
         File fOpt = new File(optimizedDirectory);
         if (!fOpt.exists()) {
             fOpt.mkdirs();
