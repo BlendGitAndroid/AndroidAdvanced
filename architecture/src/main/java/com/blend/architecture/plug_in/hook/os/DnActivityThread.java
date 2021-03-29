@@ -8,7 +8,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
-
 import com.blend.architecture.plug_in.hook.LoginActivity;
 
 import java.lang.reflect.Field;
@@ -18,7 +17,7 @@ import static com.blend.architecture.plug_in.hook.os.Parameter.EXECUTE_TRANSACTI
 import static com.blend.architecture.plug_in.hook.os.Parameter.TARGET_INTENT;
 
 /**
- * 即将要加载的时候，需要把ProxyActivi 给 换回来，换成目标LoginActivity，我们也称为【还原操作】
+ * 即将要加载的时候，需要把ProxyActivity 给换回来，换成目标LoginActivity，我们也称为【还原操作】
  */
 public class DnActivityThread {
     private Context context;
@@ -48,12 +47,14 @@ public class DnActivityThread {
      * TODO 给 26_27_28 系统版本 做【还原操作】的
      */
     private final void do_26_27_28_mHRestore() throws Exception {
+        //这一步是获取到mH对象
         Class mActivityThreadClass = Class.forName("android.app.ActivityThread");
         Object mActivityThread = mActivityThreadClass.getMethod("currentActivityThread").invoke(null);
         Field mHField = mActivityThreadClass.getDeclaredField("mH");
         mHField.setAccessible(true);
         Object mH = mHField.get(mActivityThread);
 
+        //获取Handler的Callback回调，利用Hook技术设置CallBack，这里是Handler机制
         Field mCallbackField = Handler.class.getDeclaredField("mCallback");
         mCallbackField.setAccessible(true);
         // 把系统中的Handler.Callback实现 替换成 我们自己写的Custom_26_27_28_Callback
@@ -104,7 +105,7 @@ public class DnActivityThread {
                             // 登录  还原  把原有的意图
                             targetIntent.setComponent(targetIntent.getComponent());
                         } else {
-
+                            //跳转到登录界面，并且记录是从哪一个Class跳转过来的
                             ComponentName componentName = new ComponentName(context, LoginActivity.class);
                             targetIntent.putExtra("extraIntent", targetIntent.getComponent().getClassName());
                             targetIntent.setComponent(componentName);

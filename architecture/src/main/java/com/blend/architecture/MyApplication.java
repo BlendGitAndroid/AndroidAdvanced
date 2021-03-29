@@ -48,6 +48,7 @@ public class MyApplication extends Application {
             e.printStackTrace();
         }
 
+        //这里将ActivityThread作为HOOK点
         try {
             DnActivityThread dnActivityThread = new DnActivityThread(this);
             dnActivityThread.mActivityThreadmHAction(this);

@@ -23,13 +23,17 @@ import java.lang.reflect.Method;
  * 的事件方式不同，Hook 还分为不同的种类，比如消息 Hook、API Hook 等。
  * <p>
  * HOOK技术实现途径：
- * 第一 :找到hook点
- * 第二 :将hook方法放到系统之外执行
+ * 第一 :找到hook点，hook点一般选取静态变量和单例来实现，因为他们一般不容易改变，一般是一个对象。
+ * 第二 :将hook方法放到系统之外执行。
+ * <p>
+ * Java中的HOOK主要通过反射和代理来实现，用于在SDK开发环境中修改Java代码。
  * <p>
  * 本例子是Hook：
  * 1.API Hook，Android的各种监听。
  * 2.AMS服务实现大型登陆架构，与AOP进行比较。
  * 网址：https://www.jianshu.com/p/4f6d20076922
+ * <p>
+ * 被劫持的对象叫做HOOK点，使用代理对象来代替HOOK点，实现自己想做的事情。
  */
 
 public class HookMainActivity extends AppCompatActivity {
@@ -55,7 +59,12 @@ public class HookMainActivity extends AppCompatActivity {
 
 
     /**
-     * 这个代码要放在设置Click事件之后
+     * 这个代码要放在设置Click事件之后，这个代码就是使用反射和动态代理实现的
+     * setOnClickListener，设置的其实在View的内部类ListenerInfo中的mOnClickListener字段，Hook的时候
+     * 先使用反射拿到该字段，然后使用代码创建一个View.OnClickListener类，使用代理模式，在onClick的调用前后
+     * 加上自己需要的逻辑。最后将mOnClickListener设置成自己的Click类，那么Click回调就会回调自己的类。
+     * 偷梁换柱。
+     * 其实这也是AOP的一种思想。
      */
     private void hookOnClickListener(View view) {
         try {
