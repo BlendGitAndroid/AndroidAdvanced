@@ -60,7 +60,13 @@ import java.util.Set;
  *
  * <p>
  * JavaPoet:是一个Java API用于生成Java源文件。能用于自动生成一些模板化的java文件，提高工作效率，简化流程。
- *
+ * <p>
+ * Arouter也是使用显示Intent跳转的，Intent里面有一个Component属性，主要有两个属性，一个是要启动组件的包名packageName，另外一个
+ * 是要启动组件的全类名。
+ * Intent intent = new Intent();
+ * intent.setClassName("包名", "全类名");
+ * startActivity(intent);
+ * 一般Intent是启动本应用的类，因为本应用的类的包名都是同一个，但是如果知道了其他应用的包名和全名类，也是可以用Intent启动的。
  *
  * <p>
  * 如果不使用JavaPoet,还可以使用JavaFileObject，JavaFileObject是java文件对象，可以直接创建，通过流的形式，对文件进行编写。
