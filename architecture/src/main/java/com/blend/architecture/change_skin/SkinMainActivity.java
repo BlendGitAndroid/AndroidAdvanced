@@ -1,10 +1,15 @@
 package com.blend.architecture.change_skin;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.LayoutInflaterCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.AttributeSet;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 
 import com.blend.architecture.R;
@@ -52,14 +57,34 @@ import java.util.List;
  * 获取到需要换肤的View的name(colorPrimaryDark)和type(type)，通过Resources.getIdentifier()拿到皮肤包中的相应View的属性Id（R.color.colorPrimaryDark的Id），
  * 进行换肤设置。最后将这个新打开的Activity添加为观察者。
  * 3.点击换肤时，也就是被观察者改变，通过观察者模式，对每一个观察者之前采集的View进行换肤。
- *
- *
+ * <p>
+ * 通过对网易云和微信的分析，发现微信能够切换模式，有深色和浅色模式，切换后APP必须重启才可以，这种应该就是切换使用主题Theme，
+ * 使用相同的资源id，但在不同的Theme下边自定义不同的资源。网易云不会重启，就是动态换肤框架。
  */
 public class SkinMainActivity extends AppCompatActivity {
 
+    private static final String TAG = "SkinMainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        //在onCreate方法前面提前设置Factory2，这样就不会加载AppCompatDelegate中的onCreateView方法
+        LayoutInflaterCompat.setFactory2(LayoutInflater.from(this), new LayoutInflater.Factory2() {
+            @Override
+            public View onCreateView(View parent, String name, Context context, AttributeSet attrs) {
+                Log.e(TAG, "parent:" + parent + ",name = " + name);
+                int n = attrs.getAttributeCount();
+                for (int i = 0; i < n; i++) {
+                    Log.e(TAG, attrs.getAttributeName(i) + " , " + attrs.getAttributeValue(i));
+                }
+                return null;
+            }
+
+            @Override
+            public View onCreateView(String name, Context context, AttributeSet attrs) {
+                return null;
+            }
+        });
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_skin_main);
 
