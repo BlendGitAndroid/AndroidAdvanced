@@ -23,7 +23,7 @@ class GcRoots {
 
     //本地变量表中引用的对象
     public void stack() {
-        Object ostack = new Object();    //本地变量表的对象，虚拟机栈中本地变量表中的对象
+        Object ostack = new Object();    //本地变量表的对象，虚拟机栈中局部变量表中的对象
         Object object9 = ostack;
         //以上object9 在方法没有(运行完)出栈前都是可达的
     }
