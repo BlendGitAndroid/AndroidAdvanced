@@ -51,7 +51,8 @@ public class SkinResources {
         isDefaultSkin = TextUtils.isEmpty(pkgName) || resources == null;
     }
 
-
+    //先解析出资源ID
+    //通过给定的资源名称，资源类型，包名，返回资源ID
     public int getIdentifier(int resId) {
         if (isDefaultSkin) {
             return resId;

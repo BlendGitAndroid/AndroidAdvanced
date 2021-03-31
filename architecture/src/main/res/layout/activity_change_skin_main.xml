@@ -12,6 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="skinSelect"
+        android:background="@drawable/t_window_bg"
         android:text="个性换肤"
         tools:ignore="MissingPrefix" />
 
