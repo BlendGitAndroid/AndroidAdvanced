@@ -27,7 +27,7 @@ import io.reactivex.schedulers.Schedulers;
 
 
 /**
- * 设计模式：装饰模式，观察者模式，责任链模式，简单工厂模式
+ * 设计模式：装饰模式，观察者模式，责任链模式，简单工厂模式(简单工程模式用于创建线程池Schedulers.newThread())
  * <p>
  *
  * <p>
@@ -70,8 +70,8 @@ import io.reactivex.schedulers.Schedulers;
  *
  * <p>
  * 背压：当上下游在不同的线程中，通过Observable发射，处理，响应数据流时，如果上游发射数据的速度快于下游接收处理数据的速度，这样对于那些没来得及处理的数
- * 据就会造成积压，这些数据既不会丢失，也不会被垃圾回收机制回收，而是存放在一个异步缓存池中，如果缓存池中的数据一直得不到处理，越积越多，最后就会造成内存
- * 溢出，这便是响应式编程中的背压（BackPressure）问题。
+ * 据就会造成积压，这些数据既不会丢失，也不会被垃圾回收机制回收，而是存放在一个异步缓存池中SpscLinkedArrayQueue，如果缓存池中的数据一直得不到处理，越
+ * 积越多，最后就会造成内存溢出，这便是响应式编程中的背压（BackPressure）问题。
  * 解决思路：响应式拉取，响应式拉取是观察者主动去被观察者那里拉取事件，而被观察者则是被动等待通知再发射事件。
  * 策略：默认的缓冲池大小为BUFFER_SIZE = 128
  * MISSING：在此策略下，通过Create方法创建的Flowable相当于没有指定背压策略，不会对通过onNext发射的数据做缓存或丢弃处理，当缓存池满了，提示缓存区满，
@@ -90,6 +90,19 @@ import io.reactivex.schedulers.Schedulers;
  * 如果在执行完等待队列3/4的事件之后，上游的事件还没发送结束，下游即会再次缓存上游发送过来的容量的3/4个事件。
  * 最后一个事件是怎么发出的？上游发送的事件，每次都会存贮在AtomicReference变量中，下游再去上游请求事件时，如果上游的事件已经发送结束，则将最新的
  * 这个值返回给下游。
+ * <p>
+ * 第一次从上到下只是依次执行构造器包装成被观察者，当调用subscribe方法的时候，会反向从下到上依次包装观察者。
+ * 当遇到subscribeOn进行线程切换的时候，线程会立即切换，并之后的代码都是运行在这个切换的线程里的。因为之后的subscribe方法是运行在这个切换的线程
+ * 中的，是在这个切换线程的run方法中调用subscribe方法的。这也是为什么subscribeOn只会第一次生效的原因(其实这个说法不合理，因为doOnSubscribe里
+ * 面的会立即执行，这也是为什么onSubscribe运行在调用它的线程中的原因)，因为subscribeOn之后就会立即进行线程切换。
+ * 当遇到ObserverOn的时候，这个时候只是将observerOn中的对象包装成了观察者，直接调用了subscribe方法进行向上执行了，当代码再依次从上到下执行
+ * 的时候，会调用这个观察者的onNext方法，在onNext方法中进行了线程的切换，执行的是run方法，在run方法中调用下一个观察者的onNext方法。
+ * 这也是为什么ObServerOn之后的代码会运行在ObserverOn之后的线程中。
+ * 代码先是从上到下包装被观察者，再从下到上包装观察者，最后调用观察者的onNext方法再依次从上到下执行观察者的onNext方法。
+ * <p>
+ * Rxjava中的线程其实是利用newScheduledThreadPool生成的核心线程数是1的线程池。AndroidSchedulers.mainThread()其实是利用Handler原理，调用
+ * Handler的MainLooper进行的线程切换。
+ * 背压问题主要是不同的线程中。
  */
 public class RxJavaMainActivity extends AppCompatActivity {
 
@@ -112,7 +125,7 @@ public class RxJavaMainActivity extends AppCompatActivity {
 
         subscribeOnTest();
 
-        doOnSubscribe();
+        observeOnTest();
     }
 
     /*
@@ -124,7 +137,7 @@ public class RxJavaMainActivity extends AppCompatActivity {
     出现上面这种日志的情况是：从下到上，第一个subscribeOn之后由于线程切换，又会在onSubscribe之前执行doOnSubscribe，所以doOnSubscribe
     运行在这个subscribeOn的线程
      */
-    private void doOnSubscribe() {
+    private void observeOnTest() {
         io.reactivex.Observable<Integer> observable = io.reactivex.Observable.create(new io.reactivex.ObservableOnSubscribe<Integer>() {
             @Override
             public void subscribe(io.reactivex.ObservableEmitter<Integer> observableEmitter) throws Exception {
@@ -133,7 +146,11 @@ public class RxJavaMainActivity extends AppCompatActivity {
                 observableEmitter.onComplete();
             }
         });
-        observable.subscribeOn(Schedulers.newThread())
+
+        //Map的执行流程就是，map返回一个被观察者，调用subscribe后生成一个观察者，当代码再次从上到下执行的时候，执行到这个观察者的onNext方法中，
+        // 在onNext方法中进行apply的切换，然后再调用下一次观察者的next方法将结果返回下去。其实和observerOn线程切换原理一样。
+        observable.observeOn(AndroidSchedulers.mainThread())    //这个方法只有在第二次向下执行的时候才有用
+                .subscribeOn(Schedulers.newThread())
                 .observeOn(Schedulers.io())
                 .map(new io.reactivex.functions.Function<Integer, Integer>() {
                     @Override
@@ -215,12 +232,14 @@ public class RxJavaMainActivity extends AppCompatActivity {
                 });
     }
 
+    //这是一种实现方式，Observable是一个抽象类，抽象类调用他的static的create方法，返回这个抽象类真正的实现
     private void create() {
         io.reactivex.Observable.create(new io.reactivex.ObservableOnSubscribe<String>() {
 
             @Override
             public void subscribe(io.reactivex.ObservableEmitter<String> emitter) throws Exception {
-
+                emitter.onNext("aa");
+                emitter.onComplete();
             }
         }).subscribe(new io.reactivex.Observer<String>() {
             @Override
@@ -246,12 +265,13 @@ public class RxJavaMainActivity extends AppCompatActivity {
     }
 
     private void just() {
-        io.reactivex.Observable.just("BlendAndroid")   //添加被观察者
+        io.reactivex.Observable.just("BlendAndroid")   //生成被观察者
                 .subscribeOn(Schedulers.io())   //添加被观察者   线程切换，runnable层层相调从主线程切换到io线程
                 .observeOn(AndroidSchedulers.mainThread())  //添加被观察者    利用Handler切换回主线程
                 .subscribe(new io.reactivex.Observer<String>() { //类似于接口回调，再反向注册成观察者
                     @Override
                     public void onSubscribe(Disposable d) {
+                        Log.e(TAG, "onSubscribe: " + d.toString());
                         //订阅观察者在哪个线程，这个方法就是在哪个线程，也就是当前线程
                         //因为在这个方法的整个回调过程中，没有涉及到线程的切换
                     }
@@ -273,7 +293,7 @@ public class RxJavaMainActivity extends AppCompatActivity {
                 });
     }
 
-
+    //背压，响应式拉去
     private void flowable() {
         Flowable.create(new FlowableOnSubscribe<Integer>() {
             @Override
