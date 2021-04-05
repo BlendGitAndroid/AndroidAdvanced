@@ -10,9 +10,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.blend.androidadvanced.GlideApp;
+import com.blend.androidadvanced.MyAppGlideModule;
 import com.blend.architecture.R;
 import com.blend.architecture.glide.glide.Glide;
 import com.blend.architecture.glide.glide.request.RequestOptions;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.io.File;
 
@@ -24,7 +27,7 @@ import java.io.File;
  * 3.Glide中图片复用池是怎么设计的？
  * 4.Glide中内存溢出的处理有哪些？内存占用问题？内存优化问题？
  * 5.加载一张高像素的图片（1920*1080），其内部是如何处理的，图片是怎么压缩的；缩略图是怎么处理的。
- * 6.Glide中用的到设计模式？加载不同的资源：策略模式；单列模式，工厂方法模式，建造者模式，策略模式。
+ * 6.Glide中用的到设计模式？加载不同的资源：策略模式；单列模式，工厂方法模式，建造者模式，策略模式，代理模式，状态模式。
  * 7.叫你设计一款图片加载库，你会考虑哪些？缓存、复用池、多种图片加载方式、性能。
  * <p>
  * Glide源码解读：
@@ -174,8 +177,21 @@ import java.io.File;
  * 3)DATA：只缓存原始图片。
  * 4)RESOURCE：只缓存转换过后的图片。
  * 5)AUTOMATIC：默认策略，它会尝试对本地和远程图片使用最佳的策略。如果是远程图片，则只缓存原始图片；如果是本地图片，那么只缓存转换过后的图片。
- *
+ * <p>
  * 六.数据来源。该级缓存只缓存原始图片。
+ * <p>
+ * <p>
+ * <p>
+ * 自定义GlideModule
+ * 1.自定义图片加载类型。
+ * 2.在Glide中使用OkHttp加载。但是需要引入依赖，默认使用的是HttpURLConnection。
+ * <p>
+ * Glide.with()中做了3件事情：
+ * 1.如果有配置GlideModel，则利用反射和代理模式配置Glide。
+ * 2.初始化Glide，配置线程池和BitmapPool。设置资源类型-加载方式-返回类型-解码方式的映射
+ * 3.设置一个空的Fragment，添加声明周期回调，内存监听回调，任务监听，网络状态变化回调。
+ * <p>
+ * Lru算法在Glide中有三种实现：内存缓存，磁盘缓存，BitmapPool缓存。
  */
 public class GlideMainActivity extends AppCompatActivity {
 
@@ -214,10 +230,16 @@ public class GlideMainActivity extends AppCompatActivity {
                 .into(iv1);
         Glide.with(this).load(new File(Environment.getExternalStorageDirectory().getPath() + "/glide2.jpg")).into(iv2);
 
-        //调用原生的Glide加载图片
-        // com.bumptech.glide.Glide.with(this)
-        //         .load("https://tse3-mm.cn.bing.net/th/id/OIP.Gzze2RWjGPoKUivyJQvTrQHaE7?pid=Api&rs=1")
-        //         .into(iv2);
+        // 调用原生的Glide加载图片
+        com.bumptech.glide.Glide.with(this)
+                .load("https://tse3-mm.cn.bing.net/th/id/OIP.Gzze2RWjGPoKUivyJQvTrQHaE7?pid=Api&rs=1")
+                .into(iv2);
+
+        // //自定义图片加载类型
+        GlideApp.with(this)
+                .load(new MyAppGlideModule.CachedImage("https://tse3-mm.cn.bing.net/th/id/OIP.Gzze2RWjGPoKUivyJQvTrQHaE7?pid=Api&rs=1"))
+                .apply(com.bumptech.glide.request.RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.AUTOMATIC))
+                .into(iv2);
     }
 
     public void toNext(View view) {

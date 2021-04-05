@@ -2,6 +2,7 @@ package com.blend.algorithm.gc;
 
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.SoftReference;
+import java.lang.ref.WeakReference;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -21,22 +22,58 @@ class SoftTest {
         public User() {
 
         }
-
-        @Override
-        public String toString() {
-            return "User [id=" + id + ", name=" + name + "]";
-        }
+        //
+        // @Override
+        // public String toString() {
+        //     return "User [id=" + id + ", name=" + name + "]";
+        // }
 
     }
 
     private static int CACHE_INITIAL_CAPACITY = 1000 * 1024;
     private static Set<SoftReference<User>> cache = new HashSet<>();
     private static ReferenceQueue<User> referenceQueue = new ReferenceQueue();
+    private static ReferenceQueue<User> referenceStringQueue = new ReferenceQueue();
 
-    //
-    public static void main(String[] args) {
+    //弱引用本身不会被清理，这个记住好了，key是弱引用，gc后会被回收，但是这个KeyReference不会
+    //并且引用队列中也是KeyReference，通过这个引用也能访问实体
+    //会将这个弱引用本身加入到引用队列
+    public static void main(String[] args) throws InterruptedException {
         // testSoftReference();
         // testSoft();
+        // testString2();
+
+        // User user = new User();
+        // KeyReference keyReference = new KeyReference(user, "user2", referenceStringQueue);
+        // System.out.println(keyReference);
+        // user = null;
+        // System.gc();
+        // System.out.println(keyReference.get()); //user2
+        // System.out.println(((KeyReference) referenceStringQueue.poll()).value);  //user2
+        // System.out.println(keyReference.value);
+
+        User user = new User();
+        WeakReference<User> s = new WeakReference<>(user, referenceStringQueue);
+        System.out.println(s.get());
+        System.out.println(s);
+        user = null;
+        System.gc();
+        System.out.println(s.get());
+        System.out.println(referenceStringQueue.remove());
+    }
+
+    private static class KeyReference extends WeakReference<User> {
+
+        String value;
+
+        public KeyReference(User key, String value, ReferenceQueue<User> queue) {
+            super(key, queue);
+            this.value = value;
+        }
+
+    }
+
+    private static void testString2() {
         String all = "hello" + "world" + "!";
         String a = "hello";
         String b = "world";
