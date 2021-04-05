@@ -10,12 +10,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.blend.androidadvanced.GlideApp;
-import com.blend.androidadvanced.MyAppGlideModule;
 import com.blend.architecture.R;
 import com.blend.architecture.glide.glide.Glide;
 import com.blend.architecture.glide.glide.request.RequestOptions;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.io.File;
 
@@ -231,15 +228,15 @@ public class GlideMainActivity extends AppCompatActivity {
         Glide.with(this).load(new File(Environment.getExternalStorageDirectory().getPath() + "/glide2.jpg")).into(iv2);
 
         // 调用原生的Glide加载图片
-        com.bumptech.glide.Glide.with(this)
-                .load("https://tse3-mm.cn.bing.net/th/id/OIP.Gzze2RWjGPoKUivyJQvTrQHaE7?pid=Api&rs=1")
-                .into(iv2);
-
-        // //自定义图片加载类型
-        GlideApp.with(this)
-                .load(new MyAppGlideModule.CachedImage("https://tse3-mm.cn.bing.net/th/id/OIP.Gzze2RWjGPoKUivyJQvTrQHaE7?pid=Api&rs=1"))
-                .apply(com.bumptech.glide.request.RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.AUTOMATIC))
-                .into(iv2);
+        // com.bumptech.glide.Glide.with(this)
+        //         .load("https://tse3-mm.cn.bing.net/th/id/OIP.Gzze2RWjGPoKUivyJQvTrQHaE7?pid=Api&rs=1")
+        //         .into(iv2);
+        //
+        // // //自定义图片加载类型
+        // GlideApp.with(this)
+        //         .load(new MyAppGlideModule.CachedImage("https://tse3-mm.cn.bing.net/th/id/OIP.Gzze2RWjGPoKUivyJQvTrQHaE7?pid=Api&rs=1"))
+        //         .apply(com.bumptech.glide.request.RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.AUTOMATIC))
+        //         .into(iv2);
     }
 
     public void toNext(View view) {
