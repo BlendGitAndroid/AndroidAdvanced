@@ -18,11 +18,13 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.util.concurrent.TimeUnit;
 
+import okhttp3.Cache;
 import okhttp3.FormBody;
 import okhttp3.Interceptor;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
+import okhttp3.ResponseBody;
 
 
 /**
@@ -31,15 +33,6 @@ import okhttp3.OkHttpClient;
  * <p>
  * 在网络的请求和返回的过程中，对每一步的过程如拼接请求头，发射，连接等都封装成一个对象，目的是单一职责，为了更好的扩展。
  * <p>
- * 网络请求发送的流程：
- * 1.dns解析，域名对应 ip
- * 2.TCP建立连接,三次握手
- * 3.C端向S端发送请求行命令
- * 4.C端发送请求头信息
- * 5.S端应答，发送响应命令
- * 6.S端发送响应头信息
- * 7.S端向C端发送数据，以及消息体
- * 8.S端关闭链接 tcp 四次挥手
  * Http请求报文：
  * 请求行：请求方法 + 空格 + URL + 空格 + 协议版本 + 回车符 + 换行符 (如GET www.baidu.com HTTP/1.1  )
  * 请求头：头部字段名 + 冒号（:） + 值 + 回车符 + 换行符 (如Host: www.weather.com.cn  )
@@ -92,8 +85,20 @@ import okhttp3.OkHttpClient;
  * 7.CallServerInterceptor(forWebSocket))请求网络服务拦截器：请求拦截器，在前置准备工作完成后，真正发起网络请求，进行IO读写。
  * 最后通过拦截器链，通过责任链模式，依次调用拦截器，最终返回response。
  * <p>
- * 1.OkHttp中使用Okio来进行IO的操作，对这一部分还不是很了解，尤其是IO操作这一块？？？
- * 2.使用Https进行网络通讯，这一部分是如何处理的？？？
+ * <p>
+ * <p>
+ * <p>
+ * 1.OkHttp使用步骤：先构建OkHttp对象，构建RequestBody(包括fromBody默认contentType是urlencoded；自定义的匿名RequestBody
+ * 能单独请求String/文件等，需要填写相应的contentType；MultipartBody这些内容的混合体，contentType是multipart/form-data，
+ * addFormDataPart，将每一部分的内容写成表单键值对，只不过这个键值对的值是一个RequestBody)，最后开始请求。
+ * <p>
+ * 2.不管同步还是异步，都是先根据Request创建Call实例，然后再调用相应的execute或者enqueue方法。只不过在enqueue中通过callback回调将
+ * 结果返回回来。
+ * <p>
+ * 3.先获取代理服务器信息（没有代理就是直连），根据代理服务器信息创建路由，再由路由选择器选择路由。
+ * <p>
+ * 4.第一个拦截器：重试拦截器，DNS解析域名返回多个IP，在这里一个一个去尝试重试。但是比如手动设置不允许重试、SSL异常、协议异常等
+ * 就不需要重试了。超时重试
  */
 public class OkHttpMainActivity extends AppCompatActivity {
 
@@ -106,19 +111,42 @@ public class OkHttpMainActivity extends AppCompatActivity {
 
         // socketTest();
 
-        // new Thread(new Runnable() {
-        //     @Override
-        //     public void run() {
-        //         httpTest();
-        //     }
-        // }).start();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                httpTest();
+            }
+        }).start();
         //
         // httpPostTest();
 
-        interceptTest();
+        // interceptTest();
 
         // getCustomizeTest();
         // postCustomizeTest();
+
+        // test();
+    }
+
+    private void test() {
+        OkHttpClient client = new OkHttpClient.Builder()
+                .connectTimeout(15, TimeUnit.SECONDS)   //连接超时，仅对于TCP的三次握手和TLS握手
+                .readTimeout(10, TimeUnit.SECONDS)  //读取超时，服务端返回数据太慢
+                .writeTimeout(10, TimeUnit.SECONDS) //发送超时，客户端写数据太慢
+                .cache(new Cache(getExternalCacheDir(), 500 * 1024 * 1024))
+                .addInterceptor(new Interceptor() {
+                    @Override
+                    public okhttp3.Response intercept(Chain chain) throws IOException {
+                        okhttp3.Request request = chain.request();
+                        String url = request.url().toString();
+                        Log.i(TAG, "intercept: proceed start: url" + url + ", at " + System.currentTimeMillis());
+                        okhttp3.Response response = chain.proceed(request);
+                        ResponseBody body = response.body();
+                        Log.i(TAG, "intercept: proceed end: url" + url + ", at " + System.currentTimeMillis());
+                        return response;
+                    }
+                })
+                .build();
     }
 
     private void interceptTest() {
@@ -149,6 +177,10 @@ public class OkHttpMainActivity extends AppCompatActivity {
         String jsonStr = "{\"username\":\"lisi\",\"nickname\":\"李四\"}"; //json数据.
         okhttp3.RequestBody body = okhttp3.RequestBody.create(JSON, jsonStr);
 
+        //请求文件，上传文件
+        File file = new File("file");
+        okhttp3.RequestBody body1 = okhttp3.RequestBody.create(MediaType.parse("image/png"), file);
+
         //3.多重body。FromBody传递的是字符串型的键值对，RequestBody传递的是多媒体，二者都传递,此时就需要使用MultipartBody类。其实这个里面还是做了拼接操作
         MultipartBody multipartBody = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
@@ -166,11 +198,12 @@ public class OkHttpMainActivity extends AppCompatActivity {
         call.enqueue(new okhttp3.Callback() {   //异步
             @Override
             public void onFailure(okhttp3.Call call, IOException e) {
-
+                Log.e(TAG, "onFailure Thread: " + Thread.currentThread().getName());
             }
 
             @Override
             public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
+                Log.e(TAG, "onResponse Thread: " + Thread.currentThread().getName());
                 if (response.isSuccessful()) {
                     Log.e(TAG, "response.code()==" + response.code());  //"response.code()==200；"这个是Http协议里面自带的code
                     Log.e(TAG, "response.message()==" + response.message());
@@ -209,6 +242,7 @@ public class OkHttpMainActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
 
     private void postCustomizeTest() {
