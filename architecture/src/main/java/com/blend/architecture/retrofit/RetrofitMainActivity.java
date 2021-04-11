@@ -28,7 +28,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * CallAdapterFactory：请求适配器工厂，使用工厂方法模式来创建对象，并使用适配器模式，将网络请求结果适配成需要的结果，比如
- * 默认的CallAdapterFactor的Call，Rxjava2的返回Observable，我们自定义的LiveData。
+ * 默认的CallAdapterFactor的Call，Rxjava2的返回Observable，我们自定义的LiveData。在这个方法中开始网络的请求和将返回结果
+ * 进行适配。
  * <p>
  * ConverterFactory：转换工厂，使用工厂方法模式来创建对象。用于将ResponseBody转换为type，和将type转换为requestBody。
  * <p>
@@ -63,16 +64,16 @@ public class RetrofitMainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_retrofit_main);
 
-        // executeTest();
-        // enqueueTest();
+        executeTest();
+        enqueueTest();
 
         enqueueLiveDataTest();
 
-        // withRxJava();
+        withRxJava();
 
-        // postTest();
+        postTest();
 
-        // loginTest();
+        loginTest();
     }
 
     private void loginTest() {
@@ -225,13 +226,14 @@ public class RetrofitMainActivity extends AppCompatActivity {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-        RetrofitApi serviceApi = retrofit.create(RetrofitApi.class);
+        final Class<RetrofitApi> retrofitApiClass = RetrofitApi.class;
+        RetrofitApi serviceApi = retrofit.create(retrofitApiClass);
         final Call<RetrofitBean<List<RetrofitBean.DataBean>>> officialAccounts = serviceApi.getOfficialAccounts();
         new Thread() {
             @Override
             public void run() {
                 try {
-                    Response<RetrofitBean<List<RetrofitBean.DataBean>>> response = officialAccounts.clone().execute();
+                    Response<RetrofitBean<List<RetrofitBean.DataBean>>> response = officialAccounts.execute();
                     for (int i = 0; i < response.body().getData().size(); i++) {
                         Log.i("retrofit", "execute: " + response.body().getData().get(i).toString());
                     }

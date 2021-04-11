@@ -81,7 +81,9 @@ class ReflectClass2 {
         //注意区分这里的Field#getType，返回到是Class对象
         Class<?> classType = mStringList.getType();
         System.out.println(classType);
-        if (List.class.isAssignableFrom(classType)) {
+        //isAssignableFrom是class对象
+        final Class<List> listClass = List.class;
+        if (listClass.isAssignableFrom(classType)) {
             //这里Field#getGenericType返回的是Type对象
             Type genericType = mStringList.getGenericType();
             System.out.println(genericType);
