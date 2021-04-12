@@ -192,6 +192,8 @@ import java.io.File;
  */
 public class GlideMainActivity extends AppCompatActivity {
 
+    ImageView iv2;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -199,7 +201,7 @@ public class GlideMainActivity extends AppCompatActivity {
 
         ImageView iv = findViewById(R.id.iv);
         ImageView iv1 = findViewById(R.id.iv1);
-        ImageView iv2 = findViewById(R.id.iv2);
+        iv2 = findViewById(R.id.iv2);
 
         new LruCache<String, String>(10) {
             @Override
@@ -237,7 +239,48 @@ public class GlideMainActivity extends AppCompatActivity {
         //         .load(new MyAppGlideModule.CachedImage("https://tse3-mm.cn.bing.net/th/id/OIP.Gzze2RWjGPoKUivyJQvTrQHaE7?pid=Api&rs=1"))
         //         .apply(com.bumptech.glide.request.RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.AUTOMATIC))
         //         .into(iv2);
+
+        // com.bumptech.glide.Glide.with(this).load("测试").centerCrop().into(mSimpleTarget);
+
     }
+
+    // SimpleTarget<Drawable> mSimpleTarget = new SimpleTarget<Drawable>() {
+    //     @Override
+    //     public void onResourceReady(@androidx.annotation.NonNull Drawable resource, @androidx.annotation.Nullable Transition<? super Drawable> transition) {
+    //         iv2.setImageDrawable(resource);
+    //     }
+    // };
+    //
+    // //设置target监听回调
+    // CustomViewTarget<ImageView, Drawable> mDrawableCustomViewTarget = new CustomViewTarget(iv2) {
+    //     @Override
+    //     protected void onResourceCleared(@androidx.annotation.Nullable Drawable placeholder) {
+    //         //当resource被clear的时候，就会被回收
+    //     }
+    //
+    //     @Override
+    //     public void onLoadFailed(@androidx.annotation.Nullable Drawable errorDrawable) {
+    //
+    //     }
+    //
+    //     @Override
+    //     public void onResourceReady(@androidx.annotation.NonNull Object resource, @androidx.annotation.Nullable Transition transition) {
+    //
+    //     }
+    // };
+    //
+    // RequestListener<Drawable> mDrawableRequestListener = new RequestListener<Drawable>() {
+    //     @Override
+    //     public boolean onLoadFailed(@androidx.annotation.Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+    //         return false;
+    //     }
+    //
+    //     @Override
+    //     public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+    //         iv2.setImageDrawable(resource);
+    //         return false;
+    //     }
+    // };
 
     public void toNext(View view) {
         startActivity(new Intent(this, GlideSecondActivity.class));
