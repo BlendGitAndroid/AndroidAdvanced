@@ -186,6 +186,8 @@ class ReflectClass2 {
         System.out.println(classLoader);
     }
 
+    //这里就是写一个抽象类，但是这个抽象类是泛型的，让子类实现这个抽象类，传入需要解析的泛型javabean，
+    // 然后通过getGenericsSuperclass()就能获取到这个泛型信息了。
     public static abstract class MyTypeToken<T> {
         private final Type type;
 
