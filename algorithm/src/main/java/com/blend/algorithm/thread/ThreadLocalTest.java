@@ -15,6 +15,10 @@ package com.blend.algorithm.thread;
  * 使用：
  * public final static ThreadLocal<String> RESOURCE = new ThreadLocal<String>();RESOURCE代表一个能够存放String类型的
  * ThreadLocal对象。此时不论什么一个线程能够并发访问这个变量，对它进行写入、读取操作，都是线程安全的。
+ * <p>
+ * <p>
+ * ThreadLocal就一个作用，保存每个线程独享的对象。ThreadLocal是解决线程安全问题的，但是不是解决资源共享问题的。
+ *
  */
 class ThreadLocalTest {
 
@@ -23,12 +27,18 @@ class ThreadLocalTest {
         test.StartThreadArray();
     }
 
-    static ThreadLocal<Integer> threadLocal = new ThreadLocal<Integer>() {
+    static AA a = new AA();
+
+    static ThreadLocal<AA> threadLocal = new ThreadLocal<AA>() {
         @Override
-        protected Integer initialValue() {
-            return 1;
+        protected AA initialValue() {
+            return new AA();
         }
     };
+
+    static class AA {
+        int a = 0;
+    }
 
 
     /**
@@ -57,11 +67,11 @@ class ThreadLocalTest {
 
         public void run() {
             System.out.println(Thread.currentThread().getName() + ":start");
-            Integer s = threadLocal.get();
-            s = s + id;
+            AA s = threadLocal.get();
+            s.a = s.a + id;
             threadLocal.set(s);
             System.out.println(Thread.currentThread().getName() + " :"
-                    + threadLocal.get());
+                    + threadLocal.get().a);
             //threadLocal.remove();
         }
     }
