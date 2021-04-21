@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.blend.architecture.ArchitectureMainActivity;
+import com.blend.optimization.OptimizationMainActivity;
 
 public class MainActivity extends Activity {
 
@@ -18,7 +18,7 @@ public class MainActivity extends Activity {
         // startActivity(new Intent(this, UiMainActivity.class));
 
         //移动架构
-        startActivity(new Intent(this, ArchitectureMainActivity.class));
+        // startActivity(new Intent(this, ArchitectureMainActivity.class));
 
         //IOC
         // startActivity(new Intent(this, IocMainActivity.class));
@@ -28,7 +28,7 @@ public class MainActivity extends Activity {
         // startActivity(intent);
 
         // 性能优化
-        // startActivity(new Intent(this, OptimizationMainActivity.class));
+        startActivity(new Intent(this, OptimizationMainActivity.class));
         // finish();
 
         //数据结构与算法
