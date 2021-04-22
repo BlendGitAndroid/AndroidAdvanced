@@ -90,7 +90,9 @@ public class SkinMainActivity extends AppCompatActivity {
                         Log.e(TAG, "onCreateView: " + resId);
                     }
                 }
-                return null;
+                //可以在这里进行每一个View的创建耗时监控
+                View view = getDelegate().createView(parent, name, context, attrs);
+                return view;
             }
 
             @Override
