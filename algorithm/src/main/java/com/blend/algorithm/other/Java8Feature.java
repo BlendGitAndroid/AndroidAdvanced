@@ -121,17 +121,34 @@ public class Java8Feature {
         T create();
     }
 
+    static int outerStaticNum;
+    int outerNum;
+
+
+    void testScopes() {
+        Convert<Integer, String> stringConverter1 = (from) -> {
+            outerNum = 23;
+            return String.valueOf(from);
+        };
+
+        Convert<Integer, String> stringConverter2 = (from) -> {
+            outerStaticNum = 72;
+            return String.valueOf(from);
+        };
+        stringConverter1.convert(5);
+    }
+
     public static void main(String[] args) {
         Java8Feature java8Feature = new Java8Feature();
         System.out.println("Test:" + java8Feature.mFormula.calculate(10));
 
         //通过对象引用，也就是testFunctionReference这个方法，就是Convert<T,F>的实现
         Convert<String, String> testObjectFunctionReference = java8Feature::testObjectFunctionReference;
-        testObjectFunctionReference.convert("Blend");
+        testObjectFunctionReference.convert("Blend1");
 
         //通过类引用，也就是testStaticFunctionReference这个方法，就是Convert<T,F>的实现
         Convert<String, String> testStaticFunctionReference = Java8Feature::testStaticFunctionReference;
-        testStaticFunctionReference.convert("Blend");
+        testStaticFunctionReference.convert("Blend2");
 
         //这种方式，就是相当于传入方法
         java8Feature.setConvert(testObjectFunctionReference);
