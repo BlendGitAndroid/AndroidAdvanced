@@ -147,7 +147,7 @@ public class ImageCache {
 
         //valueCount:表示一个key对应valueCount个文件
         try {
-            diskLruCache = DiskLruCache.open(new File(dir), BuildConfig.VERSION_CODE, 1, 10 * 1024 * 1024);
+            diskLruCache = DiskLruCache.open(new File(dir), 1, 1, 10 * 1024 * 1024);
         } catch (Exception e) {
             e.printStackTrace();
         }
