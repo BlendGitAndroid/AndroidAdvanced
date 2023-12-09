@@ -43,23 +43,23 @@ class SoftTest {
         // testSoft();
         // testString2();
 
+        User user = new User();
+        KeyReference keyReference = new KeyReference(user, "user2", referenceStringQueue);
+        System.out.println(keyReference);
+        user = null;    //干掉强引用，确保这个实例只有keyReference的弱引用
+        System.gc();
+        System.out.println(keyReference.get()); //user2
+        System.out.println(((KeyReference) referenceStringQueue.poll()).value);  //user2
+        System.out.println(keyReference.value);
+
         // User user = new User();
-        // KeyReference keyReference = new KeyReference(user, "user2", referenceStringQueue);
-        // System.out.println(keyReference);
+        // WeakReference<User> s = new WeakReference<>(user, referenceStringQueue);
+        // System.out.println(s.get());
+        // System.out.println(s);
         // user = null;
         // System.gc();
-        // System.out.println(keyReference.get()); //user2
-        // System.out.println(((KeyReference) referenceStringQueue.poll()).value);  //user2
-        // System.out.println(keyReference.value);
-
-        User user = new User();
-        WeakReference<User> s = new WeakReference<>(user, referenceStringQueue);
-        System.out.println(s.get());
-        System.out.println(s);
-        user = null;
-        System.gc();
-        System.out.println(s.get());
-        System.out.println(referenceStringQueue.remove());
+        // System.out.println(s.get());
+        // System.out.println(referenceStringQueue.remove());
     }
 
     private static class KeyReference extends WeakReference<User> {

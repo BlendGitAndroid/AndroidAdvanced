@@ -9,6 +9,11 @@ import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+/**
+ * 双亲委派模型是加载class文件的默认方式,但是有时候我们需要打破这种模型，比如我们需要加载网络上的class文件，或者是数据库中的class文件
+ * 注意：“双亲委派”机制只是 Java 推荐的机制，并不是强制的机制。我们可以继承 java.lang.ClassLoader 类，实现自己的类加载器。
+ * 如果想保持双亲委派模型，就应该重写 findClass(name) 方法；如果想破坏双亲委派模型，可以重写 loadClass(name) 方法。
+ */
 class DiskClassLoader extends ClassLoader {
 
     private String path;
@@ -21,10 +26,12 @@ class DiskClassLoader extends ClassLoader {
     @Override
     protected Class<?> findClass(String name) throws ClassNotFoundException {
         Class clazz = null;
+        // 获取该class文件字节码数组
         byte[] classData = loadClassData(name);
         if (classData == null) {
             throw new ClassNotFoundException("not found class");
         } else {
+            // 将字节数组转换为Class类的实例
             clazz = defineClass(name, classData, 0, classData.length);
         }
         return clazz;
@@ -94,8 +101,10 @@ class DiskClassLoader extends ClassLoader {
     }
 
     public static void main(String[] args) {
+        // 传入代表需要动态加载的 class 的路径。
         DiskClassLoader loader = new DiskClassLoader("E:\\ClassLoder");
         try {
+            // 传入class的全类名
             Class c = loader.loadClass("com.blend.Study");
             if (c != null) {
                 try {
