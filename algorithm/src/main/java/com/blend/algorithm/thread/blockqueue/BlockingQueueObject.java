@@ -2,6 +2,7 @@ package com.blend.algorithm.thread.blockqueue;
 
 import java.util.LinkedList;
 
+// 用 Object 实现生产者/消费者模式
 class BlockingQueueObject {
     private int maxSize;
     private LinkedList<Object> storage;

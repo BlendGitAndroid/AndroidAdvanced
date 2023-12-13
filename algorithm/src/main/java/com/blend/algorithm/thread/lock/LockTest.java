@@ -55,7 +55,7 @@ class LockTest {
             for (int i = 0; i < 100; i++) {//操作100次
                 goodsService.getNum();
             }
-            System.out.println(Thread.currentThread().getName() + "read goods time:"
+            System.out.println(Thread.currentThread().getName() + " read goods time:"
                     + (System.currentTimeMillis() - start) + "ms");
 
         }
@@ -83,7 +83,7 @@ class LockTest {
                 goodsService.setNum(r.nextInt(10));
             }
             System.out.println(Thread.currentThread().getName()
-                    + "write goods time:" + (System.currentTimeMillis() - start) + "ms---------");
+                    + " write goods time:" + (System.currentTimeMillis() - start) + "ms---------");
 
         }
     }
@@ -92,6 +92,7 @@ class LockTest {
     public static void main(String[] args) {
         GoodsInfo goodsInfo = new GoodsInfo("Cup", 100000, 10000);
         GoodService goodsService = new Synchronized(goodsInfo);
+        // GoodService goodsService = new LockAndRw(goodsInfo);
         for (int i = 0; i < minthreadCount; i++) {
             Thread setT = new Thread(new SetRunnable(goodsService));
             for (int j = 0; j < readWriteRatio; j++) {  //1个写线程，对应10个读线程

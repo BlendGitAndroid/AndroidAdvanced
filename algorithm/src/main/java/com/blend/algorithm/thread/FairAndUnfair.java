@@ -11,6 +11,8 @@ import java.util.concurrent.locks.ReentrantLock;
  * 线程虽然没有在阻塞队列中，但是还是会执行第二段加锁代码。
  * 其原理就是公平锁会先从阻塞队列里面去拿，如果有线程则进行执行，但是非公平锁则先看现在有没有线程来请求锁，如果有则不用从阻塞队
  * 列里面去拿，而是直接执行请求线程的代码。
+ * ReentrantLock默认是非公平锁,可以设置
+ * Synchronized默认是非公平锁,且不能设置
  */
 class FairAndUnfair {
 

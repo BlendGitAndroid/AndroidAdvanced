@@ -17,6 +17,7 @@ class JoinThread {
         System.out.println(Thread.currentThread().getName() + " terminated");
     }
 
+    // 将传入的线程加入到新建的线程中,保证线程的执行书顺序
     private static class JumpQueue implements Runnable {
 
         private Thread mThread;

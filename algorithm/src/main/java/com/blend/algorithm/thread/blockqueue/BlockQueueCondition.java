@@ -5,6 +5,7 @@ import java.util.Queue;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
+// 用 Condition 实现生产者/消费者模式
 class BlockQueueCondition {
 
     private Queue queue;

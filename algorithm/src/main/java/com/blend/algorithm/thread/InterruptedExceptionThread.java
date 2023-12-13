@@ -18,7 +18,7 @@ class InterruptedExceptionThread {
         System.out.println("Main:" + formater.format(new Date()));
         Thread.sleep(800);
         System.out.println("Main begin interrupt thread:" + formater.format(new Date()));
-        useThread.interrupt();
+        useThread.interrupt();  //开始中断
     }
 
     private static SimpleDateFormat formater
@@ -33,7 +33,7 @@ class InterruptedExceptionThread {
         @Override
         public void run() {
             String threadName = Thread.currentThread().getName();
-            while (!isInterrupted()) {
+            while (!isInterrupted()) {  // 判断中断
                 try {
                     System.out.println("UseThread:" + formater.format(new Date()));
                     Thread.sleep(3000);
@@ -41,7 +41,7 @@ class InterruptedExceptionThread {
                     System.out.println(threadName + " catch interrput flag is "
                             + isInterrupted() + " at "
                             + (formater.format(new Date())));
-                    interrupt();    //在cache方法里面重新重点，才将中断标志位置为true，才能跳出循环
+                    interrupt();    //在cache方法里面重新断点，才将中断标志位置为true，才能跳出循环
                     e.printStackTrace();
                 }
             }

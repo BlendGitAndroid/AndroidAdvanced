@@ -1,8 +1,18 @@
 package com.blend.algorithm.thread;
 
 /**
- * ThreadLocal，即线程本地变量，是一个以ThreadLocal对象为键、任意对象为值的存储结构。这个结构被附带在线程上，也就是说一个
- * 线程可以根据一个ThreadLocal对象查询到绑定在这个线程上的一个值, ThreadLocal往往用来实现变量在线程之间的隔离。
+ * ThreadLocal，即线程本地变量，是一个以ThreadLocal对象为键、任意对象为值的存储结构。
+ * 具体的意思就是：一个ThreadLocal对象，会获取当前的线程，并根据当前线程获取该线程的ThreadLocalMapd对象，
+ * 这个对象的key就是ThreadLocal对象，value就是存储的值。
+ * 这个结构被附带在线程上，也就是说一个线程可以根据一个ThreadLocal对象查询到绑定在这个线程上的一个值, ThreadLocal
+ * 往往用来实现变量在线程之间的隔离。
+ * <p>
+ * 一个线程想要存储多个线程独享的对象，那么就new多个ThreadLocaL对象。
+ * 这里需要重点看到它们的数量对应关系：一个 Thread 里面只有一个ThreadLocalMap ，而在一个 ThreadLocalMap 里面却可以有
+ * 很多的 ThreadLocal，每一个 ThreadLocal 都对应一个 value。因为一个 Thread 是可以调用多个 ThreadLocal 的，
+ * 所以 Thread 内部就采用了 ThreadLocalMap 这样 Map 的数据结构来存放 ThreadLocal 和 value。
+ * <p>
+ * 一个ThreadLocal对象还能被多个线程使用，因为每一个线程都有自己的Map对象，虽然存储的key是一样的，但是map是不一样的。
  * <p>
  * ThreadLocal类接口很简单，只有4个方法:
  * 1)void set(Object value):设置当前线程的线程局部变量的值。
@@ -18,7 +28,10 @@ package com.blend.algorithm.thread;
  * <p>
  * <p>
  * ThreadLocal就一个作用，保存每个线程独享的对象。ThreadLocal是解决线程安全问题的，但是不是解决资源共享问题的。
- *
+ * <p>
+ * 内存泄漏问题：假如一个Activity中有一个ThreadLocal对象，当Activity销毁时，那么对ThreadLocal的强引用就会断开，那ThreadLocal只有一个
+ * 弱引用了，那么就会被垃圾回收掉。但是你要说，Entry还引用这个弱引用了呢？对啊，你都说是弱引用了，所以会被销毁。但是value没有被销毁，这个时候
+ * 就会出现内存泄漏。
  */
 class ThreadLocalTest {
 
@@ -32,6 +45,7 @@ class ThreadLocalTest {
     static ThreadLocal<AA> threadLocal = new ThreadLocal<AA>() {
         @Override
         protected AA initialValue() {
+            System.out.println(Thread.currentThread().getName() + ":initialValue");
             return new AA();
         }
     };
@@ -72,7 +86,7 @@ class ThreadLocalTest {
             threadLocal.set(s);
             System.out.println(Thread.currentThread().getName() + " :"
                     + threadLocal.get().a);
-            //threadLocal.remove();
+            threadLocal.remove();
         }
     }
 

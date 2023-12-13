@@ -29,6 +29,7 @@ package com.blend.algorithm.thread;
  * 注意：wait/notify/notifyAll都是对于同一个对象来说的，它们都是Object方法。
  */
 class WaitAndNotify {
+    // 都是同一个对象
     private static Express express = new Express(0, Express.CITY);
 
     public static void main(String[] args) throws InterruptedException {

@@ -6,6 +6,7 @@ import java.util.concurrent.atomic.AtomicReference;
  * 自旋锁也是使用CAS操作来获取锁。
  * <p>
  * 同时乐观锁也是使用CAS操作来更改资源。
+ * 这是一个可重入锁
  */
 class ReentrantSpinLock {
     private AtomicReference<Thread> owner = new AtomicReference<>();

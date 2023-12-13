@@ -4,7 +4,7 @@ package com.blend.algorithm.thread;
  * Java支持多个线程同时访问一个对象或者对象的成员变量，关键字synchronized可以修饰方法或者以同步块的形式来进行使用，它主
  * 要确保多个线程在同一个时刻，只能有一个线程处于方法或者同步块中，它保证了线程对变量访问的可见性和排他性，又称为内置锁机制。
  * <p>
- * addCount()和addCount3()锁的都是本类的对象，是一样的。
+ * addCount()和addCount3()锁的都是本类的对象，是一样的，都是当前对象锁
  * <p>
  * 对象锁是用于对象实例方法，或者一个对象实例上的，类锁是用于类的静态方法或者一个类的class对象上的。我们知道，类的对象实例
  * 可以有很多个，但是每个类只有一个class对象，所以不同对象实例的对象锁是互不干扰的，但是每个类只有一个类锁。
@@ -58,7 +58,7 @@ class SyncObject {
         public void run() {
             super.run();
             for (int i = 0; i < 1000; i++) {
-                obj.addCount3();
+                obj.addCount2();
             }
         }
     }
