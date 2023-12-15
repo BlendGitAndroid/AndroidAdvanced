@@ -31,7 +31,7 @@ class ReflectClass {
      * 1.检查方法权限：对于非Member.PUBLIC的访问，会增加一项运行时权限。
      * 2.获取方法的Method对象：主要解析getMethod0，getMethod0主要调用的是getMethodsRecursive方法返回一个MethodList对象，是一个链表
      * 结点，也就是会获取到多个Method。解释一下在我们平时编写 Java 代码时，同一个类是不能有方法名和方法参数都相同的方法的，而实际上，
-     * 在 JVM 中，一个方法签名是和 返回值，方法名，方法参数 三者相关的。也就是说，在 JVM 中，可以存在 方法名和方法参数都相同，但是返回值不
+     * 在 JVM 中，方法名，方法参数一个方法签名是和 返回值， 三者相关的。也就是说，在 JVM 中，可以存在 方法名和方法参数都相同，但是返回值不
      * 同的方法。
      * 返回一个方法链表，主要通过四个步骤：
      * 1)通过 privateGetDeclaredMethods 获取自己所有的 public 方法。首先通过reflectionData通过缓存获取，维护一个reflectionData的
@@ -82,7 +82,7 @@ class ReflectClass {
     public static void reflectNewInstance() {
         try {
             Class<?> classBook = Class.forName("com.blend.algorithm.reflect.Book");
-            Object objectBook = classBook.newInstance();
+            Object objectBook = classBook.getDeclaredConstructor().newInstance();
             Book book = (Book) objectBook;
             book.setAuthor("11111");
             System.out.println("reflect create obj: " + book.getAuthor());
@@ -95,7 +95,7 @@ class ReflectClass {
     public static void reflectNewInstance2() {
         try {
             Class<Book> bookClass = Book.class;
-            Book book = bookClass.newInstance();
+            Book book = bookClass.getDeclaredConstructor().newInstance();
             book.setAuthor("22222");
             System.out.println("reflect create obj2: " + book.getAuthor());
         } catch (Exception e) {
@@ -108,7 +108,7 @@ class ReflectClass {
         try {
             Book book = new Book();
             Class<? extends Book> aClass = book.getClass();
-            Book reflectBook = aClass.newInstance();
+            Book reflectBook = aClass.getDeclaredConstructor().newInstance();
             reflectBook.setAuthor("3333");
             System.out.println("reflect create obj3: " + reflectBook.getAuthor());
         } catch (Exception e) {
@@ -137,7 +137,7 @@ class ReflectClass {
         try {
             Class<?> aClass = Class.forName("com.blend.routercompiler.reflect.Book");
             //这里也是先创建出构造器，然后通过无参构造函数实例化
-            Object o = aClass.newInstance();
+            Object o = aClass.getDeclaredConstructor().newInstance();
             Book book = (Book) o;
             book.setAuthor("private field");
             //获取到字段名
@@ -158,7 +158,7 @@ class ReflectClass {
             //获取到方法名
             Method declaredMethod = aClass.getDeclaredMethod("declaredMethod", int.class);
             declaredMethod.setAccessible(true);
-            Object o = aClass.newInstance();
+            Object o = aClass.getDeclaredConstructor().newInstance();
             //通过对象来调用方法
             String s = (String) declaredMethod.invoke(o, 0);
             System.out.println("reflect private method: " + s);
