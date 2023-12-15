@@ -1,5 +1,7 @@
 package com.blend.algorithm.thread;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
@@ -54,11 +56,33 @@ class NewThread {
     }
 
     //扩展自Thread类
-    private static class UseThread extends Thread {
+    private static class UseThread extends ProxyThread {
         @Override
         public void run() {
             super.run();
             System.out.println("I am extends Thread");
+        }
+    }
+
+    // 线程定位
+    // 通过这种方式，得知一个线程start()方法的调用栈,从而用于线程定位
+    private static class ProxyThread extends Thread {
+
+        private Map<Long, StackTraceElement[]> map = new HashMap<>();
+
+        @Override
+        public synchronized void start() {
+            new Throwable().printStackTrace();
+            // 将调用栈和线程绑定起来，这个Id在Thread初始化的时候生成
+            map.put(Thread.currentThread().getId(), new Throwable().getStackTrace());
+            super.start();
+        }
+
+        @Override
+        public void run() {
+            super.run();
+            // 线程执行完毕，将调用栈和线程解绑
+            map.remove(Thread.currentThread().getId());
         }
     }
 

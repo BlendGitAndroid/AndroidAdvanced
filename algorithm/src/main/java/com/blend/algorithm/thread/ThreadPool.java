@@ -1,5 +1,7 @@
 package com.blend.algorithm.thread;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -208,7 +210,7 @@ class ThreadPool {
         }
 
         static {
-            sCPUThreadPoolExecutor = new ThreadPoolExecutor(
+            sCPUThreadPoolExecutor = new ProxyThreadPoolExecutor(
                     CORE_POOL_SIZE, MAXIMUM_POOL_SIZE, KEEP_ALIVE_SECONDS, TimeUnit.SECONDS,
                     S_POOL_WORK_QUEUE, S_THREAD_FACTORY, S_HANDLER);
             // 设置是否允许空闲核心线程超时时，线程会根据keepAliveTime的值进行活性检查，一旦超时便销毁线程。否则，线程会永远等待新的工作。
@@ -218,5 +220,31 @@ class ThreadPool {
             sIOThreadPoolExecutor = Executors.newCachedThreadPool(S_THREAD_FACTORY);
         }
 
+    }
+
+    // Thread处理异常
+    public static class ProxyThreadPoolExecutor extends ThreadPoolExecutor {
+
+        public ProxyThreadPoolExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, @NotNull TimeUnit unit, @NotNull BlockingQueue<Runnable> workQueue) {
+            super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue);
+        }
+
+        public ProxyThreadPoolExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, @NotNull TimeUnit unit, @NotNull BlockingQueue<Runnable> workQueue, @NotNull ThreadFactory threadFactory) {
+            super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue, threadFactory);
+        }
+
+        public ProxyThreadPoolExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, @NotNull TimeUnit unit, @NotNull BlockingQueue<Runnable> workQueue, @NotNull RejectedExecutionHandler handler) {
+            super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue, handler);
+        }
+
+        public ProxyThreadPoolExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, @NotNull TimeUnit unit, @NotNull BlockingQueue<Runnable> workQueue, @NotNull ThreadFactory threadFactory, @NotNull RejectedExecutionHandler handler) {
+            super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue, threadFactory, handler);
+        }
+
+        @Override
+        protected void afterExecute(Runnable r, Throwable t) {
+            super.afterExecute(r, t);
+            // 在这里处理异常
+        }
     }
 }
