@@ -83,6 +83,7 @@ class ReflectClass2 {
         System.out.println(classType);
         //isAssignableFrom是class对象
         final Class<List> listClass = List.class;
+        // `isAssignableFrom`是Java中的一个方法，用于判断一个类是否是另一个类的子类或者实现了某个接口。
         if (listClass.isAssignableFrom(classType)) {
             //这里Field#getGenericType返回的是Type对象
             Type genericType = mStringList.getGenericType();

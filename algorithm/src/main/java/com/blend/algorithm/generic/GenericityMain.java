@@ -5,7 +5,7 @@ import java.util.List;
 
 /**
  * 泛型的好处：
- * 1.适用于多种数据类型执行相同的代码，就不需要重载很多方法，使用一个泛型就够了。
+ * 1.适用于多种数据类型执行相同的代码，就不需要重载很多方法，使用一个泛型就够了，节省了模板代码。
  * 2.泛型中的类型在使用时指定，不需要强制类型转换。比如List集合，集合不会记住此对象的类型，当再次从集合中取出此对象时，该对象
  * 的编译类型变成了Object类型，但其运行时类型任然为其本身类型。
  * <p>
@@ -21,11 +21,11 @@ import java.util.List;
  * <p>
  * 泛型中的约束与局限性：
  * 1.不能用基本类型实例化类型参数。
- * 2.运行时类型查询只适用于原始类型。
+ * 2.运行时类型查询只适用于原始类型，因为会将泛型信息擦除。
  * 3.泛型类的静态上下文中类型变量失效，但是要是静态的泛型方法就可以。原因是不能在静态域或方法中引用类型变量。因为泛型是要在对象创建的时
  * 候才知道是什么类型的，而对象创建的代码执行先后顺序是static的部分，然后才是构造函数等等。所以在对象初始化之前static的部分已经执行了，
  * 如果你在静态部分引用的泛型，那么毫无疑问虚拟机根本不知道是什么东西，因为这个时候类还没有初始化。
- * 4.不能实例化类型变脸，比如 new T()。
+ * 4.不能实例化类型变量，比如 new T()。
  * 5.泛型类不能extends Exception/Throws，并且不能捕获泛型类对象。
  * 6.不能创建参数化类型的数组。
  * <p>
@@ -75,8 +75,11 @@ class GenericityMain {
         // if (impl1 instanceof GenericInterfaceImpl1<T>)  不允许
         System.out.println(impl1.getClass());
 
-        //不能创建参数化类型的数组
-        // GenericInterfaceImpl1<Integer>[] array = new GenericInterfaceImpl1<>()[10];
+        // 不能创建参数化类型的数组
+        // 由于类型擦除的特性，创建参数化类型的数组可能会导致类型安全问题。例如，如果允许创建参数化类型的数组，那么就可
+        // 以创建一个`GenericInterfaceImpl1<Integer>[]`的数组，然后将一个`GenericInterfaceImpl1<String>`赋
+        // 值给其中一个元素，这将违反泛型的类型安全性。
+        // GenericInterfaceImpl1<Integer>[] array = new GenericInterfaceImpl1<Integer>()[10];
 
     }
 
@@ -93,11 +96,7 @@ class GenericityMain {
     // }
     //但是下面的方法是可以的
     public <T extends Throwable> void doSome(T t) throws T {
-        try {
-
-        } catch (Throwable e) {
-            throw t;
-        }
+        throw t;
     }
 
     //通配符类型
@@ -130,7 +129,7 @@ class GenericityMain {
     //表示传递给方法的参数，必须是X的父类（包括X本身），这个就是逆变
     private static void printSuper(GenericInterfaceImpl1<? super Apple> apple) {
         Object data = apple.getData();
-        // apple.setData(new Fruit());
+        // apple.setData(new Fruit()); 这里是不行， 因为Fruit是Apple的父类，？super Apple表示的是Apple的某个父类，编译期间无法确定
         //而下面这个只能传入Apple及其子类，原因是外部传入的apple为是Apple的本身及其父类，
         //setData的时候，能将子类变成父类，所以setData(子类)是可以的，要是setData(父类)不行，因为不能将父类变成子类
         apple.setData(new Apple());
@@ -138,8 +137,9 @@ class GenericityMain {
     }
 
     public static void setList(List<?> list) {
-        // list.add("Blend"); 但是这个是不能添加的
-        // list.add(1);
+        // list.add("Blend"); 但是这个是不能添加的,因为不知道你传入的是什么类型，所以不允许添加
+        // list.add(1); 类似于下面这个，也是不允许的
+        list.add(null); //但是这个是可以的，因为null可以表示任何类型
         Object o = list.get(1);
 
     }
@@ -183,7 +183,7 @@ class GenericityMain {
         为何？
         道理很简单，？ extends X  表示类型的上界，类型参数是X的子类，那么可以肯定的说，get方法返回的一定是个X（不管是X或者X的子类）
         编译器是可以确定知道的。但是set方法只知道传入的是个X，至于具体是X的那个子类，不知道，因为子类有可能很多，所以索性就不能设置数据。
-        总结：主要用于安全地访问数据，可以访问X及其子类型，并且不能写入非null的数据。
+        总结：主要用于安全地访问数据，可以访问X及其子类型，并且不能写入非null的数据。记住一点，就是只能在编译期间确定
          */
 
         /**
