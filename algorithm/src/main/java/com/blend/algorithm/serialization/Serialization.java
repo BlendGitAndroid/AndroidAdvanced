@@ -66,6 +66,23 @@ import java.io.Serializable;
  * 为什么Serializable使用的是反射呢？
  * 因为readObject、writeObject、readResolve、writeReplace都是private，怎么调用他们的呢，答案是使用的是反射。
  * 还有对象在反序列化的时候，也是使用反射来创建和赋值的。
+ * *********************************************************************************************************************
+ * Serializable的序列化过程：
+ * 当一个对象被序列化时，序列化系统会将对象转换为字节流，以便方便地进行存储或传输。在将对象转换为字节流的过程中，序列化系统会将对
+ * 象的一些关键信息写入到字节流中，以便在反序列化时能够正确地还原对象。
+ *
+ * 其中，写入到字节流中的关键信息包括：
+ * - 对象的类名：用来指示对象属于哪个类。
+ * - 类的签名：包括类的字段、方法等，用来描述类的结构信息。
+ * - 版本号：即serialVersionUID，用来标识序列化类的版本。
+ *
+ * 这些信息的写入，是为了确保在反序列化时能够正确地还原对象。在反序列化时，系统会读取字节流中的信息，并根据这些信息来创建新的对象。
+ *
+ * 如果在序列化和反序列化之间，类定义发生了变化（如增加或删除字段、修改方法等），那么版本号也会发生变化。在反序列化时，系统会比较序
+ * 列化数据中的版本号与当前类的版本号，如果两者不一致，则会抛出InvalidClassException异常，从而防止出现版本不一致的问题。
+ *
+ * 因此，通过将对象的类名、类的签名以及版本号写入序列化数据中，可以保证在反序列化时能够正确地还原对象，并且保证序列化和反序列化之
+ * 间的版本兼容性。
  */
 class Serialization implements Serializable {
 
@@ -121,7 +138,7 @@ class Serialization implements Serializable {
 
     private Object writeReplace() {
         System.out.println("writeReplace");
-        return new Serialization(name + "replace", score);
+        return new Serialization(name + " replace", score);
     }
 
 

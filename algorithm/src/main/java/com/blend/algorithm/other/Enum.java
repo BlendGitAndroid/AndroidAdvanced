@@ -99,9 +99,11 @@ public enum Enum {
 class EnumDemo {
 
     public static void main(String[] args) {
+        // values和valueOf方法是编译器为我们添加的
         System.out.println(Arrays.toString(Enum.values())); //values()方法的作用就是获取枚举类中的所有变量，并作为数组返回
         System.out.println(Enum.valueOf("THURSDAY")); //valueOf(String name)方法与Enum类中的valueOf方法的作用类似根据名称获取枚举变量，只不过编译器生成的valueOf方法更简洁些只需传递一个参数
         System.out.println(Enum.valueOf("MONDAY").ordinal()); //返回枚举常量的序数（它在枚举声明中的位置，其中初始常量序数为零）
+
         System.out.println(Enum.MONDAY.name()); //返回此枚举常量的名称，在其枚举声明中对其进行声明
         System.out.println(Enum.MONDAY.desc);
     }

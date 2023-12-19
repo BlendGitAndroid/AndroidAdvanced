@@ -56,7 +56,7 @@ class Single implements Serializable {
         }
     }
 
-    private static Single single;
+    private static volatile Single single;
 
     public static Single getInstance() {
         if (single == null) {
@@ -69,7 +69,7 @@ class Single implements Serializable {
         }
         return single;
     }
-// 如果不重写readResolve,会导致单例模式在序列化->反序列化后失败
+    // 如果不重写readResolve,会导致单例模式在序列化->反序列化后失败
    private Object readResolve() {
        return single;
    }
