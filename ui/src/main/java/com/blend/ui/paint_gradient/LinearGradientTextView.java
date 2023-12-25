@@ -57,21 +57,29 @@ public class LinearGradientTextView extends AppCompatTextView {
         float textWith = mPaint.measureText(text);
 
         //返回TextView的高度
+        // Paint.FontMetrics 是一个类，用于描述绘制文本时，字体的度量信息。
+        // 它包含了以下几个属性：
+        // - ascent: 字体基线之上至字符顶部的距离
+        // - descent: 字体基线之下至字符底部的距离
+        // - top: 字体基线之上至字符顶部的最大距离
+        // - bottom: 字体基线之下至字符底部的最大距离
+        // - leading: 两行文字之间的额外间距。
         Paint.FontMetrics fontMetrics = mPaint.getFontMetrics();
-        float hegiht = fontMetrics.bottom - fontMetrics.top;
+
+        // 获取文字的高度
+        float height = fontMetrics.bottom - fontMetrics.top;
 
         //返回字体的大小
         float size = getTextSize();
 
         //整体高度除以每个字体的大小为有多少行
-        row = (int) (hegiht / size);
-
+        row = (int) (height / size);
 
         // 3个文字的宽度，设置渐变的宽，TextView的宽度除以text的个数为一个字的宽度
         int gradientSize = (int) (textWith / text.length() * 3);
 
         // 从左边-gradientSize开始，即左边距离文字gradientSize开始渐变
-        //
+        // 0x22ffffff, 0xffffffff, 0x22ffffff这三个参数分别表示开始颜色，中间颜色，结束颜色
         mLinearGradient = new LinearGradient(-gradientSize, 0, 0, 0, new int[]{
                 0x22ffffff, 0xffffffff, 0x22ffffff}, null, Shader.TileMode.CLAMP
         );
@@ -93,8 +101,9 @@ public class LinearGradientTextView extends AppCompatTextView {
         float textWidth = getPaint().measureText(getText().toString());
         //到底部进行返回
         if (mTranslate > textWidth + 1 || mTranslate < 1) {
-            DELTAX = 0;
+            // DELTAX = 0;
             curRow++;
+            mTranslate = 0;
             if (curRow > row) {
                 curRow = 0;
             }
@@ -104,6 +113,6 @@ public class LinearGradientTextView extends AppCompatTextView {
 
         //给线性渐变着色器设置本地矩阵，这个矩阵表示x向右平移
         mLinearGradient.setLocalMatrix(mMatrix);
-        postInvalidateDelayed(500);
+        postInvalidateDelayed(100);
     }
 }

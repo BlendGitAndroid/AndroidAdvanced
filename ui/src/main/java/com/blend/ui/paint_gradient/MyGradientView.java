@@ -19,7 +19,7 @@ import android.view.View;
 import com.blend.ui.R;
 
 /**
- * 绘制图片，使用BitmapShape，把这个Bitmap着色器设置给画笔，那么这个画笔就拿到了这个Bitmap，就能利用canvas设置不同形状的
+ * 绘制图片，使用BitmapShader，把这个Bitmap着色器设置给画笔，那么这个画笔就拿到了这个Bitmap，就能利用canvas设置不同形状的
  * Bitmap图片了。
  * <p>
  * 同样，只要是着色器，就有CLAMP，MIRROR，REPEAT三种扩充渲染。

@@ -76,8 +76,10 @@ public class RadarGradientView extends View {
         //这种实现方法虽然也能实现旋转，但是是通过旋转坐标系来做的
         // canvas.concat(matrix);
 
-
+        // 左上角的矩形
         canvas.drawRect(0, 0, 200, 200, mPaintCircle);
+
+        // 画扫描的圆
         canvas.drawCircle(mWidth / 2, mHeight / 2, mWidth * pots[4], mPaintRadar);
 
         canvas.restore();
@@ -92,16 +94,17 @@ public class RadarGradientView extends View {
         mHeight = getMeasuredHeight();
         mWidth = mHeight = Math.min(mWidth, mHeight);
 
-        //设置扫描渐变
+        //扫描圆设置扫描渐变
         scanShader = new SweepGradient(mWidth / 2, mHeight / 2,
                 new int[]{Color.TRANSPARENT, Color.parseColor("#84B5CA")}, null);
 
-        mPaintRadar.setShader(scanShader); // 设置着色器
+        mPaintRadar.setShader(scanShader); // 给画笔设置着色器
     }
 
     private Runnable run = new Runnable() {
         @Override
         public void run() {
+            // 旋转矩阵
             matrix.postRotate(scanSpeed, mWidth / 2, mHeight / 2); // 旋转矩阵
 
             //这种方式实现的旋转，是通过对着色器设置旋转矩阵

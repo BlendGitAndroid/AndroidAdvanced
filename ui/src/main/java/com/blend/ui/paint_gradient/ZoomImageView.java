@@ -33,7 +33,6 @@ public class ZoomImageView extends View {
         super(context);
 
         mBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.xyjy3);
-        mBitmapScale = mBitmap;
 
         //新建一个放大后的整个图片
         mBitmapScale = Bitmap.createScaledBitmap(mBitmapScale, mBitmapScale.getWidth() * FACTOR,
