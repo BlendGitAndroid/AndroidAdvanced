@@ -254,7 +254,7 @@ public class AnimationMainActivity extends AppCompatActivity {
     public void startInterpolatorApply(final View v) {
         ValueAnimator animator = new ValueAnimator();
         animator.setDuration(3000);
-        animator.setObjectValues(new PointF(0, 0));
+        animator.setObjectValues(new PointF(0, 0)); // 设置初始值为0,0
         final PointF point = new PointF();
         //估值
         animator.setEvaluator(new TypeEvaluator() {

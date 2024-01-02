@@ -62,10 +62,7 @@ import java.lang.reflect.Constructor;
  * View：调用onDetachedFromWindow，此时View与Window解除绑定，在这里可以做一些资源的释放，防止内存泄露
  * Activity：调用onDetachedFromWindow，此时Activity与Window解除绑定
  *
- *
- * NestedScrollingParent ?还没看
- *
- * https://www.jianshu.com/p/eb9d3f212986
+ * 进入的方法: 先Activity再View, 退出的方法: 先View再Activity
  */
 
 public class BehaviorCoordinatorLayout extends RelativeLayout implements NestedScrollingParent, ViewTreeObserver.OnGlobalLayoutListener {
@@ -271,6 +268,7 @@ public class BehaviorCoordinatorLayout extends RelativeLayout implements NestedS
         return false;
     }
 
+    // 自定义LayoutParams
     public static class LayoutParams extends RelativeLayout.LayoutParams {
 
         private Behavior mBehavior;

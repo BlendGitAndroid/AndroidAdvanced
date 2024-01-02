@@ -52,6 +52,8 @@ public class PullRefreshRecyclerView extends LinearLayout {
     private int mLastYIntercept = 0;
 
     private Scroller mScroller;
+
+    // 速度追踪器
     private VelocityTracker mVelocityTracker;
 
     private RecyclerView mRecyclerView;
@@ -255,6 +257,7 @@ public class PullRefreshRecyclerView extends LinearLayout {
                 int firstCompletelyVisibleItemPosition = -1;
                 if (mLayoutManager instanceof LinearLayoutManager) {
                     LinearLayoutManager manager = (LinearLayoutManager) mLayoutManager;
+                    // 用于获取当前可见的第一个完全显示在屏幕上的列表项的位置
                     firstCompletelyVisibleItemPosition = manager.findFirstCompletelyVisibleItemPosition();
                 }
 
@@ -427,7 +430,7 @@ public class PullRefreshRecyclerView extends LinearLayout {
      * 当用户下拉刷新完成回调时，调用此方法，将头部隐去，state状态恢复
      */
     public void refreshFinish() {
-        smoothScrollBy(0 - getScrollY());
+        smoothScrollBy(-getScrollY());
         getRecyclerView().getAdapter().notifyDataSetChanged();
         state = DEFAULT;
         if (mRefreshStateCallBack != null) {

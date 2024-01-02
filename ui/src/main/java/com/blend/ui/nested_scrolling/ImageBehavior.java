@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 
 import com.blend.ui.nested_scrolling.design.Behavior;
 
-
+// 通过反射来获取
 public class ImageBehavior extends Behavior {
 
     private int mMaxHeight = 400;
@@ -28,6 +28,7 @@ public class ImageBehavior extends Behavior {
     @Override
     public void onNestedScroll(View scrollView, View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed) {
         super.onNestedScroll(scrollView, target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed);
+        // 向上滑动
         if (scrollView.getScrollY() > 0) {
             ViewGroup.LayoutParams params = target.getLayoutParams();
             params.height = params.height - Math.abs(dyConsumed);

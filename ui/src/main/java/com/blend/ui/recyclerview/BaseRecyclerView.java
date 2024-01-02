@@ -9,6 +9,7 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 
+// 将点击坐标转化成表项索引
 public class BaseRecyclerView extends RecyclerView {
 
     private GestureDetector mGestureDetector;

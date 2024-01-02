@@ -95,6 +95,7 @@ public class ViewAnimationActivityActivity extends AppCompatActivity {
         AnimationSet setAnimation = new AnimationSet(true);
 
         // 子动画1:旋转动画
+        // 中心点位置是壶的中点
         Animation rotate = new RotateAnimation(0, 10, 0.5f, 0.5f);
         rotate.setDuration(1000);
         //调用后等待3秒开始执行
@@ -123,6 +124,7 @@ public class ViewAnimationActivityActivity extends AppCompatActivity {
         setAnimation.addAnimation(translate);
         setAnimation.addAnimation(rotate);
         setAnimation.addAnimation(wait);
+        // 设置插值器,每一个动画都是这个插值器
         setAnimation.setInterpolator(new BounceInterpolator());
 
         ivShuihu.startAnimation(setAnimation);

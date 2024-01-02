@@ -86,6 +86,9 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Custo
         this.onItemClickListener = onItemClickListener;
     }
 
+    // 最致命的是，在onBindViewHolder()中设置点击监听器还会导致 bug，因为“快照机制”，作为参数传入onItemClick()的
+    // 索引值是在调用onBindViewHolder()那一刻生成的快照，如果数据发生增删，但因为各种原因没有及时刷新对应位置的视图
+    // （onBindViewHolder()没有被再次调用），此时发生的点击事件拿到的索引就是错的。
     //'定义点击回调'
     public static interface OnItemClickListener {
         void onItemClick(int position);

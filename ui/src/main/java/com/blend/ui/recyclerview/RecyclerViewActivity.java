@@ -13,6 +13,11 @@ import com.blend.ui.R;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * adapter.notifyDataSetChanged()：刷新所有数据，包括数据源和界面
+ * 他的特点是先将界面数据清空,放入回收池中,回收池只能放5个item,然后再从回收池中取出ViewHolder,
+ * 所以可以看到前5个数据会bindViewHolder,后面就要先onCreateViewHolder,再bindViewHolder
+ */
 public class RecyclerViewActivity extends AppCompatActivity {
 
     private BaseRecyclerView rv;
@@ -42,7 +47,7 @@ public class RecyclerViewActivity extends AppCompatActivity {
             public void onClick(View v) {
                 list.add(2, R.drawable.avatar);
                 adapter.notifyItemInserted(2);
-                adapter.notifyItemRangeChanged(2, list.size() - 2);
+                // adapter.notifyItemRangeChanged(2, list.size() - 2);
             }
         });
 

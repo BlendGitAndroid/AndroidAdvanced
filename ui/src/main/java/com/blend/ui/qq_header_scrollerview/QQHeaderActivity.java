@@ -8,6 +8,7 @@ import android.widget.ImageView;
 
 import com.blend.ui.R;
 
+// 改变header的高度，然后重新布局
 public class QQHeaderActivity extends AppCompatActivity {
 
     private QQHeaderScrollView mQQHeaderScrollView;
@@ -37,8 +38,8 @@ public class QQHeaderActivity extends AppCompatActivity {
                 });
         View header = View.inflate(this, R.layout.qq_list_header, null);
         mImageView = header.findViewById(R.id.qqHeaderIv);
-        mQQHeaderScrollView.setZoomImageView(mImageView);
-        mQQHeaderScrollView.addHeaderView(header);
+        mQQHeaderScrollView.setZoomImageView(mImageView); // 给头部的ImageView做动画
+        mQQHeaderScrollView.addHeaderView(header);  //添加头布局
         mQQHeaderScrollView.setAdapter(adapter);
     }
 }

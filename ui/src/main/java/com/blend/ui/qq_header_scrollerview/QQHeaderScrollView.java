@@ -13,7 +13,9 @@ import android.widget.ListView;
 
 import com.blend.ui.R;
 
-
+/**
+ * 使用getLayoutParams来改变ImageView的高度,调用requestLayout()方法重新布局
+ */
 public class QQHeaderScrollView extends ListView {
 
     private static final String TAG = "QQHeaderScrollView";
@@ -55,18 +57,16 @@ public class QQHeaderScrollView extends ListView {
      * 不管是下滑还是上滑，都是-
      * 下滑：deltaY是负值，-去负值就是加
      * 上滑：deltaY是正值，-去正值就是减
-     * <p>
-     * TODO:mImageView.getLayoutParams().height = Math.max(mImageView.getHeight() - deltaY, 1);
-     * 这里的代码为1才有用，为0的话又会变为原来的宽高，为何
      */
     @Override
     protected boolean overScrollBy(int deltaX, int deltaY, int scrollX, int scrollY, int scrollRangeX, int scrollRangeY, int maxOverScrollX, int maxOverScrollY, boolean isTouchEvent) {
         Log.e(TAG, "overScrollBy() called with: deltaY = [" + deltaY + "]" + " ,mImageView.getHeight() - deltaY: " + (mImageView.getHeight() - deltaY));
-        mImageView.getLayoutParams().height = Math.max(mImageView.getHeight() - deltaY, 1);
+        mImageView.getLayoutParams().height = Math.max(mImageView.getHeight() - deltaY, 0);
         mImageView.requestLayout();
         return super.overScrollBy(deltaX, deltaY, scrollX, scrollY, scrollRangeX, scrollRangeY, maxOverScrollX, maxOverScrollY, isTouchEvent);
     }
 
+    // 自定义动画
     class ResetAnimation extends Animation {
 
         private int extraHeight;

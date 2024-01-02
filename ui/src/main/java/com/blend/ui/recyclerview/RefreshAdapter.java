@@ -57,7 +57,7 @@ public class RefreshAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemCount() {
-        return mBodyList.size() + 1;
+        return mBodyList.size() + 1;    //加上底部的加载更多
     }
 
     @Override
