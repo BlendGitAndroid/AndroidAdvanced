@@ -1,6 +1,10 @@
 package com.blend.architecture.handle_message;
 
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.os.MessageQueue;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
@@ -44,5 +48,40 @@ public class ActivityThreadActivity extends AppCompatActivity {
         }).start();
 
         MyLooper.loop();
+
+        Handler handler = new Handler(new Handler.Callback() {
+            @Override
+            public boolean handleMessage(Message msg) {
+                return false;
+            }
+        }) {
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+            }
+        };
+        Message message = Message.obtain(handler, new Runnable() {
+            @Override
+            public void run() {
+
+            }
+        });
+        handler.sendMessage(message);
+
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+
+            }
+        });
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            handler.getLooper().getQueue().addIdleHandler(new MessageQueue.IdleHandler() {
+                @Override
+                public boolean queueIdle() {
+                    return false;   //返回false，表示只会执行一次，返回true，表示会一直执行
+                }
+            });
+        }
     }
 }
