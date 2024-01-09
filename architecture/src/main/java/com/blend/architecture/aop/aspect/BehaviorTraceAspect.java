@@ -24,6 +24,7 @@ public class BehaviorTraceAspect {
     1.就在原来的应用中那些注解的地方放到当前切面进行处理,就是代码的织入点
     execution(注解名 注解用到的地方)
      */
+    // 这是一个注解类型的限定符，指定了要匹配的目标方法上的注解。只有带有该注解的方法才会被匹配。
     @Pointcut("execution(@com.blend.architecture.aop.annotation.BehaviorTrace *  *(..))") //声明一个切点
     public void methodAnnotatedWithBehaviorTrace() {
     }
@@ -34,13 +35,13 @@ public class BehaviorTraceAspect {
     @After("methodAnnotatedWithBehaviorTrace()")
     @Around 替代原有切点，如果要执行原来代码的话，调用 ProceedingJoinPoint.proceed()
     */
-    @Around("methodAnnotatedWithBehaviorTrace()")
+    @Around("methodAnnotatedWithBehaviorTrace()")   //引入切入点
     public Object weaveJoinPoint(ProceedingJoinPoint joinPoint) throws Throwable {
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
         String className = methodSignature.getDeclaringType().getSimpleName();
         String methodName = methodSignature.getName();
         String value = methodSignature.getMethod().getAnnotation(BehaviorTrace.class).value();
-        Object result = joinPoint.proceed();
+        Object result = joinPoint.proceed();    //执行原方法
         long begin = System.currentTimeMillis();
         SystemClock.sleep(new Random().nextInt(2000));
         long duration = System.currentTimeMillis() - begin;

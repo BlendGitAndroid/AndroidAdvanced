@@ -19,6 +19,8 @@ public class MyHandler implements InvocationHandler {
 
     /**
      * 这个invoke就是拦截Object对象的所有方法
+     * <p>
+     * 使用动态代理，就是在这里进行拦截，跳转到登陆界面
      *
      * @param proxy
      * @param method
