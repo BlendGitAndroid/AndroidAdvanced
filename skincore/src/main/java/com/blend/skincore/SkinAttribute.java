@@ -109,8 +109,7 @@ public class SkinAttribute {
                 Drawable left = null, top = null, right = null, bottom = null;
                 switch (skinPair.attributeName) {
                     case "background":
-                        Object background = SkinResources.getInstance().getBackground(skinPair
-                                .resId);
+                        Object background = SkinResources.getInstance().getBackground(skinPair.resId);
                         if (background instanceof Integer) {
                             view.setBackgroundColor((int) background);
                         } else {
@@ -118,18 +117,15 @@ public class SkinAttribute {
                         }
                         break;
                     case "src":
-                        background = SkinResources.getInstance().getBackground(skinPair
-                                .resId);
+                        background = SkinResources.getInstance().getBackground(skinPair.resId);
                         if (background instanceof Integer) {
-                            ((ImageView) view).setImageDrawable(new ColorDrawable((Integer)
-                                    background));
+                            ((ImageView) view).setImageDrawable(new ColorDrawable((Integer) background));
                         } else {
                             ((ImageView) view).setImageDrawable((Drawable) background);
                         }
                         break;
                     case "textColor":
-                        ((TextView) view).setTextColor(SkinResources.getInstance().getColorStateList
-                                (skinPair.resId));
+                        ((TextView) view).setTextColor(SkinResources.getInstance().getColorStateList(skinPair.resId));
                         break;
                     case "drawableLeft":
                         left = SkinResources.getInstance().getDrawable(skinPair.resId);
@@ -144,15 +140,13 @@ public class SkinAttribute {
                         bottom = SkinResources.getInstance().getDrawable(skinPair.resId);
                         break;
                     case "skinTypeface":
-                        applyTypeFace(SkinResources.getInstance().getTypeface
-                                (skinPair.resId));
+                        applyTypeFace(SkinResources.getInstance().getTypeface(skinPair.resId));
                         break;
                     default:
                         break;
                 }
                 if (null != left || null != right || null != top || null != bottom) {
-                    ((TextView) view).setCompoundDrawablesWithIntrinsicBounds(left, top, right,
-                            bottom);
+                    ((TextView) view).setCompoundDrawablesWithIntrinsicBounds(left, top, right, bottom);
                 }
             }
         }

@@ -8,12 +8,11 @@
     android:orientation="vertical">
 
     <Button
-        skinTypeface="@string/typeface2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="skinSelect"
-        android:background="@drawable/t_window_bg"
         android:text="个性换肤"
+        app:skinTypeface="@string/typeface2"
         tools:ignore="MissingPrefix" />
 
 
