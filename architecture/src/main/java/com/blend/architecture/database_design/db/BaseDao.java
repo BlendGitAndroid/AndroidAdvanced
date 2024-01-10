@@ -28,6 +28,7 @@ public class BaseDao<T> implements IBaseDao<T> {
 
     private boolean isInit = false;
 
+    // key是数据库列名,value是类属性类型
     private HashMap<String, Field> mCacheMap;
 
     //架构内部的逻辑，最后不要提供构造方法给调用层使用
@@ -147,19 +148,19 @@ public class BaseDao<T> implements IBaseDao<T> {
     再转换成String
      */
     private Map<String, String> getValues(T entity) {
-        HashMap<String, String> map = new HashMap<>();
+        HashMap<String, String> map = new HashMap<>();  // key是数据库列名,value是成员变量的值
         Iterator<Map.Entry<String, Field>> iterator = mCacheMap.entrySet().iterator();
         while (iterator.hasNext()) {
             Map.Entry<String, Field> entry = iterator.next();
             String key = entry.getKey();    //字段，数据库列名
-            Field field = entry.getValue(); //成员变量
+            Field field = entry.getValue(); //成员变量名
             field.setAccessible(true);
             try {
-                Object object = field.get(entity);
+                Object object = field.get(entity);  //成员变量的值
                 if (object == null) {
                     continue;
                 }
-                String fieldValue = object.toString();
+                String fieldValue = object.toString();  //属性值
                 if (!TextUtils.isEmpty(key) && !TextUtils.isEmpty(fieldValue)) {
                     map.put(key, fieldValue);
                 }
@@ -276,6 +277,7 @@ public class BaseDao<T> implements IBaseDao<T> {
         return result;
     }
 
+    // 通过反射创建出对象,将查询到的数据库值转换成属性
     private List<T> getResult(Cursor query, T where) {
         ArrayList<T> list = new ArrayList<>();
         T object;
