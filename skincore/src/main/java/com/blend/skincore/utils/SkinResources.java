@@ -7,6 +7,9 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class SkinResources {
 
     private static SkinResources instance;
@@ -59,8 +62,8 @@ public class SkinResources {
         }
         //在皮肤包中不一定就是 当前程序的 id
         //获取对应id 在当前的名称 colorPrimary
-        String resName = mAppResources.getResourceEntryName(resId);
-        String resType = mAppResources.getResourceTypeName(resId);
+        String resName = mAppResources.getResourceEntryName(resId); // 资源名称,如colorPrimary
+        String resType = mAppResources.getResourceTypeName(resId);  // 资源类型,如color,drawable
         int skinId = mSkinResources.getIdentifier(resName, resType, mSkinPkgName);
         return skinId;
     }
@@ -131,6 +134,8 @@ public class SkinResources {
         return null;
     }
 
+    private Map<String, Typeface> mTypefaceMap = new HashMap<>();
+
     public Typeface getTypeface(int resId) {
         String skinTypefacePath = getString(resId);
         if (TextUtils.isEmpty(skinTypefacePath)) {
@@ -141,7 +146,11 @@ public class SkinResources {
             if (isDefaultSkin) {
                 return Typeface.createFromAsset(mAppResources.getAssets(), skinTypefacePath);
             }
-            return Typeface.createFromAsset(mSkinResources.getAssets(), skinTypefacePath);
+            if (!mTypefaceMap.containsKey(skinTypefacePath)) {
+                Typeface typeface = Typeface.createFromAsset(mSkinResources.getAssets(), skinTypefacePath);
+                mTypefaceMap.put(skinTypefacePath, typeface);
+            }
+            return mTypefaceMap.get(skinTypefacePath);
         } catch (RuntimeException e) {
         }
         return Typeface.DEFAULT;

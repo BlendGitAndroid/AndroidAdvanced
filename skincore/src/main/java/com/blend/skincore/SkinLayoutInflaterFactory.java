@@ -42,10 +42,8 @@ public class SkinLayoutInflaterFactory implements LayoutInflater.Factory2, Obser
             "android.webkit."
     };
     //记录对应View的构造函数
-    private static final Map<String, Constructor<? extends View>> mConstructorMap
-            = new HashMap<>();
-    private static final Class<?>[] mConstructorSignature = new Class[]{
-            Context.class, AttributeSet.class};
+    private static final Map<String, Constructor<? extends View>> mConstructorMap = new HashMap<>();
+    private static final Class<?>[] mConstructorSignature = new Class[]{Context.class, AttributeSet.class};
 
     // 当选择新皮肤后需要替换View与之对应的属性
     // 页面属性管理器
@@ -85,15 +83,13 @@ public class SkinLayoutInflaterFactory implements LayoutInflater.Factory2, Obser
     }
 
 
-    private View createViewFromTag(String name, Context context, AttributeSet
-            attrs) {
+    private View createViewFromTag(String name, Context context, AttributeSet attrs) {
         //如果包含 . 则不是SDK中的view 可能是自定义view包括support库中的View
         if (-1 != name.indexOf('.')) {
             return null;
         }
         for (int i = 0; i < mClassPrefixList.length; i++) {
-            View view = createView(mClassPrefixList[i] +
-                    name, context, attrs);
+            View view = createView(mClassPrefixList[i] + name, context, attrs);
             if (view != null) {
                 return view;
             }
@@ -101,8 +97,7 @@ public class SkinLayoutInflaterFactory implements LayoutInflater.Factory2, Obser
         return null;
     }
 
-    private View createView(String name, Context context, AttributeSet
-            attrs) {
+    private View createView(String name, Context context, AttributeSet attrs) {
         Constructor<? extends View> constructor = findConstructor(context, name);
         try {
             return constructor.newInstance(context, attrs);
@@ -115,8 +110,8 @@ public class SkinLayoutInflaterFactory implements LayoutInflater.Factory2, Obser
         Constructor<? extends View> constructor = mConstructorMap.get(name);
         if (null == constructor) {
             try {
-                Class<? extends View> clazz = context.getClassLoader().loadClass
-                        (name).asSubclass(View.class);
+                Class<? extends View> clazz = context.getClassLoader().loadClass(name).asSubclass(View.class);
+                // constructor = clazz.getConstructor(Context.class, AttributeSet.class);   等同于这样
                 constructor = clazz.getConstructor(mConstructorSignature);
                 mConstructorMap.put(name, constructor);
             } catch (Exception e) {

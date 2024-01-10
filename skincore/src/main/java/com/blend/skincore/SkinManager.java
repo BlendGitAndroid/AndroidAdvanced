@@ -20,8 +20,8 @@ public class SkinManager extends Observable {
     /**
      * Activity生命周期回调
      */
-    private SkinActivityLifecycle skinActivityLifecycle;
-    private Application mContext;
+    private final SkinActivityLifecycle skinActivityLifecycle;
+    private final Application mContext;
 
     /**
      * 初始化 必须在Application中先进行初始化
@@ -44,7 +44,8 @@ public class SkinManager extends Observable {
         SkinPreference.init(application);
         //资源管理类 用于从 app/皮肤 中加载资源
         SkinResources.init(application);
-        //注册Activity生命周期
+
+        //注册Activity生命周期,采集需要换肤的View
         skinActivityLifecycle = new SkinActivityLifecycle();
         application.registerActivityLifecycleCallbacks(skinActivityLifecycle);
 
@@ -79,20 +80,17 @@ public class SkinManager extends Observable {
                 //反射创建AssetManager 与 Resource
                 AssetManager assetManager = AssetManager.class.newInstance();
                 //资源路径设置 目录或压缩包
-                Method addAssetPath = assetManager.getClass().getMethod("addAssetPath",
-                        String.class);
+                Method addAssetPath = assetManager.getClass().getMethod("addAssetPath", String.class);
                 addAssetPath.invoke(assetManager, skinPath);
                 Resources appResource = mContext.getResources();
                 //根据当前的显示与配置(横竖屏、语言等)创建Resources
-                Resources skinResource = new Resources(assetManager, appResource.getDisplayMetrics(),
-                        appResource.getConfiguration());
+                Resources skinResource = new Resources(assetManager, appResource.getDisplayMetrics(), appResource.getConfiguration());
                 //记录
                 SkinPreference.getInstance().setSkin(skinPath);
                 //获取外部Apk(皮肤包) 包名
                 PackageManager mPm = mContext.getPackageManager();
                 //getPackageArchiveInfo方法，用来获取未安装APK中的信息
-                PackageInfo info = mPm.getPackageArchiveInfo(skinPath,
-                        PackageManager.GET_ACTIVITIES);
+                PackageInfo info = mPm.getPackageArchiveInfo(skinPath, PackageManager.GET_ACTIVITIES);
                 String packageName = info.packageName;
                 SkinResources.getInstance().applySkin(skinResource, packageName);
             } catch (Exception e) {

@@ -5,6 +5,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -17,6 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SkinAttribute {
+
+    private static final String TAG = "SkinAttribute";
 
     private static final List<String> mAttributes = new ArrayList<>();
 
@@ -39,7 +42,7 @@ public class SkinAttribute {
     private Typeface typeface;
 
     //记录换肤需要操作的View与属性信息
-    private List<SkinView> mSkinViews = new ArrayList<>();
+    private final List<SkinView> mSkinViews = new ArrayList<>();
 
     public SkinAttribute(Typeface typeface) {
         this.typeface = typeface;
@@ -51,10 +54,10 @@ public class SkinAttribute {
 
     public void load(View view, AttributeSet attrs) {
         List<SkinPair> mSkinPars = new ArrayList<>();
+        // 遍历属性集合
         for (int i = 0; i < attrs.getAttributeCount(); i++) {
             //获得属性名  mAttributes
             String attributeName = attrs.getAttributeName(i);
-            L.e("   " + attributeName);
             if (mAttributes.contains(attributeName)) {
                 String attributeValue = attrs.getAttributeValue(i);
                 // 如果是color的 以#开头表示写死的颜色 不可用于换肤
@@ -69,7 +72,7 @@ public class SkinAttribute {
                     // 正常以 @ 开头
                     resId = Integer.parseInt(attributeValue.substring(1));
                 }
-                L.e("   " + attributeName + " = " + attributeValue);
+                Log.e(TAG, "attributeName: " + attributeName + "  resId: " + resId + "  attributeValue: " + attributeValue);
                 SkinPair skinPair = new SkinPair(attributeName, resId);
                 mSkinPars.add(skinPair);
             }

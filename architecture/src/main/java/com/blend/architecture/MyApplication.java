@@ -26,9 +26,10 @@ public class MyApplication extends Application {
         sMyApplication = this;
 
         //换肤初始化
-        initSkin();
+        // initSkin();
 
-        // initGreenDao();
+        //数据库初始化
+        initGreenDao();
 
         // hook();
     }

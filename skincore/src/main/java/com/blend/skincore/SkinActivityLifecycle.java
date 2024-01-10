@@ -6,6 +6,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.util.ArrayMap;
 import android.support.v4.view.LayoutInflaterCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 
 import com.blend.skincore.utils.SkinThemeUtils;
@@ -24,12 +25,13 @@ import java.lang.reflect.Field;
  */
 public class SkinActivityLifecycle implements Application.ActivityLifecycleCallbacks {
 
-    private ArrayMap<Activity, SkinLayoutInflaterFactory> mLayoutInflaterFactories = new
-            ArrayMap<>();
-
+    private final ArrayMap<Activity, SkinLayoutInflaterFactory> mLayoutInflaterFactories = new ArrayMap<>();
 
     @Override
     public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+
+        Log.e("Blend", "onActivityCreated: " + activity.getClass().getSimpleName());
+
         /**
          *  更新状态栏
          */
@@ -59,8 +61,7 @@ public class SkinActivityLifecycle implements Application.ActivityLifecycleCallb
         可以利用反射将mFactorySet修改为false加载。
          */
         //使用factory2 设置布局加载工程
-        SkinLayoutInflaterFactory skinLayoutInflaterFactory = new SkinLayoutInflaterFactory
-                (activity, typeface);
+        SkinLayoutInflaterFactory skinLayoutInflaterFactory = new SkinLayoutInflaterFactory(activity, typeface);
         LayoutInflaterCompat.setFactory2(layoutInflater, skinLayoutInflaterFactory);
         mLayoutInflaterFactories.put(activity, skinLayoutInflaterFactory);
         //添加观察者

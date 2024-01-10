@@ -68,6 +68,10 @@ import java.util.List;
  * Activity的LayoutInflaterCompat都有该Activity的换肤的资源信息。
  * 3.拿到插件包的资源，保证插件包的资源名字和默认资源的名字是一样的。
  * 4.换肤的时候，根据属性ID先查找出当前资源的资源名称，资源类型，得出插件包下的资源ID，利用观察者模式，就能换肤了。
+ * <p>
+ * <p>
+ * 先获取需要换肤的View,根据View找到对应的属性和资源Id,换肤的时候,根据资源Id获取到资源类型和资源名称,然后根据资源名称和资源
+ * 类型获取到皮肤包中的资源Id,替换掉原来的资源Id,然后调用View的setXXX()方法,将皮肤包中的资源id设置到View上,这样就完成了换肤的过程.
  */
 public class SkinMainActivity extends AppCompatActivity {
 
@@ -90,7 +94,7 @@ public class SkinMainActivity extends AppCompatActivity {
                         Log.e(TAG, "onCreateView: " + resId);
                     }
                 }
-                //可以在这里进行每一个View的创建耗时监控
+                //可以在这里进行每一个View的创建耗时监控,这里调用的是系统的View的创建
                 View view = getDelegate().createView(parent, name, context, attrs);
                 return view;
             }

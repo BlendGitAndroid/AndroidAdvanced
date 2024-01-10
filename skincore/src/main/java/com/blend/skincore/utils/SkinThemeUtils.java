@@ -50,8 +50,8 @@ public class SkinThemeUtils {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             return;
         }
-        //获得 statusBarColor 与 nanavigationBarColor (状态栏颜色)
-        //当与 colorPrimaryDark  不同时 以statusBarColor为准
+        //获得 statusBarColor 与 navigationBarColor (状态栏颜色),若没有设置,默认是colorPrimaryDark的颜色
+        //当与colorPrimaryDark不同时,以statusBarColor为准
         int[] statusBarColorResId = getResId(activity, STATUSBAR_COLOR_ATTRS);
         if (statusBarColorResId[0] != 0) {
             activity.getWindow().setStatusBarColor(SkinResources.getInstance().getColor(statusBarColorResId[0]));
