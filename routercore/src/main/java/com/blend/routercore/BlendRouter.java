@@ -107,17 +107,15 @@ public class BlendRouter {
     }
 
 
-    private static void loadInfo() throws InterruptedException, IOException, PackageManager
-            .NameNotFoundException, ClassNotFoundException, NoSuchMethodException,
+    private static void loadInfo() throws InterruptedException, IOException, PackageManager.NameNotFoundException,
+            ClassNotFoundException, NoSuchMethodException,
             IllegalAccessException, InvocationTargetException, InstantiationException {
         //获得所有apt生成的路由类的全类名 (分组表)
         Set<String> routerMap = ClassUtils.getFileNameByPackageName(mContext, ROUTE_ROOT_PAKCAGE);
         for (String className : routerMap) {
-            if (className.startsWith(ROUTE_ROOT_PAKCAGE + "." + SDK_NAME + SEPARATOR +
-                    SUFFIX_ROOT)) {
+            if (className.startsWith(ROUTE_ROOT_PAKCAGE + "." + SDK_NAME + SEPARATOR + SUFFIX_ROOT)) {
                 // root中注册的是分组信息 将分组信息加入仓库中，根据反射实现，利用策略模式，加载所有分组表
-                ((IRouteRoot) (Class.forName(className).getConstructor().newInstance())).loadInto
-                        (Warehouse.groupsIndex);
+                ((IRouteRoot) (Class.forName(className).getConstructor().newInstance())).loadInto(Warehouse.groupsIndex);
             }
         }
 //        for (Map.Entry<String, Class<? extends IRouteGroup>> stringClassEntry : Warehouse
@@ -210,19 +208,14 @@ public class BlendRouter {
                     public void run() {
                         //可能需要返回码
                         if (requestCode > 0) {
-                            ActivityCompat.startActivityForResult((Activity) currentContext, intent,
-                                    requestCode, postcard.getOptionsBundle());
+                            ActivityCompat.startActivityForResult((Activity) currentContext, intent, requestCode, postcard.getOptionsBundle());
                         } else {
-                            ActivityCompat.startActivity(currentContext, intent, postcard
-                                    .getOptionsBundle());
+                            ActivityCompat.startActivity(currentContext, intent, postcard.getOptionsBundle());
                         }
 
-                        if ((0 != postcard.getEnterAnim() || 0 != postcard.getExitAnim()) &&
-                                currentContext instanceof Activity) {
+                        if ((0 != postcard.getEnterAnim() || 0 != postcard.getExitAnim()) && currentContext instanceof Activity) {
                             //老版本
-                            ((Activity) currentContext).overridePendingTransition(postcard
-                                            .getEnterAnim()
-                                    , postcard.getExitAnim());
+                            ((Activity) currentContext).overridePendingTransition(postcard.getEnterAnim(), postcard.getExitAnim());
                         }
                         //跳转完成
                         if (null != callback) {
@@ -249,11 +242,9 @@ public class BlendRouter {
         //还没准备的
         if (null == routeMeta) {
             //创建并调用 loadInto 函数,然后记录在仓库
-            Class<? extends IRouteGroup> groupMeta = Warehouse.groupsIndex.get(card
-                    .getGroup());
+            Class<? extends IRouteGroup> groupMeta = Warehouse.groupsIndex.get(card.getGroup());
             if (null == groupMeta) {
-                throw new NoRouteFoundException("没找到对应路由: " + card.getGroup() + " " +
-                        card.getPath());
+                throw new NoRouteFoundException("没找到对应路由: " + card.getGroup() + " " + card.getPath());
             }
             IRouteGroup iGroupInstance;
             try {

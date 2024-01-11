@@ -29,7 +29,7 @@ public class MyApplication extends Application {
         // initSkin();
 
         //数据库初始化
-        initGreenDao();
+        // initGreenDao();
 
         // hook();
     }

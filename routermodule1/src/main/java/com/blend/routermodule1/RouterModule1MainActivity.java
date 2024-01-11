@@ -42,12 +42,12 @@ public class RouterModule1MainActivity extends AppCompatActivity {
     }
 
     public void mainJump(View view) {
-        BlendRouter.getInstance().build("/main/test").withString("a",
-                "从Module1").navigation(this);
+        BlendRouter.getInstance().build("/main/test").withString("a", "从Module1")
+                .navigation(this);
     }
 
     public void module2Jump(View view) {
-        BlendRouter.getInstance().build("/module2/test").withString("msg",
-                "从Module1").navigation(this);
+        BlendRouter.getInstance().build("/module2/test").withString("msg", "从Module1")
+                .navigation(this);
     }
 }

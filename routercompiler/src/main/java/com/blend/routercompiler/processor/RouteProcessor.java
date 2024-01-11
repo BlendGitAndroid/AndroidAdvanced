@@ -118,7 +118,7 @@ public class RouteProcessor extends AbstractProcessor {
         super.init(processingEnvironment);
         //获得apt的日志输出
         log = Log.newLog(processingEnvironment.getMessager());  //返回实现Messager接口的对象，用于报告错误信息、警告提醒。
-        log.i("init()");
+        log.i("RouteProcessor init()");
         elementUtils = processingEnvironment.getElementUtils(); //返回实现Elements接口的对象，用于处理元素的工具类。
         typeUtils = processingEnvironment.getTypeUtils();   //返回实现Types接口的对象，用于处理类型的工具类。
         filerUtils = processingEnvironment.getFiler();  //返回实现Filer接口的对象，用于创建文件、类和辅助文件。
@@ -128,9 +128,9 @@ public class RouteProcessor extends AbstractProcessor {
         if (!Utils.isEmpty(options)) {
             moduleName = options.get(Consts.ARGUMENTS_NAME);
         }
-        log.i("RouteProcessor Parmaters:" + moduleName);
+        log.i("RouteProcessor Parameters:" + moduleName);
         if (Utils.isEmpty(moduleName)) {
-            throw new RuntimeException("Not set Processor Parmaters.");
+            throw new RuntimeException("Not set Processor Parameters.");
         }
     }
 
@@ -151,7 +151,7 @@ public class RouteProcessor extends AbstractProcessor {
             //处理 Route 注解
             if (!Utils.isEmpty(routeElements)) {
                 try {
-                    log.i("Route Class: ===" + routeElements.size());
+                    log.i("Route Class size: " + routeElements.size());
                     parseRoutes(routeElements);
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -169,7 +169,7 @@ public class RouteProcessor extends AbstractProcessor {
         TypeElement activity = elementUtils.getTypeElement(Consts.ACTIVITY);
         //节点自描述 Mirror，表示Java编程语言中的类型。这些类型包括基本类型、引用类型、数组类型、类型变量和null类型等等
         TypeMirror type_Activity = activity.asType();
-        log.i("Route Class: ===" + type_Activity);
+        log.i("Route Class type: " + type_Activity);
         TypeElement iService = elementUtils.getTypeElement(Consts.ISERVICE);
         TypeMirror type_IService = iService.asType();
 
@@ -183,7 +183,7 @@ public class RouteProcessor extends AbstractProcessor {
             RouteMeta routeMeta;
             // 使用Route注解的类信息
             TypeMirror tm = element.asType();
-            log.i("Route Class: " + tm.toString());
+            log.i("Route Class TypeMirror: " + tm.toString());
             Route route = element.getAnnotation(Route.class);
             //是否是 Activity 使用了Route注解
             if (typeUtils.isSubtype(tm, type_Activity)) {
@@ -265,8 +265,8 @@ public class RouteProcessor extends AbstractProcessor {
                             .addSuperinterface(ClassName.get(iRouteGroup))
                             .addModifiers(PUBLIC)
                             .addMethod(loadIntoMethodOfGroupBuilder.build())
-                            .build()
-            ).build().writeTo(filerUtils);
+                            .build())
+                    .build().writeTo(filerUtils);
             log.i("Generated RouteGroup: " + Consts.PACKAGE_OF_GENERATE_FILE + "." +
                     groupClassName);
             //分组名和生成的对应的Group类类名

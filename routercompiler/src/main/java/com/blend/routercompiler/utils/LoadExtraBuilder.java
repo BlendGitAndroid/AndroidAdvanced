@@ -31,8 +31,7 @@ public class LoadExtraBuilder {
 
     public LoadExtraBuilder(ParameterSpec parameterSpec) {
         // 函数 public void loadExtra(Object target)
-        builder = MethodSpec.methodBuilder(Consts
-                .METHOD_LOAD_EXTRA)
+        builder = MethodSpec.methodBuilder(Consts.METHOD_LOAD_EXTRA)
                 .addAnnotation(Override.class)
                 .addModifiers(Modifier.PUBLIC)
                 .addParameter(parameterSpec);
@@ -40,10 +39,8 @@ public class LoadExtraBuilder {
 
     public void setElementUtils(Elements elementUtils) {
         this.elementUtils = elementUtils;
-        parcelableType = elementUtils.getTypeElement(Consts
-                .PARCELABLE).asType();
-        iServiceType = elementUtils.getTypeElement(Consts
-                .ISERVICE).asType();
+        parcelableType = elementUtils.getTypeElement(Consts.PARCELABLE).asType();
+        iServiceType = elementUtils.getTypeElement(Consts.ISERVICE).asType();
     }
 
     public void setTypeUtils(Types typeUtils) {
@@ -112,8 +109,7 @@ public class LoadExtraBuilder {
 //                    .navigation();
 //            testService.test();
             statement = "t." + fieldName + " = ($T) $T.getInstance().build($S).navigation()";
-            builder.addStatement(statement, TypeName.get(element.asType()), Consts.ROUTER,
-                    extraName);
+            builder.addStatement(statement, TypeName.get(element.asType()), Consts.ROUTER, extraName);
             return;
         } else {
             //List
@@ -123,19 +119,15 @@ public class LoadExtraBuilder {
                 //list 或 arraylist
                 ClassName rawType = ((ParameterizedTypeName) typeName).rawType;
                 //泛型类型
-                List<TypeName> typeArguments = ((ParameterizedTypeName) typeName)
-                        .typeArguments;
-                if (!rawType.toString().equals(Consts.ARRAYLIST) && !rawType.toString()
-                        .equals(Consts.LIST)) {
-                    throw new RuntimeException("Not Support Inject Type:" + typeMirror + " " +
-                            element);
+                List<TypeName> typeArguments = ((ParameterizedTypeName) typeName).typeArguments;
+                if (!rawType.toString().equals(Consts.ARRAYLIST) && !rawType.toString().equals(Consts.LIST)) {
+                    throw new RuntimeException("Not Support Inject Type:" + typeMirror + " " + element);
                 }
                 if (typeArguments.isEmpty() || typeArguments.size() != 1) {
                     throw new RuntimeException("List Must Specify Generic Type:" + typeArguments);
                 }
                 TypeName typeArgumentName = typeArguments.get(0);
-                TypeElement typeElement = elementUtils.getTypeElement(typeArgumentName
-                        .toString());
+                TypeElement typeElement = elementUtils.getTypeElement(typeArgumentName.toString());
                 // Parcelable 类型
                 if (typeUtils.isSubtype(typeElement.asType(), parcelableType)) {
                     statement += "getParcelableArrayListExtra($S)";
@@ -144,12 +136,10 @@ public class LoadExtraBuilder {
                 } else if (typeElement.asType().toString().equals(Consts.INTEGER)) {
                     statement += "getIntegerArrayListExtra($S)";
                 } else {
-                    throw new RuntimeException("Not Support Generic Type : " + typeMirror + " " +
-                            element);
+                    throw new RuntimeException("Not Support Generic Type : " + typeMirror + " " + element);
                 }
             } else {
-                throw new RuntimeException("Not Support Extra Type : " + typeMirror + " " +
-                        element);
+                throw new RuntimeException("Not Support Extra Type : " + typeMirror + " " + element);
             }
         }
         builder.addStatement(statement, extraName);
@@ -163,8 +153,8 @@ public class LoadExtraBuilder {
      * @param typeMirror
      * @param element
      */
-    private void addArrayStatement(String statement, String fieldName, String extraName, TypeMirror
-            typeMirror, Element element) {
+    private void addArrayStatement(String statement, String fieldName, String extraName,
+                                   TypeMirror typeMirror, Element element) {
         //数组
         switch (typeMirror.toString()) {
             case Consts.BOOLEANARRAY:
@@ -199,25 +189,18 @@ public class LoadExtraBuilder {
                 String defaultValue = "t." + fieldName;
                 //object数组 componentType获得object类型
                 ArrayTypeName arrayTypeName = (ArrayTypeName) ClassName.get(typeMirror);
-                TypeElement typeElement = elementUtils.getTypeElement(arrayTypeName
-                        .componentType.toString());
+                TypeElement typeElement = elementUtils.getTypeElement(arrayTypeName.componentType.toString());
                 //是否为 Parcelable 类型
                 if (!typeUtils.isSubtype(typeElement.asType(), parcelableType)) {
-                    throw new RuntimeException("Not Support Extra Type:" + typeMirror + " " +
-                            element);
+                    throw new RuntimeException("Not Support Extra Type:" + typeMirror + " " + element);
                 }
-                statement = "$T[] " + fieldName + " = t.getIntent()" +
-                        ".getParcelableArrayExtra" +
-                        "($S)";
+                statement = "$T[] " + fieldName + " = t.getIntent()" + ".getParcelableArrayExtra" + "($S)";
                 builder.addStatement(statement, parcelableType, extraName);
                 builder.beginControlFlow("if( null != $L)", fieldName);
                 statement = defaultValue + " = new $T[" + fieldName + ".length]";
                 builder.addStatement(statement, arrayTypeName.componentType)
-                        .beginControlFlow("for (int i = 0; i < " + fieldName + "" +
-                                ".length; " +
-                                "i++)")
-                        .addStatement(defaultValue + "[i] = ($T)" + fieldName + "[i]",
-                                arrayTypeName.componentType)
+                        .beginControlFlow("for (int i = 0; i < " + fieldName + "" + ".length; " + "i++)")
+                        .addStatement(defaultValue + "[i] = ($T)" + fieldName + "[i]", arrayTypeName.componentType)
                         .endControlFlow();
                 builder.endControlFlow();
                 return;

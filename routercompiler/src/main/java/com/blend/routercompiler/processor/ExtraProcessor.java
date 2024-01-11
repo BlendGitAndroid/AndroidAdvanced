@@ -1,5 +1,7 @@
 package com.blend.routercompiler.processor;
 
+import static javax.lang.model.element.Modifier.PUBLIC;
+
 import com.blend.routerannotation.Extra;
 import com.blend.routercompiler.utils.Consts;
 import com.blend.routercompiler.utils.LoadExtraBuilder;
@@ -34,12 +36,10 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 
-import static javax.lang.model.element.Modifier.PUBLIC;
-
 @AutoService(Processor.class)
 @SupportedOptions(Consts.ARGUMENTS_NAME)
-@SupportedSourceVersion(SourceVersion.RELEASE_7)
-@SupportedAnnotationTypes(Consts.ANN_TYPE_Extra)
+@SupportedSourceVersion(SourceVersion.RELEASE_7)    // 指定JDK编译版本
+@SupportedAnnotationTypes(Consts.ANN_TYPE_Extra)    // 指定要处理的注解
 public class ExtraProcessor extends AbstractProcessor {
 
     /**
@@ -64,6 +64,8 @@ public class ExtraProcessor extends AbstractProcessor {
 
     /**
      * 初始化 从 {@link ProcessingEnvironment} 中获得一系列处理器工具
+     * init：被注解处理工具调用，并输入 ProcessingEnviroment 参数。
+     * ProcessingEnviroment提供很多有用的工具类，比如Elements、Types、Filer和Messager等
      *
      * @param processingEnvironment
      */
@@ -75,13 +77,15 @@ public class ExtraProcessor extends AbstractProcessor {
         elementUtils = processingEnv.getElementUtils();
         typeUtils = processingEnvironment.getTypeUtils();
         filerUtils = processingEnv.getFiler();
-
     }
 
     /**
      * @param set
      * @param roundEnvironment 表示当前或是之前的运行环境,可以通过该对象查找找到的注解。
      * @return true 表示后续处理器不会再处理(已经处理)
+     * <p>
+     * init：被注解处理工具调用，并输入 ProcessingEnviroment 参数。
+     * ProcessingEnviroment提供很多有用的工具类，比如Elements、Types、Filer和Messager等
      */
     @Override
     public boolean process(Set<? extends TypeElement> set, RoundEnvironment roundEnvironment) {
@@ -115,8 +119,7 @@ public class ExtraProcessor extends AbstractProcessor {
                 // 类
                 TypeElement rawClassElement = entry.getKey();
                 if (!typeUtils.isSubtype(rawClassElement.asType(), type_Activity)) {
-                    throw new RuntimeException("[Just Support Activity Field]:" +
-                            rawClassElement);
+                    throw new RuntimeException("[Just Support Activity Field]:" + rawClassElement);
                 }
                 //封装的函数生成类
                 LoadExtraBuilder loadExtra = new LoadExtraBuilder(objectParamSpec);
@@ -134,8 +137,8 @@ public class ExtraProcessor extends AbstractProcessor {
                 String extraClassName = rawClassElement.getSimpleName() + Consts.NAME_OF_EXTRA;
                 // 生成 XX$$Autowired
                 JavaFile.builder(className.packageName(), TypeSpec.classBuilder(extraClassName)
-                        .addSuperinterface(ClassName.get(IExtra))
-                        .addModifiers(PUBLIC).addMethod(loadExtra.build()).build())
+                                .addSuperinterface(ClassName.get(IExtra))
+                                .addModifiers(PUBLIC).addMethod(loadExtra.build()).build())
                         .build().writeTo(filerUtils);
                 log.i("Generated Extra: " + className.packageName() + "." + extraClassName);
             }

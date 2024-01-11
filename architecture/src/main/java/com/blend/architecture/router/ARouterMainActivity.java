@@ -26,7 +26,7 @@ import java.util.ArrayList;
  *
  * <p>
  * 阿里ARouter原理：一个用于帮助Android App进行组件化改造的框架——支持模块间的路由、通信、解耦，基于反射和注解来实现的。
- *
+ * <p>
  * 组件化出现的原因：在组件化中，为了业务逻辑的彻底解耦，同时也为了每个module都可以方便的单独运行和调试，上层的各个module不会进行相互依赖
  * (只有在正式联调的时候才会让app壳module去依赖上层的其他组件module)，而是共同依赖于base module，base module中会依
  * 赖一些公共的第三方库和其他配置。那么在上层的各个module中，如何进行通信呢？
@@ -100,34 +100,29 @@ public class ARouterMainActivity extends AppCompatActivity {
         ps.add(testParcelable);
         ps.add(testParcelable2);
 
-        BlendRouter.getInstance().build("/main/test").withString("a",
-                "从MainActivity").withInt("b", 1).withShort("c", (short) 2).withLong("d", 3)
-                .withFloat("e", 1.0f).withDouble("f", 1.1).withByte("g", (byte) 1).withBoolean
-                ("h", true).withChar("i", '好').withParcelable("j", testParcelable)
-                .withStringArray("aa",
-                        new String[]{"1", "2"}).withIntArray("bb", new int[]{1, 2}).withShortArray
-                ("cc", new short[]{(short) 2, (short) 2}).withLongArray("dd", new long[]{1, 2})
-                .withFloatArray("ee", new float[]{1.0f, 1.0f}).withDoubleArray("ff", new
-                double[]{1.1, 1.1}).withByteArray("gg",
-                new byte[]{(byte) 1, (byte) 1}).withBooleanArray
-                ("hh", new boolean[]{true, true}).withCharArray("ii", new char[]{'好', '好'})
+        BlendRouter.getInstance().build("/main/test").withString("a", "从MainActivity")
+                .withInt("b", 1).withShort("c", (short) 2).withLong("d", 3)
+                .withFloat("e", 1.0f).withDouble("f", 1.1).withByte("g", (byte) 1).withBoolean("h", true)
+                .withChar("i", '好').withParcelable("j", testParcelable)
+                .withStringArray("aa", new String[]{"1", "2"}).withIntArray("bb", new int[]{1, 2})
+                .withShortArray("cc", new short[]{(short) 2, (short) 2}).withLongArray("dd", new long[]{1, 2})
+                .withFloatArray("ee", new float[]{1.0f, 1.0f}).withDoubleArray("ff", new double[]{1.1, 1.1})
+                .withByteArray("gg", new byte[]{(byte) 1, (byte) 1}).withBooleanArray("hh", new boolean[]{true, true})
+                .withCharArray("ii", new char[]{'好', '好'})
                 .withParcelableArray("jj", new TestParcelable[]{testParcelable, testParcelable2})
-                .withParcelableArrayList("k1", ps).withParcelableArrayList("k2", ps)
-                .withStringArrayList("k3", strings).withIntegerArrayList("k4", integers)
-                .withInt("hhhhhh", 1)
+                .withParcelableArrayList("k1", ps).withParcelableArrayList("k2", ps).withStringArrayList("k3", strings)
+                .withIntegerArrayList("k4", integers).withInt("hhhhhh", 1)
                 .navigation(this, 100);
     }
 
     // 跳转模块1
     public void module1Jump(View view) {
-        BlendRouter.getInstance().build("/module1/test").withString("msg",
-                "从MainActivity").navigation();
+        BlendRouter.getInstance().build("/module1/test").withString("msg", "从MainActivity").navigation();
     }
 
     // 跳转模块2
     public void module2Jump(View view) {
-        BlendRouter.getInstance().build("/module2/test").withString("msg",
-                "从MainActivity").navigation();
+        BlendRouter.getInstance().build("/module2/test").withString("msg", "从MainActivity").navigation();
     }
 
 

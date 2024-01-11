@@ -5,8 +5,7 @@ import com.squareup.javapoet.ClassName;
 public class Consts {
 
 
-    public static final ClassName ROUTER = ClassName.get(
-            "com.blend.routercore", "BlendRouter");
+    public static final ClassName ROUTER = ClassName.get("com.blend.routercore", "BlendRouter");
 
     public static final String ARGUMENTS_NAME = "moduleName";
     public static final String ANN_TYPE_ROUTE = "com.blend.routerannotation.Route";

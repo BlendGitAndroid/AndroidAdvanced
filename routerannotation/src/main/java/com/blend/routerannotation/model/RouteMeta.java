@@ -29,8 +29,7 @@ public class RouteMeta {
     private String group;
 
 
-    public static RouteMeta build(Type type, Class<?> destination, String path, String
-            group) {
+    public static RouteMeta build(Type type, Class<?> destination, String path, String group) {
         return new RouteMeta(type, null, destination, path, group);
     }
 
@@ -41,6 +40,7 @@ public class RouteMeta {
     /**
      * Type
      *
+     * @param type type
      * @param route   route
      * @param element element
      */
@@ -49,8 +49,7 @@ public class RouteMeta {
     }
 
 
-    public RouteMeta(Type type, Element element, Class<?> destination, String path, String
-            group) {
+    public RouteMeta(Type type, Element element, Class<?> destination, String path, String group) {
         this.type = type;
         this.destination = destination;
         this.element = element;

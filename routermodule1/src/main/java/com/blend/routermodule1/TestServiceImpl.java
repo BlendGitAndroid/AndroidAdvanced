@@ -5,7 +5,7 @@ import android.util.Log;
 import com.blend.routerannotation.Route;
 import com.blend.routerbase.TestService;
 
-@Route(path = "/module11/service")
+@Route(path = "/module1/service")
 public class TestServiceImpl implements TestService {
 
     @Override

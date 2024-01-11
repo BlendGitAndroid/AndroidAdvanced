@@ -223,8 +223,7 @@ public class Postcard extends RouteMeta {
         return this;
     }
 
-    public Postcard withParcelableArrayList(@Nullable String key, @Nullable ArrayList<? extends
-            Parcelable> value) {
+    public Postcard withParcelableArrayList(@Nullable String key, @Nullable ArrayList<? extends Parcelable> value) {
         mBundle.putParcelableArrayList(key, value);
         return this;
     }

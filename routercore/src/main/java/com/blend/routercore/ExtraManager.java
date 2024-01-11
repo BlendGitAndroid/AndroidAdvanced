@@ -42,8 +42,7 @@ public class ExtraManager {
         IExtra iExtra = classCache.get(className);
         try {
             if (null == iExtra) {
-                iExtra = (IExtra) Class.forName(instance.getClass().getName() +
-                        SUFFIX_AUTOWIRED).getConstructor().newInstance();
+                iExtra = (IExtra) Class.forName(instance.getClass().getName() + SUFFIX_AUTOWIRED).getConstructor().newInstance();
             }
             iExtra.loadExtra(instance);
             classCache.put(className, iExtra);

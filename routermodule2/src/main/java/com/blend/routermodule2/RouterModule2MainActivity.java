@@ -47,16 +47,15 @@ public class RouterModule2MainActivity extends AppCompatActivity {
 
     public void mainJump(View view) {
         if (BuildConfig.isModule) {
-            BlendRouter.getInstance().build("/main/test").withString("a",
-                    "从Module2").navigation(this);
+            BlendRouter.getInstance().build("/main/test").withString("a", "从Module2")
+                    .navigation(this);
         } else {
-            Toast.makeText(this, "当前处于组件模式,无法使用此功能",
-                    Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "当前处于组件模式,无法使用此功能", Toast.LENGTH_SHORT).show();
         }
     }
 
     public void module1Jump(View view) {
-        BlendRouter.getInstance().build("/module1/test").withString("msg",
-                "从Module2").navigation(this);
+        BlendRouter.getInstance().build("/module1/test").withString("msg", "从Module2")
+                .navigation(this);
     }
 }
