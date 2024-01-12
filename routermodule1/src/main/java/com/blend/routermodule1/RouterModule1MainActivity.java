@@ -21,6 +21,7 @@ public class RouterModule1MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_module1_main);
 
+        // 需要注入类信息，然后给msg赋值
         BlendRouter.getInstance().inject(this);
         Log.i("module1", "我是模块1:" + msg);
 

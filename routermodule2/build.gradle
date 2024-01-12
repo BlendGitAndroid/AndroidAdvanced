@@ -22,6 +22,7 @@ android {
 
         buildConfigField("boolean", "isModule", String.valueOf(isModule))
 
+        // 用于区分是组件还是apk
         sourceSets {
             main {
                 if (!isModule) {//在组件模式下，使用不同的manifest文件

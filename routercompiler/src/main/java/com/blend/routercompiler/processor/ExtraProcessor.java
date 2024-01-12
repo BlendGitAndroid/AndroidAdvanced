@@ -57,9 +57,9 @@ public class ExtraProcessor extends AbstractProcessor {
     private Filer filerUtils;
 
     /**
-     * 记录所有需要注入的属性 key:类节点 value:需要注入的属性节点集合
+     * 记录所有需要注入的属性 key:类（如Activity） value:需要注入的属性节点集合
      */
-    private Map<TypeElement, List<Element>> parentAndChild = new HashMap<>();
+    private final Map<TypeElement, List<Element>> parentAndChild = new HashMap<>();
     private Log log;
 
     /**
@@ -90,8 +90,7 @@ public class ExtraProcessor extends AbstractProcessor {
     @Override
     public boolean process(Set<? extends TypeElement> set, RoundEnvironment roundEnvironment) {
         if (!Utils.isEmpty(set)) {
-            Set<? extends Element> elements = roundEnvironment
-                    .getElementsAnnotatedWith(Extra.class);
+            Set<? extends Element> elements = roundEnvironment.getElementsAnnotatedWith(Extra.class);
             if (!Utils.isEmpty(elements)) {
                 try {
                     categories(elements);
@@ -102,7 +101,6 @@ public class ExtraProcessor extends AbstractProcessor {
             }
             return true;
         }
-
         return false;
     }
 
@@ -127,6 +125,7 @@ public class ExtraProcessor extends AbstractProcessor {
                 loadExtra.setTypeUtils(typeUtils);
                 ClassName className = ClassName.get(rawClassElement);
                 loadExtra.injectTarget(className);
+
                 //遍历属性
                 for (int i = 0; i < entry.getValue().size(); i++) {
                     Element element = entry.getValue().get(i);
@@ -148,6 +147,8 @@ public class ExtraProcessor extends AbstractProcessor {
 
     /**
      * 记录需要生成的类与属性
+     *
+     * 用于表示一个类下面（比如Activity），所有被注解为Extra的属性集合
      *
      * @param elements
      * @throws IllegalAccessException

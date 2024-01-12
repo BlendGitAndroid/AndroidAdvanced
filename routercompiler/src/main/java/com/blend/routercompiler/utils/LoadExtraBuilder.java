@@ -21,7 +21,7 @@ import javax.lang.model.util.Types;
 public class LoadExtraBuilder {
 
     private static final String INJECT_TARGET = "$T t = ($T)target";
-    private MethodSpec.Builder builder;
+    private final MethodSpec.Builder builder;
     private Elements elementUtils;
     private Types typeUtils;
 

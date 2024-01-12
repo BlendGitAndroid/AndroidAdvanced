@@ -49,6 +49,9 @@ import java.util.ArrayList;
  * Activity.class(activity.class = map.get(path))，然后new Intent()，当调用ARouter的withString()方法它的内部会
  * 调用intent.putExtra(String name, String value)，调用navigation()方法，它的内部会调用startActivity(intent)进行
  * 跳转，这样便可以实现两个相互没有依赖的module顺利的启动对方的Activity了。
+ * <p>
+ * 如果在不同的module中，由于apt框架是分module编译，并且每个module都会生成ARouterRoot$module_name分组表类,
+ * ARouterGroup$$group_name路由表等文件.
  */
 public class ARouterMainActivity extends AppCompatActivity {
 

@@ -1,5 +1,7 @@
 package com.blend.routercompiler.processor;
 
+import static javax.lang.model.element.Modifier.PUBLIC;
+
 import com.blend.routerannotation.Route;
 import com.blend.routerannotation.model.RouteMeta;
 import com.blend.routercompiler.utils.Consts;
@@ -36,8 +38,6 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
-
-import static javax.lang.model.element.Modifier.PUBLIC;
 
 /**
  * 编译器注解的核心原理依赖APT（Annotation Processing Tools）实现，著名的ButterKnife、Dagger、等开源库都是基于APT。
@@ -81,13 +81,13 @@ import static javax.lang.model.element.Modifier.PUBLIC;
 public class RouteProcessor extends AbstractProcessor {
 
     /**
-     * key:组名 value:类名
+     * key:模块名 value:该模块下生成的的路由类名
      */
-    private Map<String, String> rootMap = new TreeMap<>();
+    private final Map<String, String> rootMap = new TreeMap<>();
     /**
-     * 分组 key:组名 value:对应组的路由信息
+     * 分组 key:group名字 value:对应组的路由信息集合
      */
-    private Map<String, List<RouteMeta>> groupMap = new HashMap<>();
+    private final Map<String, List<RouteMeta>> groupMap = new HashMap<>();
     /**
      * 节点工具类 (类、函数、属性都是节点)
      */
@@ -200,7 +200,7 @@ public class RouteProcessor extends AbstractProcessor {
         //生成类需要实现的接口
         //下面是用来判断是否实现了group或者root接口
         TypeElement iRouteGroup = elementUtils.getTypeElement(Consts.IROUTE_GROUP);
-        log.i("---------" + iRouteGroup.getSimpleName());
+        log.i("iRouteGroup getSimpleName: " + iRouteGroup.getSimpleName());
         TypeElement iRouteRoot = elementUtils.getTypeElement(Consts.IROUTE_ROOT);
 
         /**
@@ -211,30 +211,56 @@ public class RouteProcessor extends AbstractProcessor {
          * 生成Root类 作用:记录 <分组，对应的Group类>
          */
         generatedRoot(iRouteRoot, iRouteGroup);
-
-
     }
+
+    // 生成 $$Group$$ 类文件
+    // public class BlendRouter$$Group$$module1 implements IRouteGroup {
+    //   @Override
+    //   public void loadInto(Map<String, RouteMeta> atlas) {
+    //     atlas.put("/module1/test", RouteMeta.build(RouteMeta.Type.ACTIVITY,RouterModule1MainActivity.class, "/module1/test", "module1"));
+    //     atlas.put("/module1/service", RouteMeta.build(RouteMeta.Type.ISERVICE,TestServiceImpl.class, "/module1/service", "module1"));
+    //   }
+    // }
+    // 生成 $$Root$$ 类文件
+    //public class BlendRouter$$Root$$routermodule1 implements IRouteRoot {
+    //   @Override
+    //   public void loadInto(Map<String, Class<? extends IRouteGroup>> routes) {
+    //     routes.put("module1", BlendRouter$$Group$$module1.class);
+    //   }
+    // }
+
+    // 1.先构建函数参数
+    // 2.构建函数签名
+    // 3.构建函数体
+    // 4.构建类名
+    // 5.构建类
 
     //这里的iRouteGroup就是一个接口
     private void generatedGroup(TypeElement iRouteGroup) throws IOException {
-        //参数  Map<String,RouteMeta>
+
+        // `ParameterizedTypeName`是JavaPoet库中的一个类，用于表示带有参数化类型的类型。
+        // `public static ParameterizedTypeName get(ClassName rawType, TypeName... typeArguments)`：创建一个
+        // 参数化类型的`ParameterizedTypeName`对象，其中泛型参数是`TypeName`类型。
+        // 下面代码表示: Map<String,RouteMeta>
         ParameterizedTypeName atlas = ParameterizedTypeName.get(
                 ClassName.get(Map.class),
                 ClassName.get(String.class),
                 ClassName.get(RouteMeta.class)
         );
-        //参数 Map<String,RouteMeta> atlas
-        ParameterSpec groupParamSpec = ParameterSpec.builder(atlas, "atlas")
-                .build();
+
+        // `ParameterSpec`是JavaPoet库中的一个类，用于表示方法或构造函数的参数。
+        // 在Java中，方法和构造函数可以接受零个或多个参数。`ParameterSpec`类的作用是允许我们在代码生成过程中，表示和操作方法
+        // 或构造函数的参数。它提供了一些方法用于创建和操作参数，如获取参数名称、获取参数类型、获取参数修饰符等。
+        // 下面代码表示: Map<String,RouteMeta> atlas
+        ParameterSpec groupParamSpec = ParameterSpec.builder(atlas, "atlas").build();
 
         //遍历分组,每一个分组创建一个 $$Group$$ 类
         for (Map.Entry<String, List<RouteMeta>> entry : groupMap.entrySet()) {
             /**
-             * 类成员函数loadInfo声明构建
+             * 类成员函数loadInto声明构建
              */
-            //函数 public void loadInto(Map<String,RouteMeta> atlas)
-            MethodSpec.Builder loadIntoMethodOfGroupBuilder = MethodSpec.methodBuilder
-                    (Consts.METHOD_LOAD_INTO)
+            //函数签名 public void loadInto(Map<String,RouteMeta> atlas)
+            MethodSpec.Builder loadIntoMethodOfGroupBuilder = MethodSpec.methodBuilder(Consts.METHOD_LOAD_INTO)
                     .addAnnotation(Override.class)
                     .addModifiers(PUBLIC)
                     .addParameter(groupParamSpec);
@@ -246,8 +272,6 @@ public class RouteProcessor extends AbstractProcessor {
             for (RouteMeta routeMeta : groupData) {
                 // 组装函数体:
                 // atlas.put(地址,RouteMeta.build(Class,path,group))
-                // $S https://github.com/square/javapoet#s-for-strings
-                // $T https://github.com/square/javapoet#t-for-types
                 loadIntoMethodOfGroupBuilder.addStatement(
                         "atlas.put($S, $T.build($T.$L,$T.class, $S, $S))",
                         routeMeta.getPath(),
@@ -260,47 +284,41 @@ public class RouteProcessor extends AbstractProcessor {
             }
             // 创建java文件($$Group$$)  组
             String groupClassName = Consts.NAME_OF_GROUP + groupName;
-            JavaFile.builder(Consts.PACKAGE_OF_GENERATE_FILE,
-                    TypeSpec.classBuilder(groupClassName)
-                            .addSuperinterface(ClassName.get(iRouteGroup))
-                            .addModifiers(PUBLIC)
-                            .addMethod(loadIntoMethodOfGroupBuilder.build())
-                            .build())
+            JavaFile.builder(Consts.PACKAGE_OF_GENERATE_FILE,  //包名
+                            TypeSpec.classBuilder(groupClassName)   //类名
+                                    .addSuperinterface(ClassName.get(iRouteGroup))  //实现IRouteGroup接口
+                                    .addModifiers(PUBLIC)
+                                    .addMethod(loadIntoMethodOfGroupBuilder.build())
+                                    .build())
                     .build().writeTo(filerUtils);
-            log.i("Generated RouteGroup: " + Consts.PACKAGE_OF_GENERATE_FILE + "." +
-                    groupClassName);
+            log.i("Generated RouteGroup: " + Consts.PACKAGE_OF_GENERATE_FILE + "." + groupClassName);
             //分组名和生成的对应的Group类类名
             rootMap.put(groupName, groupClassName);
         }
     }
 
     private void generatedRoot(TypeElement iRouteRoot, TypeElement iRouteGroup) throws IOException {
-        //类型 Map<String,Class<? extends IRouteGroup>> routes>
-        //Wildcard 通配符
+        //Wildcard 表示通配符
+        //类型 Map<String,Class<? extends IRouteGroup>>
         ParameterizedTypeName routes = ParameterizedTypeName.get(
                 ClassName.get(Map.class),
                 ClassName.get(String.class),
-                ParameterizedTypeName.get(
-                        ClassName.get(Class.class),
-                        WildcardTypeName.subtypeOf(ClassName.get(iRouteGroup))
-                )
+                ParameterizedTypeName.get(ClassName.get(Class.class), WildcardTypeName.subtypeOf(ClassName.get(iRouteGroup)))
         );
 
         //参数 Map<String,Class<? extends IRouteGroup>> routes> routes
-        ParameterSpec rootParamSpec = ParameterSpec.builder(routes, "routes")
-                .build();
+        ParameterSpec rootParamSpec = ParameterSpec.builder(routes, "routes").build();
         //函数 public void loadInfo(Map<String,Class<? extends IRouteGroup>> routes> routes)
-        MethodSpec.Builder loadIntoMethodOfRootBuilder = MethodSpec.methodBuilder
-                (Consts.METHOD_LOAD_INTO)
+        MethodSpec.Builder loadIntoMethodOfRootBuilder = MethodSpec.methodBuilder(Consts.METHOD_LOAD_INTO)
                 .addAnnotation(Override.class)
                 .addModifiers(PUBLIC)
                 .addParameter(rootParamSpec);
 
         //函数体
         for (Map.Entry<String, String> entry : rootMap.entrySet()) {
-            loadIntoMethodOfRootBuilder.addStatement("routes.put($S, $T.class)", entry
-                    .getKey(), ClassName.get(Consts.PACKAGE_OF_GENERATE_FILE, entry.getValue
-                    ()));
+            loadIntoMethodOfRootBuilder.addStatement("routes.put($S, $T.class)",
+                    entry.getKey(),
+                    ClassName.get(Consts.PACKAGE_OF_GENERATE_FILE, entry.getValue()));  //构建全类名
         }
         //生成 $Root$类
         String rootClassName = Consts.NAME_OF_ROOT + moduleName;
@@ -317,8 +335,7 @@ public class RouteProcessor extends AbstractProcessor {
 
     private void categories(RouteMeta routeMeta) {
         if (routeVerify(routeMeta)) {
-            log.i("Group Info, Group Name = " + routeMeta.getGroup() + ", Path = " +
-                    routeMeta.getPath());
+            log.i("Group Info, Group Name = " + routeMeta.getGroup() + ", Path = " + routeMeta.getPath());
             List<RouteMeta> routeMetas = groupMap.get(routeMeta.getGroup());
             //如果未记录分组则创建
             if (Utils.isEmpty(routeMetas)) {
