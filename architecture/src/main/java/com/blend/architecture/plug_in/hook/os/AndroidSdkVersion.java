@@ -22,9 +22,9 @@ public class AndroidSdkVersion {
      * 判断当前系统版本 26 27 28
      * @return
      */
-    public static boolean isAndroidOS_26_27_28() {
+    public static boolean isAndroidOS_26_27_28_30() {
         int V = Build.VERSION.SDK_INT;
-        if ((V > 26 || V == 26) && (V < 28 || V == 28)) {
+        if ((V > 26 || V == 26) && (V < 30 || V == 30)) {
             return true;
         }
         return false;

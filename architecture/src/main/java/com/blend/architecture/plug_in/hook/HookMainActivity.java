@@ -59,12 +59,14 @@ public class HookMainActivity extends AppCompatActivity {
 
 
     /**
-     * 这个代码要放在设置Click事件之后，这个代码就是使用反射和动态代理实现的
+     * 这个代码要放在设置Click事件之后，这个代码就是使用反射和代理实现的
      * setOnClickListener，设置的其实在View的内部类ListenerInfo中的mOnClickListener字段，Hook的时候
      * 先使用反射拿到该字段，然后使用代码创建一个View.OnClickListener类，使用代理模式，在onClick的调用前后
      * 加上自己需要的逻辑。最后将mOnClickListener设置成自己的Click类，那么Click回调就会回调自己的类。
      * 偷梁换柱。
      * 其实这也是AOP的一种思想。
+     * <p>
+     * Hook的本质就是用自己的代码替换掉原来的代码，用自己生成的对象替换掉原来的对象，这样就可以在原来的代码前后加上自己的逻辑。
      */
     private void hookOnClickListener(View view) {
         try {

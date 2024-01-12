@@ -34,7 +34,7 @@ public class DnActivityThread {
      */
     public void mActivityThreadmHAction(Context mContext) throws Exception {
         context = mContext;
-        if (AndroidSdkVersion.isAndroidOS_26_27_28()) {
+        if (AndroidSdkVersion.isAndroidOS_26_27_28_30()) {
             do_26_27_28_mHRestore();
         } else if (AndroidSdkVersion.isAndroidOS_21_22_23_24_25()) {
             do_21_22_23_24_25_mHRestore();
@@ -99,8 +99,7 @@ public class DnActivityThread {
                     Intent targetIntent = proxyIntent.getParcelableExtra(TARGET_INTENT);
                     if (targetIntent != null) {
                         //集中式登录
-                        SharedPreferences share = context.getSharedPreferences("blend",
-                                Context.MODE_PRIVATE);
+                        SharedPreferences share = context.getSharedPreferences("blend", Context.MODE_PRIVATE);
                         if (share.getBoolean("login", false)) {
                             // 登录  还原  把原有的意图
                             targetIntent.setComponent(targetIntent.getComponent());
