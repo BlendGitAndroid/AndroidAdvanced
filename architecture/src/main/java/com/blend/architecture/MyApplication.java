@@ -31,7 +31,7 @@ public class MyApplication extends Application {
         //数据库初始化
         // initGreenDao();
 
-        hook();
+        // hook();
     }
 
     private void hook() {

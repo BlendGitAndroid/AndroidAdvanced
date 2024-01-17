@@ -68,6 +68,7 @@ public class DnAMSCheckEngine {
                         if ("startActivity".equals(method.getName())) {
                             // 把LoginActivity 换成 ProxyActivity
                             // TODO 把不能经过检测的LoginActivity 替换 成能够经过检测的ProxyActivity
+                            // 使用占坑Activity通过AMS的检测
                             Intent proxyIntent = new Intent(mContext, ProxyActivity.class);
 
 
