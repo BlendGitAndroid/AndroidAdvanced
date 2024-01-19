@@ -1,5 +1,6 @@
 package com.blend.architecture.okhttp;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -14,11 +15,24 @@ import com.blend.architecture.okhttp.okhttp.Response;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.Proxy;
 import java.net.Socket;
+import java.security.KeyStore;
+import java.security.SecureRandom;
+import java.security.cert.CertificateFactory;
 import java.util.concurrent.TimeUnit;
 
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManagerFactory;
+
 import okhttp3.Cache;
+import okhttp3.CertificatePinner;
 import okhttp3.FormBody;
 import okhttp3.Interceptor;
 import okhttp3.MediaType;
@@ -129,8 +143,7 @@ public class OkHttpMainActivity extends AppCompatActivity {
     }
 
     private void test() {
-        OkHttpClient client = new OkHttpClient.Builder()
-                .connectTimeout(15, TimeUnit.SECONDS)   //连接超时，仅对于TCP的三次握手和TLS握手
+        OkHttpClient client = new OkHttpClient.Builder().connectTimeout(15, TimeUnit.SECONDS)   //连接超时，仅对于TCP的三次握手和TLS握手
                 .readTimeout(10, TimeUnit.SECONDS)  //读取超时，服务端返回数据太慢
                 .writeTimeout(10, TimeUnit.SECONDS) //发送超时，客户端写数据太慢
                 .cache(new Cache(getExternalCacheDir(), 500 * 1024 * 1024))
@@ -145,13 +158,11 @@ public class OkHttpMainActivity extends AppCompatActivity {
                         Log.i(TAG, "intercept: proceed end: url" + url + ", at " + System.currentTimeMillis());
                         return response;
                     }
-                })
-                .build();
+                }).build();
     }
 
     private void interceptTest() {
-        OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .addInterceptor(new LoggingInterceptor())   //应用拦截器
+        OkHttpClient okHttpClient = new OkHttpClient.Builder().addInterceptor(new LoggingInterceptor())   //应用拦截器
                 .build();
     }
 
@@ -164,9 +175,7 @@ public class OkHttpMainActivity extends AppCompatActivity {
      */
     private void httpPostTest() {
         String url = "http://www.baidu.com";
-        OkHttpClient builder = new OkHttpClient()
-                .newBuilder()
-                .build(); //利用建造者模式，用于添加自定义属性
+        OkHttpClient builder = new OkHttpClient().newBuilder().build(); //利用建造者模式，用于添加自定义属性
 
         //1.FromBody是RequestBody的实现类
         FormBody.Builder formBody = new FormBody.Builder();//创建表单请求体
@@ -220,13 +229,30 @@ public class OkHttpMainActivity extends AppCompatActivity {
     private void httpTest() {
         String url = "http://www.baidu.com";
         OkHttpClient client = new OkHttpClient();
+
+        // 做SSL Pinner
+        CertificatePinner cp = new CertificatePinner.Builder()
+                .add("hostname", "hash")
+                .build();
+
+        // 当使用代理服务器时，客户端发送的请求会经过代理服务器转发到目标服务器，而响应数据也会经过代理服务器返回给客户端。这样的网络传输
+        // 过程中，代理服务器可以拦截、查看和修改请求和响应的数据，从而可能导致数据被窃取或篡改。
+        // 为了防止抓包，OkHttp提供了`NO_PROXY`的机制，用于指定不使用代理服务器进行连接的特定主机。具体原理如下：
+        // 1. 在OkHttp的配置中设置`NO_PROXY`常量，将目标主机添加到`NO_PROXY`中。可以通过`ProxySelector`或直接设置`Proxy`对象来配置`NO_PROXY`。
+        // 2. 当发起请求时，OkHttp会根据请求的目标主机和`NO_PROXY`的规则匹配来决定是否使用代理服务器。如果目标主机与`NO_PROXY`中指定的主机匹配，
+        // 则直接进行网络连接，不通过代理服务器。
+        // 3. 如果目标主机与`NO_PROXY`中的规则不匹配，则会使用配置的代理服务器进行连接，并按照正常的代理方式进行网络传输。
+        // 通过将目标主机添加到`NO_PROXY`中，OkHttp会绕过代理服务器直接连接目标服务器，从而减少了数据经过代理服务器的风险。这样，请求和响应
+        // 的数据就不会被代理服务器拦截、查看或修改，提高了数据的安全性。
+        // 需要注意的是，`NO_PROXY`仅仅是防止通过代理服务器进行抓包的一种方式，它并不能提供绝对的安全性。如果在客户端或网络中存在其他的抓包手
+        // 段或安全问题，仍然可能导致数据被窃取或篡改。因此，在保证数据安全性方面，还需要综合考虑其他安全措施，如使用HTTPS协议、加密数据等。
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .connectTimeout(300, TimeUnit.SECONDS)
+                .certificatePinner(cp)
+                .proxy(Proxy.NO_PROXY)  // 不使用代理
                 .build(); //利用建造者模式，用于添加自定义属性
 
-        okhttp3.Request request = new okhttp3.Request.Builder()
-                .url(url)
-                .get()  //默认为GET请求，可以不写
+        okhttp3.Request request = new okhttp3.Request.Builder().url(url).get()  //默认为GET请求，可以不写
                 .build();
         final okhttp3.Call call = client.newCall(request);
         try {
@@ -246,11 +272,8 @@ public class OkHttpMainActivity extends AppCompatActivity {
     }
 
     private void postCustomizeTest() {
-        RequestBody body = new RequestBody()
-                .add("city", "长沙")
-                .add("key", "13cb58f5884f9749287abbead9c658f2");
-        Request request = new Request.Builder().url("http://restapi.amap" +
-                ".com/v3/weather/weatherInfo").post(body).build();
+        RequestBody body = new RequestBody().add("city", "长沙").add("key", "13cb58f5884f9749287abbead9c658f2");
+        Request request = new Request.Builder().url("http://restapi.amap" + ".com/v3/weather/weatherInfo").post(body).build();
         new DNHttpClient().newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, Throwable throwable) {
@@ -265,9 +288,7 @@ public class OkHttpMainActivity extends AppCompatActivity {
     }
 
     private void getCustomizeTest() {
-        Request request = new Request.Builder()
-                .url("http://www.kuaidi100.com/query?type=yuantong&postid=11111111111")
-                .build();
+        Request request = new Request.Builder().url("http://www.kuaidi100.com/query?type=yuantong&postid=11111111111").build();
         Call call = new DNHttpClient().newCall(request);
         call.enqueue(new Callback() {
             @Override
@@ -295,8 +316,7 @@ public class OkHttpMainActivity extends AppCompatActivity {
 
         try {
             OutputStream outputStream = socket.getOutputStream();
-            outputStream.write(("GET /weather/101250101.shtml HTTP/1.1\r\n" +
-                    "Host: www.weather.com.cn\r\n\r\n").getBytes());
+            outputStream.write(("GET /weather/101250101.shtml HTTP/1.1\r\n" + "Host: www.weather.com.cn\r\n\r\n").getBytes());
             outputStream.flush();
             byte[] bytes = new byte[1024];
             int len = 0;
@@ -312,6 +332,110 @@ public class OkHttpMainActivity extends AppCompatActivity {
 //        OkHttpClient client1 = new OkHttpClient().newBuilder().addInterceptor();  // 应用拦截器
 //        OkHttpClient client2 = new OkHttpClient().newBuilder().addNetworkInterceptor();  // 网络拦截器
     }
+
+    /**
+     * 在建立HTTPS连接时，Android操作系统会负责处理证书的获取和验证过程。具体来说，当Android客户端与服务器建立连接时，TLS/SSL协议会进行以下操作：
+     * 1. 服务器发送证书链：服务器会将证书链发送给客户端。证书链通常由服务器证书、中间证书和根证书组成。
+     * 2. 证书验证：Android操作系统会自动验证证书的有效性。这包括检查证书的签名是否有效、证书是否过期、证书是否被吊销等。
+     * 3. 主机名验证：在证书验证的过程中，Android操作系统会检查证书中的主机名字段是否与连接的主机名匹配。这是为了防止中间人攻击或使用伪造证书进行欺骗。
+     * 4. 证书链的验证：除了验证服务器证书的有效性，Android操作系统还会验证证书链的完整性。这包括检查中间证书是否来自受信任的颁发机构，以及根证书是否
+     * 在Android操作系统的信任存储中。
+     * 如果证书验证和主机名验证都通过，Android操作系统会继续与服务器完成握手过程，建立加密通道。
+     * 需要注意的是，Android操作系统会使用内置的证书信任存储来验证证书的有效性。这个信任存储中包含了一组受信任的根证书，来自主要的颁发机构。如果服务器
+     * 的证书由这些受信任的根证书签名，那么验证过程将会成功。如果服务器的证书不是由受信任的根证书签名，那么验证过程将会失败。在这种情况下，开发者可以通
+     * 过自定义的方式来处理证书验证和主机名验证，以满足特定的需求。
+     *
+     *
+     * 当Android客户端通过HTTPS连接与服务器建立连接时，TLS/SSL协议会处理整个握手过程，其中包括服务器证书的验证和交换。在握手的过程中，客户端会自动获取
+     * 到服务器的证书。
+     * 具体来说，当客户端发起HTTPS连接时，服务器会将证书链发送给客户端。客户端会负责验证证书的合法性，并检查证书中的主机名字段是否与连接的主机名匹配。如果
+     * 验证通过，客户端会继续与服务器完成握手过程，建立加密通道。
+     * 这个自动的过程是由Android操作系统的TLS/SSL实现来处理的，开发者无需手动获取服务器的证书。一般情况下，可以使用Android提供的网络库（如`HttpsURLConnection`、
+     * `OkHttpClient`等）来建立HTTPS连接，这些库在底层已经实现了证书验证的逻辑。
+     * 但需要注意的是，自动获取服务器证书不代表自动进行证书链的完整性验证。为了确保安全，开发者仍然需要对证书进行验证，包括验证证书的合法性、有效期、颁发机构等信息。
+     * 可以使用`HostnameVerifier`来验证服务器证书的主机名字段是否与连接的主机名匹配，或者使用其他方式进行自定义的证书校验逻辑。
+     *
+     * 操作系统提供的默认证书校验逻辑是为了确保基本的安全性，通常情况下是足够的。然而，有时候默认的校验逻辑可能无法满足特定的安全要求。例如，您可能需要确保与服务器连接
+     * 的主机名与服务器证书中的主机名完全匹配，以避免中间人攻击。在这种情况下，您可能需要进行额外的证书校验。因为https还是不能防止中间人攻击，只是能够防止数据被篡改。
+     * 因此，需要对证书进行校验，比如匹配主机名。严格一点，进行SSL Pinner，即对证书进行校验，同时还要校验证书的hash值。更严格一点，需要进行双端校验。
+     *
+     * 在Android中，信任管理器的校验过程是先尝试使用系统证书存储区中的根证书进行验证，如果通过则校验成功。如果服务器证书链中的证书不在系统证书存储区中，或者应用程序使用
+     * 了自定义的根证书，那么会使用自定义的根证书进行验证。这样，Android保证了默认情况下使用操作系统提供的根证书进行校验，同时也允许应用程序自定义信任策略和根证书。
+     *
+     * 要通过操作系统校验自定义证书，可以按照以下步骤进行：
+     * 1. 获取服务器证书：在建立连接之前，首先需要获取服务器的证书。可以通过网络通信库或框架提供的接口获取服务器返回的证书。
+     * 2. 导入自定义根证书：将自定义的根证书导入到操作系统的信任存储库中。不同操作系统和环境的导入方式可能有所不同，可以参考操作系统的文档或相关开发文档。
+     * 3. 配置操作系统信任存储库：将操作系统的信任存储库配置为包含自定义根证书。这样，操作系统会将自定义根证书作为信任根来验证服务器证书。
+     * 4. 建立连接并进行校验：使用网络通信库或框架建立与服务器的连接。在建立连接时，操作系统会自动进行证书校验。操作系统会检查证书链的完整性，验证证书的有效性，
+     * 检查主机名是否匹配等。
+     * 需要注意的是，自定义证书的校验依赖于操作系统的信任存储库。因此，自定义证书只有在操作系统信任的情况下才能通过校验。在进行自定义证书校验之前，需要确保自定
+     * 义根证书已经被导入到操作系统的信任存储库中，并且信任存储库的配置正确。
+     * 此外，自定义证书的校验仍然受到操作系统校验机制的限制。如果操作系统的校验机制对证书进行了其他限制或策略，自定义证书的校验仍然可能失败。因此，在使用自定义
+     * 证书时，需要了解操作系统的校验机制和策略，并确保证书满足相应的要求。
+     */
+
+    /**
+     * 证书双向校验,使用ssl pinging访问自签名的网站 和 证书双向校验
+     * 调用:setCertificates(getAssets().open("srca.cer"))
+     *
+     * @param context      上下文
+     * @param certificates 证书流
+     */
+    public void setCertificates(Context context, InputStream... certificates) {
+        try {
+            // 证书工厂
+            CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
+            // 创建一个证书库，使用的是默认的KeyStore类型
+            KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+            // 不设置密码
+            keyStore.load(null);
+            int index = 0;
+            for (InputStream certificate : certificates) {
+                // 生成证书别名
+                String certificateAlias = Integer.toString(index++);
+                // 证书工厂根据证书文件的流生成证书 cert
+                keyStore.setCertificateEntry(certificateAlias, certificateFactory.generateCertificate(certificate));
+                if (certificate != null) {
+                    certificate.close();
+                }
+            }
+
+            // 初始化SSLContext，使用TLS协议
+            SSLContext sslContext = SSLContext.getInstance("TLS");
+            // 创建了TrustManagerFactory实例，使用的是默认的信任管理算法
+            TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+            // 初始化keystore
+            trustManagerFactory.init(keyStore);
+
+            //--- 用于双向校验 --//
+            // 创建一个证书库，使用的是默认的KeyStore类型
+            KeyStore clientKeyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+            // 加载了一个名为"zhy_client.jks"的KeyStore文件，该文件位于应用的assets目录下，加载时使用的密码是"123456"
+            clientKeyStore.load(context.getAssets().open("zhy_client.jks"), "123456".toCharArray());
+
+            KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
+            keyManagerFactory.init(clientKeyStore, "123456".toCharArray());
+
+            // 初始化SSLContext
+            sslContext.init(keyManagerFactory.getKeyManagers(), trustManagerFactory.getTrustManagers(), new SecureRandom());
+
+            OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                    .connectTimeout(300, TimeUnit.SECONDS)
+                    .sslSocketFactory(sslContext.getSocketFactory())    // 让OkhttpClient去信任这个自定义证书
+                    .hostnameVerifier(new HostnameVerifier() {  // 用于主机名校验
+                        @Override
+                        public boolean verify(String hostname, SSLSession session) {
+                            // `HttpsURLConnection.getDefaultHostnameVerifier().verify(hostname, session)` 是用
+                            // 来验证服务器主机名的方法。它的原理是使用默认的主机名验证器（DefaultHostnameVerifier）来验证
+                            // 给定的主机名（hostname）是否与SSL会话（SSLSession）中的服务器主机名匹配。
+                            return HttpsURLConnection.getDefaultHostnameVerifier().verify(hostname, session);
+                        }
+                    })
+                    .build();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
 
 class LoggingInterceptor implements Interceptor {
@@ -319,14 +443,12 @@ class LoggingInterceptor implements Interceptor {
     public okhttp3.Response intercept(Chain chain) throws IOException {
         okhttp3.Request request = chain.request();
         long t1 = System.nanoTime();
-        Log.i("LoggingInterceptor", String.format("Sending request %s on %s%n%s",
-                request.url(), chain.connection(), request.headers()));
+        Log.i("LoggingInterceptor", String.format("Sending request %s on %s%n%s", request.url(), chain.connection(), request.headers()));
 
         okhttp3.Response response = chain.proceed(request);
 
         long t2 = System.nanoTime();
-        Log.i("LoggingInterceptor", String.format("Received response for %s in %.1fms%n%s",
-                response.request().url(), (t2 - t1) / 1e6d, response.headers()));
+        Log.i("LoggingInterceptor", String.format("Received response for %s in %.1fms%n%s", response.request().url(), (t2 - t1) / 1e6d, response.headers()));
         return response;
     }
 }
