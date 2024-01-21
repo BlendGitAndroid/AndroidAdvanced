@@ -54,6 +54,10 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * 返回每一个网络请求方法不同的类型，比如Call，LiveData，Observer，这个时候就需要CallAdapter来进行适配转换。
  * 3.Convert机制如何实现？
  * 将网络请求数据进行转换，进行数据解析。
+ *
+ * CallAdapterFactory先根据type.getActualTypeArguments()获取Call<RetrofitBean<Boolean>>里面的RetrofitBean<Boolean>类型,
+ * 然后再通过ConverterFactory的TypeToken.get(type)获取确定的RetrofitBean<Boolean>类型.
+ *
  */
 public class RetrofitMainActivity extends AppCompatActivity {
 
