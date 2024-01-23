@@ -220,14 +220,15 @@ public class GlideMainActivity extends AppCompatActivity {
         Glide.with(this).load("https://ss1.bdstatic" +
                 ".com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=2669567003," +
                 "3609261574&fm=27&gp=0.jpg22222222asads")
-                .apply(new RequestOptions().error(R.drawable.ic_launcher_background).placeholder
-                        (R.mipmap.ic_launcher).override(500, 500))
+                .apply(new RequestOptions().error(R.drawable.ic_launcher_background)
+                        .placeholder(R.mipmap.ic_launcher).override(500, 500))
                 .into(iv);
 
 
         Glide.with(this).load(Environment.getExternalStorageDirectory().getPath() + "/glide1.jpg")
                 .into(iv1);
-        Glide.with(this).load(new File(Environment.getExternalStorageDirectory().getPath() + "/glide2.jpg")).into(iv2);
+        Glide.with(this).load(new File(Environment.getExternalStorageDirectory().getPath() + "/glide2.jpg"))
+                .into(iv2);
 
         // 调用原生的Glide加载图片
         // com.bumptech.glide.Glide.with(this)
