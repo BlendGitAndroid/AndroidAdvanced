@@ -1,5 +1,6 @@
 package com.blend.architecture.rxjava;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -39,7 +40,7 @@ import io.reactivex.schedulers.Schedulers;
  * <p>
  *
  * <p>
- * RxJava中还有Consumer和Action，也可以创建观察者。他们都是为了触发回调的，Consumer自带一个参数，Action不带餐宿。
+ * RxJava中还有Consumer和Action，也可以创建观察者。他们都是为了触发回调的，Consumer自带一个参数，Action不带参数。
  * 当被观察者发射 onNext时，由于onNext带有参数，所以使用Consumer；
  * 当被观察者发送onComplete时，由于onComplete不带参数，所以使用Action。
  * subscribe的几个重载方法：
@@ -62,10 +63,10 @@ import io.reactivex.schedulers.Schedulers;
  * 这两个操作符一般联合使用，第一步先使用subscribeOn指定这一行上面的代码执行线程，之后通过observeOn来切换线程。
  * 注意：若有多个subscribeOn，只有第一个subscribeOn指定的线程生效；若有observeOn指定的线程，则observeOn之后进行线程切换，不管subscribeOn指定的
  * 线程，即使subscribeOn是observeOn之后的第一个线程。
- * 原因是：RxJava代码的执行是先从上到下，依次添加被观察者，当执行到subscribe注册观察者的时候，再反向执行注册包装的观察者，此时subscribeOn执行，所以
- * subscribeOn是从下到上执行的，这也是为什么第一个subscribeOn指定的线程才生效；当执行到代码最顶部的时候，先进行onSubscribe回调，这也是为什么
- * onSubscribe执行在代码运行的线程；然后，代码再从上到下执行，若subscribeOn有指定线程，则之后的代码都是运行在subscribeOn指定的线程中，直到遇到
- * observeOn进行线程切换，若有多个observeOn，则线程进行多次切换。
+ * 原因是：RxJava代码的执行是先从上到下，依次添加被观察者(也就是从上到下都是包装被观察者)，当执行到subscribe注册观察者的时候(再从下往上包装观察者)，再反
+ * 向执行注册包装的观察者，此时subscribeOn执行，所以subscribeOn是从下到上执行的，这也是为什么第一个subscribeOn指定的线程才生效；当执行到代码最顶部的时候，
+ * 先进行onSubscribe回调，这也是为什么onSubscribe执行在代码运行的线程；然后，代码再从上到下执行，若subscribeOn有指定线程，则之后的代码都是运行在subscribeOn
+ * 指定的线程中，直到遇到observeOn进行线程切换，若有多个observeOn，则线程进行多次切换。
  * <p>
  *
  * <p>
@@ -103,6 +104,7 @@ import io.reactivex.schedulers.Schedulers;
  * Rxjava中的线程其实是利用newScheduledThreadPool生成的核心线程数是1的线程池。AndroidSchedulers.mainThread()其实是利用Handler原理，调用
  * Handler的MainLooper进行的线程切换。
  * 背压问题主要是不同的线程中。
+ * 在Android中,线程无非就是线程池,切换到主线程无非就是Handler.
  */
 public class RxJavaMainActivity extends AppCompatActivity {
 
@@ -137,6 +139,7 @@ public class RxJavaMainActivity extends AppCompatActivity {
     出现上面这种日志的情况是：从下到上，第一个subscribeOn之后由于线程切换，又会在onSubscribe之前执行doOnSubscribe，所以doOnSubscribe
     运行在这个subscribeOn的线程
      */
+    @SuppressLint("CheckResult")
     private void observeOnTest() {
         io.reactivex.Observable<Integer> observable = io.reactivex.Observable.create(new io.reactivex.ObservableOnSubscribe<Integer>() {
             @Override
@@ -177,7 +180,7 @@ public class RxJavaMainActivity extends AppCompatActivity {
 
 
     /*
-    onSubscribe: main
+    onSubscribe: main(因为会立即执行)
     map-1:RxNewThreadScheduler-1
     map-2:RxNewThreadScheduler-1
     map-3:RxNewThreadScheduler-1
