@@ -81,8 +81,8 @@ public class FragmentMainActivity extends AppCompatActivity {
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction transaction = fragmentManager.beginTransaction();
             transaction.add(R.id.rightFragment, RightFragment.newInstance("blend"), RightFragment.class.getName());
-            transaction.addToBackStack(null);
-            transaction.commitNow();
+            // transaction.addToBackStack(null);
+            transaction.commitNow();    // commitNow()立即执行，commit()是异步执行,commitNow不能加入回退栈
         }
 
         fragmentBtn = findViewById(R.id.fragmentBtn);
