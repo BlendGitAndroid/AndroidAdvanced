@@ -38,8 +38,8 @@ public class SecondBugActivity extends AppCompatActivity {
         //getDir("odex", Context.MODE_PRIVATE) data/user/0/包名/app_odex
         //  /storage/emulated/0/hotfix.dex  从手机存储器中获取dex修复包文件
         //  /data/user/0/com.blend.androidadvanced/app_odex/hotfix.dex
-        File targetFile = new File(getDir("odex",
-                Context.MODE_PRIVATE).getAbsolutePath() + File.separator + "hotfix.dex");
+        File targetFile = new File(getDir("odex", Context.MODE_PRIVATE).getAbsolutePath()
+                + File.separator + "hotfix.dex");
         if (targetFile.exists()) {
             targetFile.delete();
         }

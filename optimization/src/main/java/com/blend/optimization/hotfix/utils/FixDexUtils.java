@@ -70,11 +70,9 @@ public class FixDexUtils {
         try {
             //重要的来了
             // 获取自己的DexElements数组对象
-            Object myDexElements = ReflectUtils.getDexElements(
-                    ReflectUtils.getPathList(myClassLoader));
+            Object myDexElements = ReflectUtils.getDexElements(ReflectUtils.getPathList(myClassLoader));
             // 获取系统的DexElements数组对象
-            Object sysDexElements = ReflectUtils.getDexElements(
-                    ReflectUtils.getPathList(pathClassLoader));
+            Object sysDexElements = ReflectUtils.getDexElements(ReflectUtils.getPathList(pathClassLoader));
             // 合并
             Object dexElements = ArrayUtils.combineArray(myDexElements, sysDexElements);
             // 获取系统的 pathList
