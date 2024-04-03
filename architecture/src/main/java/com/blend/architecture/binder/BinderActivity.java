@@ -1,7 +1,11 @@
 package com.blend.architecture.binder;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.os.Messenger;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 import com.blend.architecture.R;
 
@@ -47,5 +51,21 @@ public class BinderActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_binder);
+
+        Messenger messenger = new Messenger(new MessengerHandler());
+        messenger.getBinder();
+    }
+
+    private static class MessengerHandler extends Handler {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case 1:
+                    Log.e("BinderActivity", "receive msg from service: " + msg.getData().getString("reply"));
+                    break;
+                default:
+                    super.handleMessage(msg);
+            }
+        }
     }
 }
